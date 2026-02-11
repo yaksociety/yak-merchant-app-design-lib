@@ -31,7 +31,49 @@ All components support:
 
 ## 🚀 Installation
 
+### For Projects in the Same Organization (Private Repo)
+
+Since this is a private repository in the `yaksociety` organization, projects within the same organization can use it directly.
+
+**Important:** Make sure you have:
+- ✅ Access to the `yaksociety` organization on GitHub
+- ✅ Read permissions for this repository
+- ✅ SSH keys configured (for SSH method) or GitHub credentials (for HTTPS method)
+
 Add this package to your Flutter project's `pubspec.yaml`:
+
+#### Option 1: Using SSH (Recommended)
+
+If you have SSH keys set up with GitHub:
+
+```yaml
+dependencies:
+  yak_merchant_app_design_lib:
+    git:
+      url: git@github.com:yaksociety/yak-merchant-app-design-lib.git
+      ref: main
+```
+
+#### Option 2: Using HTTPS with Personal Access Token
+
+If you prefer HTTPS, you'll need a GitHub Personal Access Token:
+
+1. Create a Personal Access Token in GitHub (Settings → Developer settings → Personal access tokens)
+2. Add it to your `pubspec.yaml`:
+
+```yaml
+dependencies:
+  yak_merchant_app_design_lib:
+    git:
+      url: https://YOUR_TOKEN@github.com/yaksociety/yak-merchant-app-design-lib.git
+      ref: main
+```
+
+**Note:** For better security, use environment variables or store the token securely instead of hardcoding it.
+
+#### Option 3: Using HTTPS (if already authenticated)
+
+If you're already authenticated with GitHub CLI or Git credentials:
 
 ```yaml
 dependencies:
@@ -41,9 +83,33 @@ dependencies:
       ref: main
 ```
 
-Then run:
+### After Adding the Dependency
+
+Run:
 ```bash
 flutter pub get
+```
+
+### Using a Specific Version
+
+To use a specific version or tag:
+
+```yaml
+dependencies:
+  yak_merchant_app_design_lib:
+    git:
+      url: git@github.com:yaksociety/yak-merchant-app-design-lib.git
+      ref: v0.0.1  # Use a specific tag
+```
+
+Or use a specific commit:
+
+```yaml
+dependencies:
+  yak_merchant_app_design_lib:
+    git:
+      url: git@github.com:yaksociety/yak-merchant-app-design-lib.git
+      ref: abc123def456  # Use a specific commit hash
 ```
 
 ---
