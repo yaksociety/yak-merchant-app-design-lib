@@ -28,4 +28,6 @@ Use this checklist for every release to keep the process consistent.
 - [ ] **Tag + create GitHub Release**
   - Create tag: `git tag v1.0.0`
   - Push tag: `git push origin v1.0.0`
-  - Create GitHub Release with release notes from CHANGELOG
+  - Create GitHub Release
+    - **Title:** `v1.0.0 — Initial release` (or copy from CHANGELOG)
+    - **Description:** Copy release notes from CHANGELOG
