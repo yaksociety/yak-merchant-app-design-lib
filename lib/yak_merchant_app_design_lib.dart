@@ -9,3 +9,7 @@ export 'inputs/yak_text_input.dart';
 export 'inputs/yak_text_area.dart';
 export 'inputs/yak_select.dart';
 export 'inputs/yak_otp_input.dart';
+
+// Theme
+export 'theme/yak_color.dart';
+export 'theme/yak_typography.dart';

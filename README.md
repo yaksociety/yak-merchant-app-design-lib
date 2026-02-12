@@ -21,6 +21,10 @@ This library provides pre-built UI components for the Yak Merchant App:
 - **[YakSelect](docs/widgets/yak_select.md)** - Dropdown/select with optional icons per item
 - **[YakOtpInput](docs/widgets/yak_otp_input.md)** - OTP/PIN input with multiple digit boxes
 
+### 🎨 Theme
+- **[YakColor](docs/theme/yak_color.md)** - Color palette with primitive (Primary, Neutral, Gray, Danger, Success, Warning, Blue) and semantic (Background, TextAndIcons, Stroke) tokens
+- **[YakTypography](docs/theme/yak_typography.md)** - Typography system with primitive (font sizes, weights, letter spacing) and semantic (Headings, Text L/M/S/XS/XXS) styles, plus Material 3 compatible typography
+
 All components support:
 - ✅ Loading states
 - ✅ Disabled states
@@ -52,25 +56,48 @@ flutter pub get
 
 ## 🎨 Design System
 
-The library follows these design principles:
+The library provides theme tokens aligned with the Android merchant app. See [YakColor](docs/theme/yak_color.md) and [YakTypography](docs/theme/yak_typography.md) for full usage and examples.
 
-- **Color Scheme**: Gold/Yellow (#F4C430) primary color with black text
-- **Spacing**: 8px grid system with consistent padding
-- **Typography**: Font size 16px with 0.15 letter spacing and 600 font weight
-- **Accessibility**: Proper disabled states, touch targets, and visual feedback
+### Usage
+
+**YakColor**
+```dart
+YakColor.primitive.primary.primary500
+YakColor.semantic.textAndIcons.baseMain
+YakColor.semantic.background.primaryMain
+YakColor.semantic.stroke.base
+```
+
+**YakTypography**
+```dart
+Text('Title', style: YakTypography.semantic.heading1.semibold)
+Text('Body', style: YakTypography.semantic.textM.regular)
+
+MaterialApp(
+  theme: ThemeData(typography: YakTypography.materialTypography),
+  ...,
+)
+```
+
+**Font**: Uses Google Sans. Add the font files to your app's `pubspec.yaml` (see [YakTypography](docs/theme/yak_typography.md) for setup).
 
 ---
 
-## 📖 Widget Documentation
+## 📖 Documentation
 
-Each widget has its own README with API reference and examples. Click a widget to view its docs:
+Each widget and theme token has its own doc with API reference and examples:
 
+**Widgets**
 - [**YakButton**](docs/widgets/yak_button.md) – Buttons (primary, secondary, ghost, icon, FAB)
 - [**YakToggleButton**](docs/widgets/yak_toggle_button.md) – On/off toggle switch
 - [**YakTextInput**](docs/widgets/yak_text_input.md) – Single-line text input
 - [**YakTextArea**](docs/widgets/yak_text_area.md) – Multi-line text area
 - [**YakSelect**](docs/widgets/yak_select.md) – Dropdown/select
 - [**YakOtpInput**](docs/widgets/yak_otp_input.md) – OTP/PIN digit boxes
+
+**Theme**
+- [**YakColor**](docs/theme/yak_color.md) – Color palette
+- [**YakTypography**](docs/theme/yak_typography.md) – Typography system
 
 ---
 
