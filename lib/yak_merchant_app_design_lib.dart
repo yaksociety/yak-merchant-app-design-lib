@@ -1,8 +1,5 @@
 library yak_merchant_app_design_lib;
 
-// Flutter
-export 'package:flutter/material.dart';
-
 // Button Components
 export 'buttons/yak_button.dart';
 export 'buttons/yak_toggle_button.dart';
