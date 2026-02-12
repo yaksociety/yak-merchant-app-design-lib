@@ -7,17 +7,19 @@ A Flutter design system library for **Yak Merchant App**, providing reusable UI 
 This library provides pre-built UI components for the Yak Merchant App:
 
 ### 🎯 Button Components
-- **YakButton** - Unified button component with 5 variants:
+- **[YakButton](docs/widgets/yak_button.md)** - Unified button component with 5 variants:
   - `primary` - Main action button (gold background)
   - `secondary` - Outlined button for secondary actions
   - `ghost` - Transparent button for subtle actions
   - `icon` - Icon-only button (circular or square)
   - `floating` - Floating action button (FAB)
-- **YakToggleButton** - Toggle switch button for on/off states
+- **[YakToggleButton](docs/widgets/yak_toggle_button.md)** - Toggle switch button for on/off states
 
 ### 📝 Input Components
-- **YakTextInput** - Text input field with label, error states, and validation
-- **YakOtpInput** - OTP/PIN input with multiple digit boxes
+- **[YakTextInput](docs/widgets/yak_text_input.md)** - Single-line text input with label, error states, and validation
+- **[YakTextArea](docs/widgets/yak_text_area.md)** - Multi-line text area for addresses and longer content
+- **[YakSelect](docs/widgets/yak_select.md)** - Dropdown/select with optional icons per item
+- **[YakOtpInput](docs/widgets/yak_otp_input.md)** - OTP/PIN input with multiple digit boxes
 
 All components support:
 - ✅ Loading states
@@ -31,49 +33,7 @@ All components support:
 
 ## 🚀 Installation
 
-### For Projects in the Same Organization (Private Repo)
-
-Since this is a private repository in the `yaksociety` organization, projects within the same organization can use it directly.
-
-**Important:** Make sure you have:
-- ✅ Access to the `yaksociety` organization on GitHub
-- ✅ Read permissions for this repository
-- ✅ SSH keys configured (for SSH method) or GitHub credentials (for HTTPS method)
-
 Add this package to your Flutter project's `pubspec.yaml`:
-
-#### Option 1: Using SSH (Recommended)
-
-If you have SSH keys set up with GitHub:
-
-```yaml
-dependencies:
-  yak_merchant_app_design_lib:
-    git:
-      url: git@github.com:yaksociety/yak-merchant-app-design-lib.git
-      ref: main
-```
-
-#### Option 2: Using HTTPS with Personal Access Token
-
-If you prefer HTTPS, you'll need a GitHub Personal Access Token:
-
-1. Create a Personal Access Token in GitHub (Settings → Developer settings → Personal access tokens)
-2. Add it to your `pubspec.yaml`:
-
-```yaml
-dependencies:
-  yak_merchant_app_design_lib:
-    git:
-      url: https://YOUR_TOKEN@github.com/yaksociety/yak-merchant-app-design-lib.git
-      ref: main
-```
-
-**Note:** For better security, use environment variables or store the token securely instead of hardcoding it.
-
-#### Option 3: Using HTTPS (if already authenticated)
-
-If you're already authenticated with GitHub CLI or Git credentials:
 
 ```yaml
 dependencies:
@@ -83,33 +43,9 @@ dependencies:
       ref: main
 ```
 
-### After Adding the Dependency
-
-Run:
+Then run:
 ```bash
 flutter pub get
-```
-
-### Using a Specific Version
-
-To use a specific version or tag:
-
-```yaml
-dependencies:
-  yak_merchant_app_design_lib:
-    git:
-      url: git@github.com:yaksociety/yak-merchant-app-design-lib.git
-      ref: v0.0.1  # Use a specific tag
-```
-
-Or use a specific commit:
-
-```yaml
-dependencies:
-  yak_merchant_app_design_lib:
-    git:
-      url: git@github.com:yaksociety/yak-merchant-app-design-lib.git
-      ref: abc123def456  # Use a specific commit hash
 ```
 
 ---
@@ -414,6 +350,19 @@ The library follows these design principles:
 - **Spacing**: 8px grid system with consistent padding
 - **Typography**: Font size 16px with 0.15 letter spacing and 600 font weight
 - **Accessibility**: Proper disabled states, touch targets, and visual feedback
+
+---
+
+## 📖 Widget Documentation
+
+Each widget has its own README with API reference and examples. Click a widget to view its docs:
+
+- [**YakButton**](docs/widgets/yak_button.md) – Buttons (primary, secondary, ghost, icon, FAB)
+- [**YakToggleButton**](docs/widgets/yak_toggle_button.md) – On/off toggle switch
+- [**YakTextInput**](docs/widgets/yak_text_input.md) – Single-line text input
+- [**YakTextArea**](docs/widgets/yak_text_area.md) – Multi-line text area
+- [**YakSelect**](docs/widgets/yak_select.md) – Dropdown/select
+- [**YakOtpInput**](docs/widgets/yak_otp_input.md) – OTP/PIN digit boxes
 
 ---
 

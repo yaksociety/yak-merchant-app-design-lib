@@ -6,4 +6,6 @@ export 'buttons/yak_toggle_button.dart';
 
 // Input Components
 export 'inputs/yak_text_input.dart';
+export 'inputs/yak_text_area.dart';
+export 'inputs/yak_select.dart';
 export 'inputs/yak_otp_input.dart';

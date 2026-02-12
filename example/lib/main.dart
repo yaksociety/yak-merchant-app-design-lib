@@ -37,9 +37,14 @@ class _ButtonExamplePageState extends State<ButtonExamplePage> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _addressController = TextEditingController();
   
   // OTP input
   String _otpCode = '';
+
+  // Select
+  String? _selectedCountry;
+  String? _selectedItem;
 
   @override
   void dispose() {
@@ -47,6 +52,7 @@ class _ButtonExamplePageState extends State<ButtonExamplePage> {
     _usernameController.dispose();
     _phoneController.dispose();
     _passwordController.dispose();
+    _addressController.dispose();
     super.dispose();
   }
 
@@ -327,9 +333,9 @@ class _ButtonExamplePageState extends State<ButtonExamplePage> {
               'Text input fields with labels, placeholders, and error messages.',
               [
                 YakTextInput(
-                  label: 'อีเมล',
+                  label: 'label',
                   isRequired: true,
-                  placeholder: 'name@email.com',
+                  placeholder: 'placeholder',
                   controller: _emailController,
                   keyboardType: TextInputType.emailAddress,
                   onChanged: (value) {
@@ -338,9 +344,9 @@ class _ButtonExamplePageState extends State<ButtonExamplePage> {
                 ),
                 const SizedBox(height: 24),
                 YakTextInput(
-                  label: 'ชื่อผู้ใช้',
+                  label: 'label',
                   isRequired: true,
-                  placeholder: 'name',
+                  placeholder: 'placeholder',
                   controller: _usernameController,
                   errorMessage: 'ชื่อผู้ใช้นี้ได้ลงทะเบียนร้านค้าแล้ว',
                   onChanged: (value) {
@@ -349,8 +355,8 @@ class _ButtonExamplePageState extends State<ButtonExamplePage> {
                 ),
                 const SizedBox(height: 24),
                 YakTextInput(
-                  label: 'Phone',
-                  placeholder: '12 345 6789',
+                  label: 'label',
+                  placeholder: 'placeholder',
                   controller: _phoneController,
                   keyboardType: TextInputType.phone,
                   textStyle: const TextStyle(
@@ -363,9 +369,9 @@ class _ButtonExamplePageState extends State<ButtonExamplePage> {
                 ),
                 const SizedBox(height: 24),
                 YakTextInput(
-                  label: 'Password',
+                  label: 'label',
                   isRequired: true,
-                  placeholder: 'Enter password',
+                  placeholder: 'placeholder',
                   controller: _passwordController,
                   obscureText: true,
                   onChanged: (value) {
@@ -374,10 +380,124 @@ class _ButtonExamplePageState extends State<ButtonExamplePage> {
                 ),
                 const SizedBox(height: 24),
                 YakTextInput(
-                  placeholder: 'No label input',
+                  placeholder: 'placeholder',
                   onChanged: (value) {
                     // Handle input without label
                   },
+                ),
+                const SizedBox(height: 24),
+                YakTextArea(
+                  label: 'label',
+                  isRequired: true,
+                  placeholder: 'placeholder',
+                  controller: _addressController,
+                  minLines: 4,
+                  onChanged: (value) {
+                    // Handle address input
+                  },
+                ),
+              ],
+            ),
+
+            const SizedBox(height: 32),
+
+            // Select Section
+            _buildSection(
+              'Select',
+              'Dropdown select with optional label, placeholder, and icon. Chevron is hidden when only 1 item.',
+              [
+                YakSelect<String>(
+                  label: 'label',
+                  isRequired: true,
+                  placeholder: 'placeholder',
+                  items: const [
+                    YakSelectItem(value: 'item1', label: 'Item 1'),
+                    YakSelectItem(value: 'item2', label: 'Item 2'),
+                    YakSelectItem(value: 'item3', label: 'Item 3'),
+                    YakSelectItem(value: 'item4', label: 'Item 4'),
+                  ],
+                  value: _selectedItem,
+                  onChanged: (value) {
+                    setState(() => _selectedItem = value);
+                  },
+                ),
+                const SizedBox(height: 24),
+                YakSelect<String>(
+                  label: 'label',
+                  placeholder: 'placeholder',
+                  items: [
+                    YakSelectItem(
+                      value: 'th',
+                      label: 'ไทย',
+                      icon: Container(
+                        width: 24,
+                        height: 16,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(4),
+                          gradient: LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: [
+                              const Color(0xFFA51931),
+                              Colors.white,
+                              const Color(0xFF2D2A4A),
+                              Colors.white,
+                              const Color(0xFFA51931),
+                            ],
+                            stops: const [0.0, 0.2, 0.4, 0.6, 1.0],
+                          ),
+                        ),
+                      ),
+                    ),
+                    YakSelectItem(
+                      value: 'en',
+                      label: 'English',
+                      icon: Container(
+                        width: 24,
+                        height: 16,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(4),
+                          color: Colors.blue,
+                        ),
+                        child: const Icon(Icons.flag, size: 12, color: Colors.white),
+                      ),
+                    ),
+                  ],
+                  value: _selectedCountry,
+                  onChanged: (value) {
+                    setState(() => _selectedCountry = value);
+                  },
+                ),
+                const SizedBox(height: 24),
+                YakSelect<String>(
+                  label: 'Single item (no chevron)',
+                  items: [
+                    YakSelectItem(
+                      value: 'only',
+                      label: '+66',
+                      icon: Container(
+                        width: 24,
+                        height: 24,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          gradient: LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: [
+                              const Color(0xFFA51931),
+                              Colors.white,
+                              const Color(0xFF2D2A4A),
+                              Colors.white,
+                              const Color(0xFFA51931),
+                            ],
+                            stops: const [0.0, 0.2, 0.4, 0.6, 1.0],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                  value: 'only',
+                  onChanged: (_) {},
                 ),
               ],
             ),
