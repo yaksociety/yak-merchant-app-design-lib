@@ -13,6 +13,9 @@ export 'inputs/yak_otp_input.dart';
 // Indicators
 export 'indicators/yak_indicator.dart';
 
+// Cards
+export 'cards/yak_card.dart';
+
 // Theme
 export 'theme/yak_color.dart';
 export 'theme/yak_typography.dart';

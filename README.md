@@ -21,6 +21,12 @@ This library provides pre-built UI components for the Yak Merchant App:
 - **[YakSelect](docs/widgets/yak_select.md)** - Dropdown/select with optional icons per item
 - **[YakOtpInput](docs/widgets/yak_otp_input.md)** - OTP/PIN input with multiple digit boxes
 
+### 📊 Indicators
+- **[YakIndicator](docs/widgets/yak_indicator.md)** - Horizontal progress indicator with rounded ends and smooth animation
+
+### 🃏 Cards
+- **[YakCard](docs/widgets/yak_card.md)** - Universal card with optional decoration, padding, and tap; globally themed via `YakCardThemeData`
+
 ### 🎨 Theme
 - **[YakColor](docs/theme/yak_color.md)** - Color palette with primitive (Primary, Neutral, Gray, Danger, Success, Warning, Blue) and semantic (Background, TextAndIcons, Stroke) tokens
 - **[YakTypography](docs/theme/yak_typography.md)** - Typography system with primitive (font sizes, weights, letter spacing) and semantic (Headings, Text L/M/S/XS/XXS) styles, plus Material 3 compatible typography
@@ -94,6 +100,8 @@ Each widget and theme token has its own doc with API reference and examples:
 - [**YakTextArea**](docs/widgets/yak_text_area.md) – Multi-line text area
 - [**YakSelect**](docs/widgets/yak_select.md) – Dropdown/select
 - [**YakOtpInput**](docs/widgets/yak_otp_input.md) – OTP/PIN digit boxes
+- [**YakIndicator**](docs/widgets/yak_indicator.md) – Progress indicator
+- [**YakCard**](docs/widgets/yak_card.md) – Universal card
 
 **Theme**
 - [**YakColor**](docs/theme/yak_color.md) – Color palette
