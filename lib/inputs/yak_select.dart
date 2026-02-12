@@ -261,7 +261,7 @@ class _YakSelectState<T> extends State<YakSelect<T>> {
   }
 }
 
-class _SelectOverlay<T> extends StatelessWidget {
+class _SelectOverlay<T> extends StatefulWidget {
   final LayerLink layerLink;
   final Size size;
   final List<YakSelectItem<T>> items;
@@ -279,9 +279,38 @@ class _SelectOverlay<T> extends StatelessWidget {
   });
 
   @override
+  State<_SelectOverlay<T>> createState() => _SelectOverlayState<T>();
+}
+
+class _SelectOverlayState<T> extends State<_SelectOverlay<T>>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _controller;
+  late final Animation<double> _animation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 180),
+    );
+    _animation = CurvedAnimation(
+      parent: _controller,
+      curve: Curves.easeOutCubic,
+    );
+    _controller.forward();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final dropdownContent = Container(
-      width: size.width,
+      width: widget.size.width,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
@@ -299,18 +328,18 @@ class _SelectOverlay<T> extends StatelessWidget {
           maxHeight: MediaQuery.of(context).size.height * 0.4,
         ),
         child: ListView.builder(
-          padding: const EdgeInsets.symmetric(vertical: 8),
+          padding: const EdgeInsets.symmetric(vertical: 4),
           shrinkWrap: true,
-          itemCount: items.length,
+          itemCount: widget.items.length,
           itemBuilder: (context, index) {
-            final item = items[index];
-            final isSelected = item.value == value;
+            final item = widget.items[index];
+            final isSelected = item.value == widget.value;
             return InkWell(
-              onTap: () => onSelected(item.value),
+              onTap: () => widget.onSelected(item.value),
               child: Padding(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 16,
-                  vertical: 12,
+                  vertical: 8,
                 ),
                 child: Row(
                   children: [
@@ -344,19 +373,28 @@ class _SelectOverlay<T> extends StatelessWidget {
     return Stack(
       children: [
         GestureDetector(
-          onTap: onTapOutside,
+          onTap: widget.onTapOutside,
           behavior: HitTestBehavior.opaque,
           child: Container(color: Colors.transparent),
         ),
         Positioned(
-          width: size.width,
+          width: widget.size.width,
           child: CompositedTransformFollower(
-            link: layerLink,
+            link: widget.layerLink,
             showWhenUnlinked: false,
-            offset: Offset(0, size.height + 4),
+            offset: Offset(0, widget.size.height + 2),
             child: Material(
               color: Colors.transparent,
-              child: dropdownContent,
+              child: FadeTransition(
+                opacity: _animation,
+                child: ScaleTransition(
+                  scale: _animation.drive(
+                    Tween<double>(begin: 0.98, end: 1.0),
+                  ),
+                  alignment: Alignment.topCenter,
+                  child: dropdownContent,
+                ),
+              ),
             ),
           ),
         ),

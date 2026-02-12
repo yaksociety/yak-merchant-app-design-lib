@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:yak_merchant_app_design_lib/yak_merchant_app_design_lib.dart';
 
 import 'pages/button_page.dart';
+import 'pages/indicator_page.dart';
 import 'pages/otp_input_page.dart';
 import 'pages/select_page.dart';
 import 'pages/text_area_page.dart';
@@ -31,6 +32,7 @@ class YakDesignExampleApp extends StatelessWidget {
         '/text-area': (_) => const TextAreaPage(),
         '/select': (_) => const SelectPage(),
         '/otp-input': (_) => const OtpInputPage(),
+        '/indicator': (_) => const IndicatorPage(),
       },
     );
   }
@@ -48,6 +50,7 @@ class HomePage extends StatelessWidget {
       _NavItem('YakTextArea', 'Multi-line text area', Icons.notes, '/text-area'),
       _NavItem('YakSelect', 'Dropdown select', Icons.arrow_drop_down_circle, '/select'),
       _NavItem('YakOtpInput', 'OTP / PIN digit boxes', Icons.pin, '/otp-input'),
+      _NavItem('YakIndicator', 'Progress bar with rounded ends & animation', Icons.trending_up, '/indicator'),
     ];
 
     return Scaffold(
