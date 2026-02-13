@@ -6,6 +6,7 @@ import 'pages/card_page.dart';
 import 'pages/indicator_page.dart';
 import 'pages/otp_input_page.dart';
 import 'pages/select_page.dart';
+import 'pages/sheet_page.dart';
 import 'pages/text_area_page.dart';
 import 'pages/text_input_page.dart';
 import 'pages/toggle_button_page.dart';
@@ -35,6 +36,7 @@ class YakDesignExampleApp extends StatelessWidget {
         '/otp-input': (_) => const OtpInputPage(),
         '/indicator': (_) => const IndicatorPage(),
         '/card': (_) => const CardPage(),
+        '/sheet': (_) => const SheetPage(),
       },
     );
   }
@@ -54,6 +56,7 @@ class HomePage extends StatelessWidget {
       _NavItem('YakOtpInput', 'OTP / PIN digit boxes', Icons.pin, '/otp-input'),
       _NavItem('YakIndicator', 'Progress bar with rounded ends & animation', Icons.trending_up, '/indicator'),
       _NavItem('YakCard', 'Card with image/overlay, globally themed', Icons.credit_card, '/card'),
+      _NavItem('YakSheet', 'Bottom sheet with drag handle & title', Icons.call_made, '/sheet'),
     ];
 
     return Scaffold(

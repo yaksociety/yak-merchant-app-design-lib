@@ -27,6 +27,9 @@ This library provides pre-built UI components for the Yak Merchant App:
 ### 🃏 Cards
 - **[YakCard](docs/widgets/yak_card.md)** - Universal card with optional decoration, padding, and tap; globally themed via `YakCardThemeData`
 
+### 📄 Sheets
+- **[YakSheet](docs/widgets/yak_sheet.md)** - Bottom sheet with optional drag handle and title; themed via `YakSheetThemeData`. Use `YakSheet.show(context, child: ...)` or build as content for `showModalBottomSheet`.
+
 ### 🎨 Theme
 - **[YakColor](docs/theme/yak_color.md)** - Color palette with primitive (Primary, Neutral, Gray, Danger, Success, Warning, Blue) and semantic (Background, TextAndIcons, Stroke) tokens
 - **[YakTypography](docs/theme/yak_typography.md)** - Typography system with primitive (font sizes, weights, letter spacing) and semantic (Headings, Text L/M/S/XS/XXS) styles, plus Material 3 compatible typography
@@ -87,6 +90,25 @@ MaterialApp(
 
 **Font**: Uses Google Sans. Add the font files to your app's `pubspec.yaml` (see [YakTypography](docs/theme/yak_typography.md) for setup).
 
+**YakSheet**
+```dart
+// Simple modal sheet
+YakSheet.show(context, child: Text('Content'));
+
+// With title
+YakSheet.show(
+  context,
+  title: Text('Title', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
+  child: YourContent(),
+);
+
+// As content for showModalBottomSheet
+showModalBottomSheet(
+  context: context,
+  builder: (context) => YakSheet(title: Text('Options'), child: ...),
+);
+```
+
 ---
 
 ## 📖 Documentation
@@ -102,6 +124,7 @@ Each widget and theme token has its own doc with API reference and examples:
 - [**YakOtpInput**](docs/widgets/yak_otp_input.md) – OTP/PIN digit boxes
 - [**YakIndicator**](docs/widgets/yak_indicator.md) – Progress indicator
 - [**YakCard**](docs/widgets/yak_card.md) – Universal card
+- [**YakSheet**](docs/widgets/yak_sheet.md) – Bottom sheet (drag handle, title, `YakSheet.show()`)
 
 **Theme**
 - [**YakColor**](docs/theme/yak_color.md) – Color palette
