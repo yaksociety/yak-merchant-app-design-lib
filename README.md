@@ -30,6 +30,9 @@ This library provides pre-built UI components for the Yak Merchant App:
 ### 📄 Sheets
 - **[YakSheet](docs/widgets/yak_sheet.md)** - Bottom sheet with optional drag handle and title; themed via `YakSheetThemeData`. Use `YakSheet.show(context, child: ...)` or build as content for `showModalBottomSheet`.
 
+### 🪟 Modals
+- **[YakModal](docs/widgets/yak_modal.md)** - Centered dialog with optional header icon (info/success/warning/error), title, description, and **custom child** (forms, images, checkboxes, toggles, etc.); optional Cancel + Continue buttons; close (X); themed via `YakModalThemeData`. Use `YakModal.show(context, child: ...)`.
+
 ### 🔔 Alerts
 - **[YakAlert](docs/widgets/yak_alert.md)** - Banner alert at the top of the screen with icon, title, message, optional action link, and dismiss; types: info, warning, error, success. Use `YakAlert.show(context, ...)` to display as overlay.
 
@@ -112,6 +115,24 @@ showModalBottomSheet(
 );
 ```
 
+**YakModal**
+```dart
+YakModal.show(
+  context,
+  title: 'Subscribe',
+  description: 'Choose what you want to receive.',
+  headerIconType: YakModalIconType.info,
+  child: Column(
+    children: [
+      CheckboxListTile(title: Text('Guides'), value: false, onChanged: (_) {}),
+      CheckboxListTile(title: Text('Resources'), value: true, onChanged: (_) {}),
+    ],
+  ),
+  primaryLabel: 'Continue',
+  cancelLabel: 'Cancel',
+);
+```
+
 **YakAlert**
 ```dart
 // Show at top of screen (e.g. login failed)
@@ -150,6 +171,7 @@ Each widget and theme token has its own doc with API reference and examples:
 - [**YakIndicator**](docs/widgets/yak_indicator.md) – Progress indicator
 - [**YakCard**](docs/widgets/yak_card.md) – Universal card
 - [**YakSheet**](docs/widgets/yak_sheet.md) – Bottom sheet (drag handle, title, `YakSheet.show()`)
+- [**YakModal**](docs/widgets/yak_modal.md) – Centered modal (icon, title, description, custom child, `YakModal.show()`)
 - [**YakAlert**](docs/widgets/yak_alert.md) – Top-of-screen alert (info, warning, error, success, `YakAlert.show()`)
 
 **Theme**

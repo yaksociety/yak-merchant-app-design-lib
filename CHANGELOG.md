@@ -6,6 +6,27 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ---
 
+## [v1.3.0] - 2026-02-13
+
+**Title:** `v1.3.0 — Sheets and alerts`
+
+**Description:** Adds YakSheet for bottom sheets with optional drag handle and title, and YakAlert for top-of-screen banner alerts with icon, message, action link, and smooth animations. Both support global theming and are documented with example pages.
+
+**Added**
+- **YakSheet** – bottom sheet in `lib/sheets/yak_sheet.dart` with optional drag handle, title, and `YakSheetThemeData`; `YakSheet.show(context, ...)` and use as content for `showModalBottomSheet`; docs in `docs/widgets/yak_sheet.md` and example in `example/lib/pages/sheet_page.dart`
+- **YakAlert** – top-of-screen alert in `lib/alerts/yak_alert.dart` with icon, title, message, optional action link (“Show More →”), and dismiss (X); types: info, warning, error, success with distinct icon colors (blue, warning, danger, success); `YakAlertThemeData`; slide-down + fade-in / slide-up + fade-out animations; inline SVG icon (Material info symbol); default icon size 24; `YakAlert.show(context, ...)`; docs in `docs/widgets/yak_alert.md` and example in `example/lib/pages/alert_page.dart`
+- Dependency: `flutter_svg` for alert icon rendering
+- README: Sheets and Alerts sections, usage snippets, and doc links for YakSheet and YakAlert
+- Example app: routes and home list entries for `/sheet` (YakSheet) and `/alert` (YakAlert)
+
+**Changed**
+- `yak_merchant_app_design_lib.dart`: exports `sheets/yak_sheet.dart` and `alerts/yak_alert.dart`
+
+**Fixed**
+- None
+
+---
+
 ## [v1.2.0] - 2026-02-12
 
 **Title:** `v1.2.0 — Cards, indicator, and select polish`
