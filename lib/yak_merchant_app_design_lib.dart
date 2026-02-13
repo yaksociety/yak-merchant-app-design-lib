@@ -19,6 +19,9 @@ export 'cards/yak_card.dart';
 // Sheets
 export 'sheets/yak_sheet.dart';
 
+// Alerts
+export 'alerts/yak_alert.dart';
+
 // Theme
 export 'theme/yak_color.dart';
 export 'theme/yak_typography.dart';

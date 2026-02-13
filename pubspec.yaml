@@ -10,6 +10,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_svg: ^2.0.10+1
 
 dev_dependencies:
   flutter_test:
@@ -21,6 +22,7 @@ dev_dependencies:
 
 # The following section is specific to Flutter packages.
 flutter:
+  # Alert icon is embedded in lib/alerts/yak_alert.dart (no asset needed).
 
   # To add assets to your package, add an assets section, like this:
   # assets:

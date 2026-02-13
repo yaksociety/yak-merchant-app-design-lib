@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:yak_merchant_app_design_lib/yak_merchant_app_design_lib.dart';
 
+import 'pages/alert_page.dart';
 import 'pages/button_page.dart';
 import 'pages/card_page.dart';
 import 'pages/indicator_page.dart';
@@ -37,6 +38,7 @@ class YakDesignExampleApp extends StatelessWidget {
         '/indicator': (_) => const IndicatorPage(),
         '/card': (_) => const CardPage(),
         '/sheet': (_) => const SheetPage(),
+        '/alert': (_) => const AlertPage(),
       },
     );
   }
@@ -57,6 +59,7 @@ class HomePage extends StatelessWidget {
       _NavItem('YakIndicator', 'Progress bar with rounded ends & animation', Icons.trending_up, '/indicator'),
       _NavItem('YakCard', 'Card with image/overlay, globally themed', Icons.credit_card, '/card'),
       _NavItem('YakSheet', 'Bottom sheet with drag handle & title', Icons.call_made, '/sheet'),
+      _NavItem('YakAlert', 'Top-of-screen alert (info, warning, error, success)', Icons.warning_amber_rounded, '/alert'),
     ];
 
     return Scaffold(

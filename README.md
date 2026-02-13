@@ -30,6 +30,9 @@ This library provides pre-built UI components for the Yak Merchant App:
 ### 📄 Sheets
 - **[YakSheet](docs/widgets/yak_sheet.md)** - Bottom sheet with optional drag handle and title; themed via `YakSheetThemeData`. Use `YakSheet.show(context, child: ...)` or build as content for `showModalBottomSheet`.
 
+### 🔔 Alerts
+- **[YakAlert](docs/widgets/yak_alert.md)** - Banner alert at the top of the screen with icon, title, message, optional action link, and dismiss; types: info, warning, error, success. Use `YakAlert.show(context, ...)` to display as overlay.
+
 ### 🎨 Theme
 - **[YakColor](docs/theme/yak_color.md)** - Color palette with primitive (Primary, Neutral, Gray, Danger, Success, Warning, Blue) and semantic (Background, TextAndIcons, Stroke) tokens
 - **[YakTypography](docs/theme/yak_typography.md)** - Typography system with primitive (font sizes, weights, letter spacing) and semantic (Headings, Text L/M/S/XS/XXS) styles, plus Material 3 compatible typography
@@ -109,6 +112,28 @@ showModalBottomSheet(
 );
 ```
 
+**YakAlert**
+```dart
+// Show at top of screen (e.g. login failed)
+YakAlert.show(
+  context,
+  title: 'Login failed',
+  message: 'Identity verification incomplete. Please try again.',
+  type: YakAlertType.error,
+);
+
+// With action link and auto-dismiss
+YakAlert.show(
+  context,
+  title: 'Some kind of alert!',
+  message: 'This is an alert message in the body.',
+  type: YakAlertType.info,
+  actionLabel: 'Show More →',
+  onAction: () => {},
+  duration: Duration(seconds: 4),
+);
+```
+
 ---
 
 ## 📖 Documentation
@@ -125,6 +150,7 @@ Each widget and theme token has its own doc with API reference and examples:
 - [**YakIndicator**](docs/widgets/yak_indicator.md) – Progress indicator
 - [**YakCard**](docs/widgets/yak_card.md) – Universal card
 - [**YakSheet**](docs/widgets/yak_sheet.md) – Bottom sheet (drag handle, title, `YakSheet.show()`)
+- [**YakAlert**](docs/widgets/yak_alert.md) – Top-of-screen alert (info, warning, error, success, `YakAlert.show()`)
 
 **Theme**
 - [**YakColor**](docs/theme/yak_color.md) – Color palette
