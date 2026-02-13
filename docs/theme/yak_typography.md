@@ -6,21 +6,7 @@ Typography system with primitive and semantic styles. Mirrors TypographyStyle fr
 
 ## Font setup
 
-Add Google Sans to your app's `pubspec.yaml`:
-
-```yaml
-flutter:
-  fonts:
-    - family: GoogleSans
-      fonts:
-        - asset: fonts/GoogleSans-Regular.ttf
-        - asset: fonts/GoogleSans-Medium.ttf
-          weight: 500
-        - asset: fonts/GoogleSans-SemiBold.ttf
-          weight: 600
-        - asset: fonts/GoogleSans-Bold.ttf
-          weight: 700
-```
+Google Sans is bundled in this package. Apps that depend on `yak_merchant_app_design_lib` get the font automatically—no extra setup needed.
 
 ---
 

@@ -2,20 +2,8 @@ import 'package:flutter/material.dart';
 
 /// Default font family for Yak typography.
 ///
-/// Add Google Sans font files to your app's pubspec.yaml:
-/// ```yaml
-/// flutter:
-///   fonts:
-///     - family: GoogleSans
-///       fonts:
-///         - asset: fonts/GoogleSans-Regular.ttf
-///         - asset: fonts/GoogleSans-Medium.ttf
-///           weight: 500
-///         - asset: fonts/GoogleSans-SemiBold.ttf
-///           weight: 600
-///         - asset: fonts/GoogleSans-Bold.ttf
-///           weight: 700
-/// ```
+/// Google Sans is bundled in this package; apps that depend on
+/// [yak_merchant_app_design_lib] get the font automatically.
 const String yakFontFamily = 'GoogleSans';
 
 /// Yak design system typography.

@@ -94,7 +94,7 @@ MaterialApp(
 )
 ```
 
-**Font**: Uses Google Sans. Add the font files to your app's `pubspec.yaml` (see [YakTypography](docs/theme/yak_typography.md) for setup).
+**Font**: Uses Google Sans, bundled with the package (no extra setup needed).
 
 **YakSheet**
 ```dart
