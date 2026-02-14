@@ -14,6 +14,7 @@ This library provides pre-built UI components for the Yak Merchant App:
   - `icon` - Icon-only button (circular or square)
   - `floating` - Floating action button (FAB)
 - **[YakToggleButton](docs/widgets/yak_toggle_button.md)** - Toggle switch button for on/off states
+- **[YakRadioButton & YakRadioGroup](docs/widgets/yak_radio_button.md)** - Radio options for single-choice selection (delivery method, payment, size, etc.) with optional label, subtitle, and per-option or group-level helper text
 
 ### 📝 Input Components
 - **[YakTextInput](docs/widgets/yak_text_input.md)** - Single-line text input with label, error states, and validation
@@ -164,6 +165,7 @@ Each widget and theme token has its own doc with API reference and examples:
 **Widgets**
 - [**YakButton**](docs/widgets/yak_button.md) – Buttons (primary, secondary, ghost, icon, FAB)
 - [**YakToggleButton**](docs/widgets/yak_toggle_button.md) – On/off toggle switch
+- [**YakRadioButton & YakRadioGroup**](docs/widgets/yak_radio_button.md) – Radio options for single-choice (label, subtitle, helper text)
 - [**YakTextInput**](docs/widgets/yak_text_input.md) – Single-line text input
 - [**YakTextArea**](docs/widgets/yak_text_area.md) – Multi-line text area
 - [**YakSelect**](docs/widgets/yak_select.md) – Dropdown/select
