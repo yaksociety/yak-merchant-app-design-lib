@@ -7,6 +7,7 @@ import 'pages/card_page.dart';
 import 'pages/indicator_page.dart';
 import 'pages/modal_page.dart';
 import 'pages/otp_input_page.dart';
+import 'pages/radio_page.dart';
 import 'pages/select_page.dart';
 import 'pages/sheet_page.dart';
 import 'pages/text_area_page.dart';
@@ -31,6 +32,7 @@ class YakDesignExampleApp extends StatelessWidget {
       home: const HomePage(),
       routes: {
         '/button': (_) => const ButtonPage(),
+        '/radio': (_) => const RadioPage(),
         '/toggle': (_) => const ToggleButtonPage(),
         '/text-input': (_) => const TextInputPage(),
         '/text-area': (_) => const TextAreaPage(),
@@ -53,6 +55,7 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     final items = [
       _NavItem('YakButton', 'Primary, secondary, ghost, icon, FAB', Icons.smart_button, '/button'),
+      _NavItem('YakRadioButton', 'Single choice from options (delivery, payment, size)', Icons.radio_button_checked, '/radio'),
       _NavItem('YakToggleButton', 'On/off toggle switch', Icons.toggle_on, '/toggle'),
       _NavItem('YakTextInput', 'Single-line text input', Icons.text_fields, '/text-input'),
       _NavItem('YakTextArea', 'Multi-line text area', Icons.notes, '/text-area'),
