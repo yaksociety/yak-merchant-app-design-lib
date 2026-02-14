@@ -6,6 +6,26 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ---
 
+## [v1.4.0] - 2026-02-15
+
+**Title:** `v1.4.0 — Radio button and radio group`
+
+**Description:** Adds YakRadioButton and YakRadioGroup for single-choice selection. Use YakRadioGroup to wrap multiple options with shared groupValue/onChanged; each option supports label, optional subtitle, and optional per-option or group-level helper text with optional close action. Styled with YakColor (primary when selected, gray when unselected). Documented in docs/widgets/yak_radio_button.md and linked from the main README.
+
+**Added**
+- **YakRadioButton** – single radio option in `lib/buttons/yak_radio_button.dart` with `value`, `label`, optional `subtitle`, optional `helperText` (indented below option), optional `onHelperClose`; works inside YakRadioGroup (omit groupValue/onChanged) or standalone; customizable `activeColor` and `inactiveColor`
+- **YakRadioGroup** – wrapper in `lib/buttons/yak_radio_button.dart` with `groupValue`, `onChanged`, `children` (YakRadioButton widgets), optional `helperText`, `onHelperClose`, `helperStyle`, `helperPadding`, `paddingTop`, `paddingBottom`
+- Widget doc: `docs/widgets/yak_radio_button.md` with when-to-use, props tables for both widgets, and examples (group usage, group-level helper, subtitle, standalone, custom colors)
+- README: YakRadioButton & YakRadioGroup in Button Components and Documentation widget list
+
+**Changed**
+- None
+
+**Fixed**
+- None
+
+---
+
 ## [v1.3.0] - 2026-02-13
 
 **Title:** `v1.3.0 — Sheets, alerts, and Google Sans font`
