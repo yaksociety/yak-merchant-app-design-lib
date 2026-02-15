@@ -13,6 +13,8 @@ export 'indicators/yak_indicator.dart';
 export 'inputs/yak_otp_input.dart';
 export 'inputs/yak_select.dart';
 export 'inputs/yak_text_area.dart';
+// File uploads
+export 'file_uploads/yak_file_upload.dart';
 // Input Components
 export 'inputs/yak_text_input.dart';
 // Modals

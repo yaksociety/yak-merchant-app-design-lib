@@ -22,6 +22,9 @@ This library provides pre-built UI components for the Yak Merchant App:
 - **[YakSelect](docs/widgets/yak_select.md)** - Dropdown/select with optional icons per item
 - **[YakOtpInput](docs/widgets/yak_otp_input.md)** - OTP/PIN input with multiple digit boxes
 
+### 📤 File Upload
+- **[YakFileUpload](docs/widgets/yak_file_upload.md)** - File upload with drag-and-drop, optional label, vertical/horizontal drop zone layout, image thumbnail, progress/success/failed states, and optional instructions. Supports custom upload sources (e.g. Take a photo, Choose file, Import from library) and configurable hint, max file size, and Change button label.
+
 ### 📊 Indicators
 - **[YakIndicator](docs/widgets/yak_indicator.md)** - Horizontal progress indicator with rounded ends and smooth animation
 
@@ -156,6 +159,34 @@ YakAlert.show(
 );
 ```
 
+**YakFileUpload**
+```dart
+// Basic: single pick callback
+YakFileUpload(
+  value: _fileItem,
+  acceptedTypes: const ['jpg', 'png', 'pdf'],
+  callbacks: YakFileUploadCallbacks(
+    onPickRequested: () async {
+      final result = await FilePicker.platform.pickFiles(...);
+      if (result != null) setState(() => _fileItem = YakFileUploadItem(...));
+    },
+    onRemove: () => setState(() => _fileItem = null),
+  ),
+);
+
+// Configurable: label, horizontal layout, max size, instructions
+YakFileUpload(
+  value: _fileItem,
+  label: 'Professional license in Thailand',
+  isRequired: true,
+  hintText: 'Attach image or file for upload',
+  maxFileSizeLabel: 'max 2 MB',
+  dropZoneLayout: YakFileUploadDropZoneLayout.horizontal,
+  instructions: Column(children: [Text('Please attach...'), _bullet('...')]),
+  callbacks: YakFileUploadCallbacks(onPickRequested: _pickDocument, onRemove: _remove),
+);
+```
+
 ---
 
 ## 📖 Documentation
@@ -170,6 +201,7 @@ Each widget and theme token has its own doc with API reference and examples:
 - [**YakTextArea**](docs/widgets/yak_text_area.md) – Multi-line text area
 - [**YakSelect**](docs/widgets/yak_select.md) – Dropdown/select
 - [**YakOtpInput**](docs/widgets/yak_otp_input.md) – OTP/PIN digit boxes
+- [**YakFileUpload**](docs/widgets/yak_file_upload.md) – File upload (drag-and-drop, label, horizontal/vertical layout, thumbnail, instructions)
 - [**YakIndicator**](docs/widgets/yak_indicator.md) – Progress indicator
 - [**YakCard**](docs/widgets/yak_card.md) – Universal card
 - [**YakSheet**](docs/widgets/yak_sheet.md) – Bottom sheet (drag handle, title, `YakSheet.show()`)

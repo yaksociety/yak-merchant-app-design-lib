@@ -3,6 +3,7 @@ import 'package:yak_merchant_app_design_lib/yak_merchant_app_design_lib.dart';
 
 import 'pages/alert_page.dart';
 import 'pages/button_page.dart';
+import 'pages/file_upload_page.dart';
 import 'pages/card_page.dart';
 import 'pages/indicator_page.dart';
 import 'pages/modal_page.dart';
@@ -43,6 +44,7 @@ class YakDesignExampleApp extends StatelessWidget {
         '/sheet': (_) => const SheetPage(),
         '/modal': (_) => const ModalPage(),
         '/alert': (_) => const AlertPage(),
+        '/file-upload': (_) => const FileUploadPage(),
       },
     );
   }
@@ -66,6 +68,7 @@ class HomePage extends StatelessWidget {
       _NavItem('YakSheet', 'Bottom sheet with drag handle & title', Icons.call_made, '/sheet'),
       _NavItem('YakModal', 'Dialog with icon, title, description, custom child', Icons.dashboard_customize, '/modal'),
       _NavItem('YakAlert', 'Top-of-screen alert (info, warning, error, success)', Icons.warning_amber_rounded, '/alert'),
+      _NavItem('YakFileUpload', 'Drag-and-drop, choose file, progress, success/failed', Icons.upload_file, '/file-upload'),
     ];
 
     return Scaffold(
