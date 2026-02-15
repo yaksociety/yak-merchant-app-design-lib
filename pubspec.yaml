@@ -1,7 +1,6 @@
 name: yak_merchant_app_design_lib
 description: "A new Flutter package project."
-version: 1.3.0
-homepage:
+version: 1.5.0
 
 environment:
   sdk: ^3.10.8

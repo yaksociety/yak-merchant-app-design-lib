@@ -6,6 +6,38 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ---
 
+## [v1.5.0] - 2026-02-15
+
+**Title:** `v1.5.0 — File upload (YakFileUpload)`
+
+**Description:** Adds YakFileUpload, a configurable file upload component with drag-and-drop, optional label and instructions, vertical or horizontal drop zone layout, image thumbnail preview, and upload states (uploading with progress, success, failed). Supports custom upload sources (e.g. Take a photo, Choose file, Import from library) for platform-appropriate flows. Documented in `docs/widgets/yak_file_upload.md` with a full example in `example/lib/pages/file_upload_page.dart`.
+
+**Added**
+- **YakFileUpload** – file upload widget in `lib/file_uploads/yak_file_upload.dart`:
+  - Empty state: dashed-border drop zone with icon and hint (vertical or horizontal layout)
+  - Disabled state: greyed-out drop zone
+  - Uploading: file card with thumbnail/icon, name, size, progress bar, cancel (X)
+  - Success: file card with thumbnail, name, size, pill-style “Change” button, delete icon
+  - Failed: file card with error styling and retry icon
+- **YakFileUploadItem** – model with `name`, `sizeBytes`, `status` (uploading/success/failed), `progress`, optional `errorMessage`, optional `thumbnail` (ImageProvider for image preview)
+- **YakFileUploadStatus** – enum: `uploading`, `success`, `failed`
+- **YakFileUploadCallbacks** – `onPickRequested`, `onCancelUpload`, `onRetry`, `onRemove`, `onChangeRequested`, `onFilesDropped`
+- **YakFileUploadSource** – custom upload option (label, icon, onSelected) for bottom sheet (e.g. Take a photo, Choose file, Import from library)
+- **YakFileUploadDropZoneLayout** – enum: `vertical` (icon on top), `horizontal` (icon left, text right)
+- Config: `label`, `isRequired` (red asterisk), `hintText`, `hintSubtext`, `maxFileSizeLabel`, `dropZoneLayout`, `instructions` (widget below drop zone), `changeButtonLabel`
+- Widget doc: `docs/widgets/yak_file_upload.md` with API, states, configurable layout, custom sources, and best practices
+- Example app: `example/lib/pages/file_upload_page.dart` with main upload (sources + thumbnail), configurable document upload (label + horizontal + instructions, full pick/upload/change/remove), disabled state, and state demo buttons
+- README: File Upload section, YakFileUpload doc link, and usage snippets (basic + configurable)
+
+**Changed**
+- `lib/yak_merchant_app_design_lib.dart`: exports `file_uploads/yak_file_upload.dart`
+- Example app: route `/file-upload` and home list entry for YakFileUpload; dependencies `file_picker`, `image_picker` in example `pubspec.yaml`
+
+**Fixed**
+- None
+
+---
+
 ## [v1.4.0] - 2026-02-15
 
 **Title:** `v1.4.0 — Radio button and radio group`
