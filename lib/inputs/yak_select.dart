@@ -1,5 +1,19 @@
 import 'package:flutter/material.dart';
 
+import '../theme/yak_color.dart';
+
+/// Style variant for [YakSelect], matching DropdownClass from the Android design.
+enum YakSelectStyle {
+  /// Minimal padding, compact design.
+  compact,
+
+  /// Minimal styling with subtle border.
+  minimal,
+
+  /// Standard styling with full border and padding (default).
+  normal,
+}
+
 /// Represents a single option in [YakSelect].
 ///
 /// Supports optional [icon] (e.g. flag) displayed before the [label].
@@ -13,21 +27,18 @@ class YakSelectItem<T> {
   /// Optional icon (e.g. flag) shown before the label.
   final Widget? icon;
 
-  const YakSelectItem({
-    required this.value,
-    required this.label,
-    this.icon,
-  });
+  const YakSelectItem({required this.value, required this.label, this.icon});
 }
 
 /// Select / dropdown widget for the Yak design system.
 ///
-/// Matches the provided designs:
-/// - Optional label above with red `*` when required
-/// - Rounded corners, light grey border, white/light background
-/// - Gold border when focused
-/// - Chevron icon (hidden when only 1 item)
-/// - Supports icon per item (e.g. flag)
+/// Aligned with DropdownStyle from the Android app:
+/// - Optional label with red `*` when [isRequired]; label uses error color when [errorMessage] is set
+/// - Border: error → danger, expanded → primary, default → neutral; border width 1, radius 12
+/// - Background: disabled → neutral50, else white; padding 16 horizontal, 12 vertical
+/// - Chevron (size 20) only when items.length > 1; rotates when open
+/// - Dropdown menu: max height 200, rounded 12; selected item shows check icon (primary)
+/// - [YakSelectStyle] for compact / minimal / normal (affects text and icon size)
 class YakSelect<T> extends StatefulWidget {
   /// Optional label shown above the field.
   final String? label;
@@ -53,6 +64,15 @@ class YakSelect<T> extends StatefulWidget {
   /// Whether the field is enabled.
   final bool enabled;
 
+  /// Style variant: compact, minimal, or normal (default).
+  final YakSelectStyle style;
+
+  /// When true, show item [YakSelectItem.icon] in the selector and in the dropdown list.
+  final bool visibleIcon;
+
+  /// Optional override for the selector button text/placeholder color.
+  final Color? buttonTextColor;
+
   const YakSelect({
     super.key,
     this.label,
@@ -63,6 +83,9 @@ class YakSelect<T> extends StatefulWidget {
     this.onChanged,
     this.errorMessage,
     this.enabled = true,
+    this.style = YakSelectStyle.normal,
+    this.visibleIcon = true,
+    this.buttonTextColor,
   });
 
   @override
@@ -81,6 +104,8 @@ class _YakSelectState<T> extends State<YakSelect<T>> {
   bool get _hasSelection =>
       widget.value != null &&
       widget.items.any((item) => item.value == widget.value);
+  bool get _showIconInSelector =>
+      widget.visibleIcon && _selectedItem?.icon != null;
 
   YakSelectItem<T>? get _selectedItem {
     for (final item in widget.items) {
@@ -136,6 +161,8 @@ class _YakSelectState<T> extends State<YakSelect<T>> {
         size: size,
         items: widget.items,
         value: widget.value,
+        style: widget.style,
+        visibleIcon: widget.visibleIcon,
         onSelected: (value) {
           _removeOverlay();
           widget.onChanged?.call(value);
@@ -151,26 +178,59 @@ class _YakSelectState<T> extends State<YakSelect<T>> {
     Overlay.of(context).insert(_overlayEntry!);
   }
 
+  static const double _radius = 12;
+  static const double _borderWidth = 1;
+  static const double _paddingH = 16;
+  static const double _paddingV = 12;
+  static const double _chevronSize = 20;
+
+  TextStyle _selectorTextStyle() {
+    switch (widget.style) {
+      case YakSelectStyle.compact:
+        return const TextStyle(
+          fontSize: 12,
+          fontWeight: FontWeight.w600,
+          letterSpacing: 0.15,
+        );
+      case YakSelectStyle.minimal:
+      case YakSelectStyle.normal:
+        return const TextStyle(
+          fontSize: 14,
+          fontWeight: FontWeight.w400,
+          letterSpacing: 0.15,
+        );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    const Color borderDefault = Color(0xFFE0E0E0);
-    const Color borderFocused = Color(0xFFF4C430);
-    const Color borderError = Color(0xFFEB5757);
-    const Color labelDefault = Color(0xFF000000);
-    const Color labelError = Color(0xFFEB5757);
-    const Color placeholderColor = Color(0xFFBDBDBD);
-
     final bool hasError = _hasError;
     final bool isOpen = _overlayEntry != null;
     final bool isFocused = (_isFocused || isOpen) && widget.enabled;
 
-    final Color effectiveBorderColor =
-        hasError ? borderError : (isFocused ? borderFocused : borderDefault);
-    final Color effectiveLabelColor = hasError ? labelError : labelDefault;
-    const Color fillColor = Colors.white;
+    final Color borderColor = hasError
+        ? YakColor.primitive.danger.danger600
+        : (isFocused
+              ? YakColor.primitive.primary.primary500
+              : YakColor.primitive.neutral.neutral700);
+    final Color labelColor = hasError
+        ? YakColor.primitive.danger.danger600
+        : YakColor.semantic.textAndIcons.baseMain;
+    final Color fillColor = widget.enabled
+        ? YakColor.semantic.background.baseMain
+        : YakColor.primitive.neutral.neutral50;
+    final Color textColor =
+        widget.buttonTextColor ??
+        (widget.enabled
+            ? YakColor.semantic.textAndIcons.baseMain
+            : YakColor.semantic.textAndIcons.disabled);
+    final Color placeholderColor = YakColor.semantic.textAndIcons.baseMain;
+    final Color chevronColor = widget.enabled
+        ? YakColor.semantic.textAndIcons.baseMain
+        : YakColor.semantic.textAndIcons.disabled;
 
     final String displayText =
-        _selectedItem?.label ?? (widget.placeholder ?? 'Dropdown');
+        _selectedItem?.label ?? (widget.placeholder ?? 'Select an option');
     final bool isPlaceholder = !_hasSelection;
     final YakSelectItem<T>? selectedItem = _selectedItem;
 
@@ -180,20 +240,23 @@ class _YakSelectState<T> extends State<YakSelect<T>> {
       children: [
         if (_hasLabel)
           Padding(
-            padding: const EdgeInsets.only(bottom: 4),
+            padding: const EdgeInsets.only(bottom: 8),
             child: RichText(
               text: TextSpan(
                 text: widget.label!,
                 style: TextStyle(
                   fontSize: 14,
-                  color: effectiveLabelColor,
-                  fontWeight: FontWeight.w500,
+                  color: labelColor,
+                  fontWeight: FontWeight.w400,
                 ),
                 children: widget.isRequired
-                    ? const [
+                    ? [
                         TextSpan(
                           text: ' *',
-                          style: TextStyle(color: Color(0xFFEB5757)),
+                          style: TextStyle(
+                            color: YakColor.primitive.danger.danger500,
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
                       ]
                     : const [],
@@ -209,35 +272,42 @@ class _YakSelectState<T> extends State<YakSelect<T>> {
               child: DecoratedBox(
                 decoration: BoxDecoration(
                   color: fillColor,
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(
-                    color: effectiveBorderColor,
-                    width: 1.5,
-                  ),
+                  borderRadius: BorderRadius.circular(_radius),
+                  border: Border.all(color: borderColor, width: _borderWidth),
                 ),
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: _paddingH,
+                    vertical: _paddingV,
+                  ),
                   child: Row(
                     children: [
-                      if (selectedItem?.icon != null) ...[
-                        selectedItem!.icon!,
-                        const SizedBox(width: 12),
+                      if (_showIconInSelector) ...[
+                        SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: Center(child: selectedItem!.icon),
+                        ),
+                        const SizedBox(width: 8),
                       ],
                       Expanded(
                         child: Text(
                           displayText,
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: isPlaceholder ? placeholderColor : Colors.black,
+                          style: _selectorTextStyle().copyWith(
+                            color: isPlaceholder ? placeholderColor : textColor,
                           ),
                           overflow: TextOverflow.ellipsis,
+                          textAlign: TextAlign.start,
                         ),
                       ),
                       if (_showChevron)
-                        Icon(
-                          isOpen ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
-                          color: Colors.grey[700],
-                          size: 24,
+                        Transform.rotate(
+                          angle: isOpen ? 3.14159 : 0,
+                          child: Icon(
+                            Icons.keyboard_arrow_down,
+                            color: chevronColor,
+                            size: _chevronSize,
+                          ),
                         ),
                     ],
                   ),
@@ -247,12 +317,15 @@ class _YakSelectState<T> extends State<YakSelect<T>> {
           ),
         ),
         if (hasError) ...[
-          const SizedBox(height: 4),
-          Text(
-            widget.errorMessage!,
-            style: const TextStyle(
-              fontSize: 12,
-              color: Color(0xFFEB5757),
+          Padding(
+            padding: const EdgeInsets.only(left: 12, top: 4),
+            child: Text(
+              widget.errorMessage!,
+              style: TextStyle(
+                fontSize: 12,
+                color: YakColor.primitive.danger.danger600,
+                fontWeight: FontWeight.w400,
+              ),
             ),
           ),
         ],
@@ -266,6 +339,8 @@ class _SelectOverlay<T> extends StatefulWidget {
   final Size size;
   final List<YakSelectItem<T>> items;
   final T? value;
+  final YakSelectStyle style;
+  final bool visibleIcon;
   final ValueChanged<T?> onSelected;
   final VoidCallback onTapOutside;
 
@@ -274,6 +349,8 @@ class _SelectOverlay<T> extends StatefulWidget {
     required this.size,
     required this.items,
     required this.value,
+    required this.style,
+    required this.visibleIcon,
     required this.onSelected,
     required this.onTapOutside,
   });
@@ -307,14 +384,19 @@ class _SelectOverlayState<T> extends State<_SelectOverlay<T>>
     super.dispose();
   }
 
+  static const double _radius = 12;
+  static const double _itemIconSize = 16;
+  static const double _checkSize = 12;
+  static const double _dropdownMaxHeight = 200;
+
   @override
   Widget build(BuildContext context) {
     final dropdownContent = Container(
       width: widget.size.width,
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFFE0E0E0)),
+        color: YakColor.semantic.background.baseMain,
+        borderRadius: BorderRadius.circular(_radius),
+        border: Border.all(color: YakColor.primitive.neutral.neutral700),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.1),
@@ -324,11 +406,9 @@ class _SelectOverlayState<T> extends State<_SelectOverlay<T>>
         ],
       ),
       child: ConstrainedBox(
-        constraints: BoxConstraints(
-          maxHeight: MediaQuery.of(context).size.height * 0.4,
-        ),
+        constraints: BoxConstraints(maxHeight: _dropdownMaxHeight),
         child: ListView.builder(
-          padding: const EdgeInsets.symmetric(vertical: 4),
+          padding: const EdgeInsets.only(bottom: 4),
           shrinkWrap: true,
           itemCount: widget.items.length,
           itemBuilder: (context, index) {
@@ -343,24 +423,31 @@ class _SelectOverlayState<T> extends State<_SelectOverlay<T>>
                 ),
                 child: Row(
                   children: [
-                    if (item.icon != null) ...[
-                      item.icon!,
-                      const SizedBox(width: 12),
+                    if (widget.visibleIcon && item.icon != null) ...[
+                      SizedBox(
+                        width: _itemIconSize,
+                        height: _itemIconSize,
+                        child: item.icon,
+                      ),
+                      const SizedBox(width: 8),
                     ],
                     Expanded(
                       child: Text(
                         item.label,
                         style: TextStyle(
-                          fontSize: 16,
-                          color: isSelected
-                              ? Colors.black
-                              : Colors.black87,
-                          fontWeight: isSelected
-                              ? FontWeight.w500
-                              : FontWeight.normal,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w400,
+                          color: YakColor.semantic.textAndIcons.baseMain,
                         ),
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
+                    if (isSelected)
+                      Icon(
+                        Icons.check,
+                        size: _checkSize,
+                        color: YakColor.primitive.primary.primary500,
+                      ),
                   ],
                 ),
               ),
@@ -382,15 +469,13 @@ class _SelectOverlayState<T> extends State<_SelectOverlay<T>>
           child: CompositedTransformFollower(
             link: widget.layerLink,
             showWhenUnlinked: false,
-            offset: Offset(0, widget.size.height + 2),
+            offset: Offset(0, widget.size.height - 16),
             child: Material(
               color: Colors.transparent,
               child: FadeTransition(
                 opacity: _animation,
                 child: ScaleTransition(
-                  scale: _animation.drive(
-                    Tween<double>(begin: 0.98, end: 1.0),
-                  ),
+                  scale: _animation.drive(Tween<double>(begin: 0.98, end: 1.0)),
                   alignment: Alignment.topCenter,
                   child: dropdownContent,
                 ),
@@ -402,4 +487,3 @@ class _SelectOverlayState<T> extends State<_SelectOverlay<T>>
     );
   }
 }
-

@@ -20,7 +20,7 @@ This library provides pre-built UI components for the Yak Merchant App:
 ### 📝 Input Components
 - **[YakTextInput](docs/widgets/yak_text_input.md)** - Single-line text input with label, error states, and validation
 - **[YakTextArea](docs/widgets/yak_text_area.md)** - Multi-line text area for addresses and longer content
-- **[YakSelect](docs/widgets/yak_select.md)** - Dropdown/select with optional icons per item
+- **[YakSelect](docs/widgets/yak_select.md)** - Dropdown/select aligned with Android DropdownStyle: label/required/error, border states (YakColor), style variants (compact/minimal/normal), optional `visibleIcon`, check icon on selected item, chevron rotation when open
 - **[YakOtpInput](docs/widgets/yak_otp_input.md)** - OTP/PIN input with multiple digit boxes
 
 ### 📤 File Upload
@@ -200,7 +200,7 @@ Each widget and theme token has its own doc with API reference and examples:
 - [**YakRadioButton & YakRadioGroup**](docs/widgets/yak_radio_button.md) – Radio options for single-choice (label, subtitle, helper text)
 - [**YakTextInput**](docs/widgets/yak_text_input.md) – Single-line text input
 - [**YakTextArea**](docs/widgets/yak_text_area.md) – Multi-line text area
-- [**YakSelect**](docs/widgets/yak_select.md) – Dropdown/select
+- [**YakSelect**](docs/widgets/yak_select.md) – Dropdown/select (YakSelectStyle, visibleIcon, label/error, check icon on selected)
 - [**YakOtpInput**](docs/widgets/yak_otp_input.md) – OTP/PIN digit boxes
 - [**YakFileUpload**](docs/widgets/yak_file_upload.md) – File upload (drag-and-drop, label, horizontal/vertical layout, thumbnail, instructions)
 - [**YakIndicator**](docs/widgets/yak_indicator.md) – Progress indicator

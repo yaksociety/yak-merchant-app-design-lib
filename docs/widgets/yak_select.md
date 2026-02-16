@@ -1,6 +1,6 @@
 # YakSelect
 
-Dropdown/select for choosing one option from a list. Supports optional icons per item. Chevron is hidden when there is only one item.
+Dropdown/select for choosing one option from a list. Aligned with **DropdownStyle** from the Android app: label with optional required asterisk, border states (error → danger, focused → primary, default → neutral), disabled background, chevron that rotates when open, and dropdown menu with check icon on the selected item.
 
 ---
 
@@ -9,6 +9,18 @@ Dropdown/select for choosing one option from a list. Supports optional icons per
 - Country/language picker
 - Single-choice from a list
 - Phone code selector (with flag icons)
+
+---
+
+## YakSelectStyle
+
+Style variant (matches DropdownClass on Android):
+
+| Value | Description |
+|-------|-------------|
+| `compact` | Minimal padding, XS semibold text. |
+| `minimal` | Minimal styling, S regular text. |
+| `normal` | Standard styling (default), S regular text. |
 
 ---
 
@@ -33,16 +45,20 @@ Each option is a `YakSelectItem`:
 | `onChanged` | `ValueChanged<T?>?` | — | Called when selection changes. |
 | `label` | `String?` | — | Label above the field. |
 | `isRequired` | `bool` | `false` | Show red `*` after label. |
-| `placeholder` | `String?` | `'Dropdown'` | Shown when nothing selected. |
-| `errorMessage` | `String?` | — | Error text below field. |
-| `enabled` | `bool` | `true` | Enable/disable. |
+| `placeholder` | `String?` | `'Select an option'` | Shown when nothing selected. |
+| `errorMessage` | `String?` | — | Error text below field (label uses danger color when set). |
+| `enabled` | `bool` | `true` | Enable/disable (grey background when disabled). |
+| `style` | `YakSelectStyle` | `normal` | compact / minimal / normal. |
+| `visibleIcon` | `bool` | `true` | Show item icon in selector and in dropdown list. |
+| `buttonTextColor` | `Color?` | — | Override text/placeholder color in the selector. |
 
 ---
 
 ## Behavior
 
 - **Single item** – No chevron. Tapping selects the only option.
-- **Multiple items** – Chevron down when closed, up when open. Dropdown list appears below.
+- **Multiple items** – Chevron (size 20) rotates 180° when open. Dropdown list appears below (max height 200, rounded 12); selected item shows a check icon (primary color).
+- **Colors** – Uses YakColor: border (error/focused/default), background (disabled neutral50), label and error text.
 
 ---
 
@@ -107,5 +123,49 @@ YakSelect<String>(
   items: [...],
   value: _selected,
   onChanged: (v) => setState(() => _selected = v),
+)
+```
+
+### Style variants
+```dart
+YakSelect<String>(
+  label: 'Compact',
+  style: YakSelectStyle.compact,
+  items: [...],
+  value: _selected,
+  onChanged: (v) => setState(() => _selected = v),
+)
+
+YakSelect<String>(
+  label: 'Minimal',
+  style: YakSelectStyle.minimal,
+  placeholder: 'Select item',
+  items: [...],
+  value: _selected,
+  onChanged: (v) => setState(() => _selected = v),
+)
+```
+
+### With error
+```dart
+YakSelect<String>(
+  label: 'Province',
+  isRequired: true,
+  placeholder: 'Please select',
+  items: [...],
+  value: null,
+  onChanged: (v) => setState(() => _selected = v),
+  errorMessage: 'This field is required',
+)
+```
+
+### Disabled
+```dart
+YakSelect<String>(
+  label: 'Disabled',
+  items: [...],
+  value: 'item1',
+  onChanged: null,
+  enabled: false,
 )
 ```

@@ -41,6 +41,23 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 - **YakSheet** – top corner `borderRadius` now renders correctly; sheet content is wrapped in `ClipRRect` so the modal’s rounded top corners are visible on all platforms
 
+**YakSelect improvements (align with DropdownStyle.kt)**
+
+**Added**
+
+- **YakSelectStyle** – enum `compact`, `minimal`, `normal` (matches Android DropdownClass); affects selector text size/weight
+- **YakSelect** – `style` (default `normal`), `visibleIcon` (default `true`), `buttonTextColor` (optional override)
+- Theming via **YakColor**: border (error → danger600, focused/open → primary500, default → neutral700), background (disabled → neutral50), label and error text; border width 1, radius 12, padding 16×12; label spacing 8
+- Chevron size 20, rotates 180° when dropdown is open; only shown when `items.length > 1`
+- Dropdown menu: max height 200, rounded 12; selected item shows **check icon** (primary, size 12); item icon size 16 when `visibleIcon` is true; error message padding left 12, top 4
+- Default placeholder text: `"Select an option"`
+
+**Changed**
+
+- **YakSelect** – Uses YakColor for all border, background, label, and text colors; label uses danger color when `errorMessage` is set
+- Docs: `docs/widgets/yak_select.md` updated with YakSelectStyle, new props, behavior, and examples (style variants, error, disabled)
+- Example app: select page adds compact style, with error, and disabled examples
+
 ---
 
 ## [v1.5.0] - 2026-02-15
