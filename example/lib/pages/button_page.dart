@@ -12,16 +12,28 @@ class _ButtonPageState extends State<ButtonPage> {
   bool isLoading = false;
 
   void _showSnackBar(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(message)));
   }
 
-  Widget _buildSection(String title, String description, List<Widget> children) {
+  Widget _buildSection(
+    String title,
+    String description,
+    List<Widget> children,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(title, style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+        Text(
+          title,
+          style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+        ),
         const SizedBox(height: 8),
-        Text(description, style: TextStyle(fontSize: 14, color: Colors.grey[600])),
+        Text(
+          description,
+          style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+        ),
         const SizedBox(height: 16),
         ...children,
       ],
@@ -38,7 +50,10 @@ class _ButtonPageState extends State<ButtonPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildSection('Primary', 'Main action button.', [
-              YakButton(text: 'Continue', onPressed: () => _showSnackBar('Primary pressed')),
+              YakButton(
+                text: 'Continue',
+                onPressed: () => _showSnackBar('Primary pressed'),
+              ),
               const SizedBox(height: 16),
               YakButton(
                 text: 'With left icon',
@@ -52,6 +67,14 @@ class _ButtonPageState extends State<ButtonPage> {
                 rightIcon: const Icon(Icons.arrow_forward, size: 20),
                 variant: YakButtonVariant.primary,
                 onPressed: () => _showSnackBar('Right icon pressed'),
+              ),
+              const SizedBox(height: 16),
+              YakButton(
+                text: 'Leading & trailing icon',
+                leadingIcon: Icons.add,
+                trailingIcon: Icons.arrow_forward,
+                variant: YakButtonVariant.primary,
+                onPressed: () => _showSnackBar('Icons pressed'),
               ),
               const SizedBox(height: 16),
               YakButton(
@@ -76,8 +99,112 @@ class _ButtonPageState extends State<ButtonPage> {
                 onPressed: () => _showSnackBar('Secondary pressed'),
               ),
               const SizedBox(height: 16),
-              const YakButton(text: 'Disabled', variant: YakButtonVariant.secondary, onPressed: null),
+              const YakButton(
+                text: 'Disabled',
+                variant: YakButtonVariant.secondary,
+                onPressed: null,
+              ),
             ]),
+            const SizedBox(height: 32),
+            _buildSection(
+              'Custom stroke & rounded',
+              'Custom border and border radius.',
+              [
+                YakButton(
+                  text: 'Primary with stroke',
+                  variant: YakButtonVariant.primary,
+                  stroke: BorderSide(color: Colors.black87, width: 2),
+                  borderRadius: 12,
+                  onPressed: () => _showSnackBar('Stroke pressed'),
+                ),
+                const SizedBox(height: 16),
+                YakButton(
+                  text: 'Pill shape',
+                  variant: YakButtonVariant.secondary,
+                  borderRadius: 999,
+                  onPressed: () => _showSnackBar('Pill pressed'),
+                ),
+                const SizedBox(height: 16),
+                YakButton(
+                  text: 'Rounded ghost',
+                  variant: YakButtonVariant.ghost,
+                  borderRadius: 20,
+                  stroke: BorderSide(color: const Color(0xFFF4C430), width: 1),
+                  onPressed: () => _showSnackBar('Rounded ghost pressed'),
+                ),
+              ],
+            ),
+            const SizedBox(height: 32),
+            _buildSection(
+              'Label & required (field-style)',
+              'Custom label with red asterisk when required. Style like a select/location field.',
+              [
+                YakButton(
+                  label: 'ที่ตั้งร้านค้า',
+                  isRequired: true,
+                  text: 'เลือกตำแหน่งร้านค้า',
+                  variant: YakButtonVariant.secondary,
+                  backgroundColor: Colors.white,
+                  textColor: Colors.grey[600],
+                  leftIcon: const Icon(
+                    Icons.location_on,
+                    color: Color(0xFFF4C430),
+                    size: 22,
+                  ),
+                  trailingIcon: Icons.chevron_right,
+                  iconSize: 22,
+                  borderRadius: 12,
+                  stroke: BorderSide(color: Colors.grey[400]!, width: 1),
+                  width: double.infinity,
+                  onPressed: () => _showSnackBar('Select location pressed'),
+                ),
+                const SizedBox(height: 16),
+                YakButton(
+                  label: 'จังหวัด',
+                  isRequired: true,
+                  text: 'เลือกจังหวัด',
+                  variant: YakButtonVariant.secondary,
+                  backgroundColor: Colors.white,
+                  textColor: Colors.grey[600],
+                  trailingIcon: Icons.keyboard_arrow_down,
+                  iconSize: 24,
+                  borderRadius: 999,
+                  stroke: BorderSide(color: Colors.grey[400]!, width: 1),
+                  width: double.infinity,
+                  onPressed: () => _showSnackBar('Select province pressed'),
+                ),
+                const SizedBox(height: 16),
+                YakButton(
+                  label: 'อำเภอ/เขต',
+                  isRequired: true,
+                  text: 'เลือกอำเภอ/เขต',
+                  variant: YakButtonVariant.secondary,
+                  backgroundColor: Colors.white,
+                  textColor: Colors.grey[600],
+                  trailingIcon: Icons.keyboard_arrow_down,
+                  iconSize: 24,
+                  borderRadius: 999,
+                  stroke: BorderSide(color: Colors.grey[400]!, width: 1),
+                  width: double.infinity,
+                  onPressed: null,
+                ),
+                const SizedBox(height: 16),
+                YakButton(
+                  label: 'Optional field',
+                  isRequired: false,
+                  text: 'Choose an option',
+                  variant: YakButtonVariant.secondary,
+                  backgroundColor: Colors.white,
+                  textColor: Colors.grey[600],
+                  leadingIcon: Icons.tune,
+                  trailingIcon: Icons.chevron_right,
+                  borderRadius: 12,
+                  stroke: BorderSide(color: Colors.grey[400]!, width: 1),
+                  width: double.infinity,
+                  onPressed: () => _showSnackBar('Optional pressed'),
+                ),
+              ],
+            ),
             const SizedBox(height: 32),
             _buildSection('Ghost', 'Transparent button for subtle actions.', [
               YakButton(
@@ -86,7 +213,11 @@ class _ButtonPageState extends State<ButtonPage> {
                 onPressed: () => _showSnackBar('Ghost pressed'),
               ),
               const SizedBox(height: 16),
-              const YakButton(text: 'Disabled', variant: YakButtonVariant.ghost, onPressed: null),
+              const YakButton(
+                text: 'Disabled',
+                variant: YakButtonVariant.ghost,
+                onPressed: null,
+              ),
             ]),
             const SizedBox(height: 32),
             _buildSection('Icon', 'Icon-only button (circular or square).', [
@@ -114,7 +245,12 @@ class _ButtonPageState extends State<ButtonPage> {
                     onPressed: () => _showSnackBar('Settings pressed'),
                   ),
                   const SizedBox(width: 16),
-                  YakButton(text: '', icon: Icons.delete, variant: YakButtonVariant.icon, onPressed: null),
+                  YakButton(
+                    text: '',
+                    icon: Icons.delete,
+                    variant: YakButtonVariant.icon,
+                    onPressed: null,
+                  ),
                 ],
               ),
             ]),

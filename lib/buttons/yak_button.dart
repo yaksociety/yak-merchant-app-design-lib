@@ -33,6 +33,17 @@ class YakButton extends StatelessWidget {
   /// Optional icon after the text (primary/secondary/ghost only).
   final Widget? rightIcon;
 
+  /// Leading icon (primary/secondary/ghost). Rendered with [iconSize] and text color.
+  /// Ignored if [leftIcon] is set.
+  final IconData? leadingIcon;
+
+  /// Trailing icon (primary/secondary/ghost). Rendered with [iconSize] and text color.
+  /// Ignored if [rightIcon] is set.
+  final IconData? trailingIcon;
+
+  /// Size of [leadingIcon] and [trailingIcon]. Default 20.
+  final double iconSize;
+
   /// Icon data for [YakButtonVariant.icon] and [YakButtonVariant.floating].
   final IconData? icon;
 
@@ -64,12 +75,34 @@ class YakButton extends StatelessWidget {
   /// Text style override. If [textColor] is also provided, it wins.
   final TextStyle? textStyle;
 
+  /// Custom border/stroke. When set, overrides default outline for secondary and
+  /// adds a border to primary/ghost. Disabled state uses a muted color when [stroke] is null.
+  final BorderSide? stroke;
+
+  /// Corner radius for the button shape. Default 8. Ignored for circular icon variant.
+  final double? borderRadius;
+
+  /// Optional label shown above the button (e.g. form field label).
+  final String? label;
+
+  /// When true, shows a red asterisk after [label]. Use for required fields.
+  final bool isRequired;
+
+  /// Text style for [label]. Defaults to dark grey, 14–16px.
+  final TextStyle? labelStyle;
+
+  /// Inner padding of the button (primary/secondary/ghost). When null, uses 24 horizontal, 12 vertical.
+  final EdgeInsetsGeometry? padding;
+
   const YakButton({
     super.key,
     required this.text,
     this.onPressed,
     this.leftIcon,
     this.rightIcon,
+    this.leadingIcon,
+    this.trailingIcon,
+    this.iconSize = 20.0,
     this.icon,
     this.isCircularIcon = true,
     this.isLoading = false,
@@ -79,6 +112,12 @@ class YakButton extends StatelessWidget {
     this.backgroundColor,
     this.textColor,
     this.textStyle,
+    this.stroke,
+    this.borderRadius,
+    this.label,
+    this.isRequired = false,
+    this.labelStyle,
+    this.padding,
   });
 
   bool get _isDisabled => onPressed == null;
@@ -105,28 +144,73 @@ class YakButton extends StatelessWidget {
     final TextStyle effectiveTextStyle =
         baseTextStyle.merge(textStyle).copyWith(color: effectiveTextColor);
 
+    final Widget buttonWidget;
     switch (variant) {
       case YakButtonVariant.icon:
-        return _buildIconButton(
+        buttonWidget = _buildIconButton(
           background: backgroundColor ?? primaryBackground,
           iconColor: effectiveTextColor,
         );
+        break;
       case YakButtonVariant.floating:
-        return _buildFloatingButton(
+        buttonWidget = _buildFloatingButton(
           background: backgroundColor ?? primaryBackground,
           iconColor: effectiveTextColor,
         );
+        break;
       case YakButtonVariant.primary:
       case YakButtonVariant.secondary:
       case YakButtonVariant.ghost:
-        return _buildTextualButton(
+        buttonWidget = _buildTextualButton(
           primaryBackground: primaryBackground,
           disabledBackground: disabledBackground,
           disabledText: disabledText,
           effectiveTextStyle: effectiveTextStyle,
           effectiveTextColor: effectiveTextColor,
         );
+        break;
     }
+
+    if (label != null && label!.isNotEmpty) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          _buildLabelRow(),
+          const SizedBox(height: 8),
+          buttonWidget,
+        ],
+      );
+    }
+    return buttonWidget;
+  }
+
+  /// Label row with optional red asterisk for required fields.
+  Widget _buildLabelRow() {
+    final TextStyle base = labelStyle ??
+        TextStyle(
+          fontSize: 14,
+          fontWeight: FontWeight.w500,
+          color: Colors.grey[800],
+        );
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(label!, style: base),
+        if (isRequired)
+          Padding(
+            padding: const EdgeInsets.only(left: 2),
+            child: Text(
+              '*',
+              style: base.copyWith(
+                color: Colors.red,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+      ],
+    );
   }
 
   /// Primary / Secondary / Ghost – text-based buttons with optional icons.
@@ -138,6 +222,23 @@ class YakButton extends StatelessWidget {
     required Color effectiveTextColor,
   }) {
     const Color ghostTextDefault = Color(0xFFF4C430);
+    final double radius = borderRadius ?? 8;
+    final EdgeInsetsGeometry effectivePadding = padding ??
+        const EdgeInsets.symmetric(horizontal: 24, vertical: 12);
+    final BorderSide primaryStroke = stroke ?? BorderSide.none;
+    final BorderSide secondaryStroke = stroke ??
+        BorderSide(
+          color: _isDisabled ? disabledBackground : effectiveTextColor,
+          width: 1.5,
+        );
+    final BorderSide ghostStroke = stroke ?? BorderSide.none;
+
+    final Widget? leading = leftIcon ?? (leadingIcon != null
+        ? Icon(leadingIcon, size: iconSize, color: effectiveTextColor)
+        : null);
+    final Widget? trailing = rightIcon ?? (trailingIcon != null
+        ? Icon(trailingIcon, size: iconSize, color: effectiveTextColor)
+        : null);
 
     final Widget content = isLoading
         ? SizedBox(
@@ -150,21 +251,35 @@ class YakButton extends StatelessWidget {
               ),
             ),
           )
-        : Row(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              if (leftIcon != null) ...[
-                leftIcon!,
-                const SizedBox(width: 8),
-              ],
-              Text(text, style: effectiveTextStyle),
-              if (rightIcon != null) ...[
-                const SizedBox(width: 8),
-                rightIcon!,
-              ],
-            ],
-          );
+        : trailing != null
+            ? Row(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      if (leading != null) ...[
+                        leading,
+                        const SizedBox(width: 8),
+                      ],
+                      Text(text, style: effectiveTextStyle),
+                    ],
+                  ),
+                  trailing!,
+                ],
+              )
+            : Row(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  if (leading != null) ...[
+                    leading,
+                    const SizedBox(width: 8),
+                  ],
+                  Text(text, style: effectiveTextStyle),
+                ],
+              );
 
     final ButtonStyle style;
     switch (variant) {
@@ -177,12 +292,10 @@ class YakButton extends StatelessWidget {
           elevation: 0,
           shadowColor: Colors.transparent,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(radius),
+            side: primaryStroke,
           ),
-          padding: const EdgeInsets.symmetric(
-            horizontal: 24,
-            vertical: 12,
-          ),
+          padding: effectivePadding,
         );
         return SizedBox(
           width: width,
@@ -197,17 +310,11 @@ class YakButton extends StatelessWidget {
         style = OutlinedButton.styleFrom(
           foregroundColor: effectiveTextColor,
           disabledForegroundColor: disabledText,
-          side: BorderSide(
-            color: _isDisabled ? disabledBackground : effectiveTextColor,
-            width: 1.5,
-          ),
+          side: secondaryStroke,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(radius),
           ),
-          padding: const EdgeInsets.symmetric(
-            horizontal: 24,
-            vertical: 12,
-          ),
+          padding: effectivePadding,
         );
         return SizedBox(
           width: width,
@@ -224,12 +331,10 @@ class YakButton extends StatelessWidget {
           disabledForegroundColor: disabledText,
           backgroundColor: Colors.transparent,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(radius),
+            side: ghostStroke,
           ),
-          padding: const EdgeInsets.symmetric(
-            horizontal: 24,
-            vertical: 12,
-          ),
+          padding: effectivePadding,
         );
         return SizedBox(
           width: width,
@@ -273,14 +378,14 @@ class YakButton extends StatelessWidget {
         shape: isCircularIcon
             ? const CircleBorder()
             : RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(borderRadius ?? 8),
               ),
         child: InkWell(
           onTap: _isDisabled || isLoading ? null : onPressed,
           customBorder: isCircularIcon
               ? const CircleBorder()
               : RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: BorderRadius.circular(borderRadius ?? 8),
                 ),
           child: Center(child: child),
         ),

@@ -13,6 +13,7 @@ This library provides pre-built UI components for the Yak Merchant App:
   - `ghost` - Transparent button for subtle actions
   - `icon` - Icon-only button (circular or square)
   - `floating` - Floating action button (FAB)
+  - Custom styling: `stroke`, `borderRadius`, `padding`; leading/trailing icons (`leadingIcon`, `trailingIcon`, or `leftIcon`/`rightIcon`); optional `label` with `isRequired` (red asterisk) for field-style buttons; content uses space-between layout when a trailing icon is set.
 - **[YakToggleButton](docs/widgets/yak_toggle_button.md)** - Toggle switch button for on/off states
 - **[YakRadioButton & YakRadioGroup](docs/widgets/yak_radio_button.md)** - Radio options for single-choice selection (delivery method, payment, size, etc.) with optional label, subtitle, and per-option or group-level helper text
 
@@ -32,7 +33,7 @@ This library provides pre-built UI components for the Yak Merchant App:
 - **[YakCard](docs/widgets/yak_card.md)** - Universal card with optional decoration, padding, and tap; globally themed via `YakCardThemeData`
 
 ### 📄 Sheets
-- **[YakSheet](docs/widgets/yak_sheet.md)** - Bottom sheet with optional drag handle and title; themed via `YakSheetThemeData`. Use `YakSheet.show(context, child: ...)` or build as content for `showModalBottomSheet`.
+- **[YakSheet](docs/widgets/yak_sheet.md)** - Bottom sheet with optional drag handle and title; themed via `YakSheetThemeData`. Use `YakSheet.show(context, child: ...)` with optional `showDragHandle`, `borderRadius`, `padding`; top corners clip correctly with the set radius.
 
 ### 🪟 Modals
 - **[YakModal](docs/widgets/yak_modal.md)** - Centered dialog with optional header icon (info/success/warning/error), title, description, and **custom child** (forms, images, checkboxes, toggles, etc.); optional Cancel + Continue buttons; close (X); themed via `YakModalThemeData`. Use `YakModal.show(context, child: ...)`.
@@ -194,7 +195,7 @@ YakFileUpload(
 Each widget and theme token has its own doc with API reference and examples:
 
 **Widgets**
-- [**YakButton**](docs/widgets/yak_button.md) – Buttons (primary, secondary, ghost, icon, FAB)
+- [**YakButton**](docs/widgets/yak_button.md) – Buttons (primary, secondary, ghost, icon, FAB; label/required, stroke, rounded, padding, leading/trailing icons)
 - [**YakToggleButton**](docs/widgets/yak_toggle_button.md) – On/off toggle switch
 - [**YakRadioButton & YakRadioGroup**](docs/widgets/yak_radio_button.md) – Radio options for single-choice (label, subtitle, helper text)
 - [**YakTextInput**](docs/widgets/yak_text_input.md) – Single-line text input
@@ -204,7 +205,7 @@ Each widget and theme token has its own doc with API reference and examples:
 - [**YakFileUpload**](docs/widgets/yak_file_upload.md) – File upload (drag-and-drop, label, horizontal/vertical layout, thumbnail, instructions)
 - [**YakIndicator**](docs/widgets/yak_indicator.md) – Progress indicator
 - [**YakCard**](docs/widgets/yak_card.md) – Universal card
-- [**YakSheet**](docs/widgets/yak_sheet.md) – Bottom sheet (drag handle, title, `YakSheet.show()`)
+- [**YakSheet**](docs/widgets/yak_sheet.md) – Bottom sheet (drag handle, title, `YakSheet.show()`; optional `showDragHandle`, `borderRadius`, `padding`; rounded top corners)
 - [**YakModal**](docs/widgets/yak_modal.md) – Centered modal (icon, title, description, custom child, `YakModal.show()`)
 - [**YakAlert**](docs/widgets/yak_alert.md) – Top-of-screen alert (info, warning, error, success, `YakAlert.show()`)
 

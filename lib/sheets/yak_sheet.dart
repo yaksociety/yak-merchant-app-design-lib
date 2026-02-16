@@ -68,7 +68,11 @@ class YakSheetThemeData extends ThemeExtension<YakSheetThemeData> {
       backgroundColor: Color.lerp(backgroundColor, other.backgroundColor, t),
       dragHandleColor: Color.lerp(dragHandleColor, other.dragHandleColor, t),
       dragHandleWidth: lerpDouble(dragHandleWidth, other.dragHandleWidth, t)!,
-      dragHandleHeight: lerpDouble(dragHandleHeight, other.dragHandleHeight, t)!,
+      dragHandleHeight: lerpDouble(
+        dragHandleHeight,
+        other.dragHandleHeight,
+        t,
+      )!,
       padding: EdgeInsetsGeometry.lerp(padding, other.padding, t),
       showDragHandle: t < 0.5 ? showDragHandle : other.showDragHandle,
     );
@@ -157,7 +161,8 @@ class YakSheet extends StatelessWidget {
   ///
   /// [context] is used to find the navigator and theme. [child] is the sheet
   /// body. Optional [title] is shown below the drag handle. [backgroundColor],
-  /// [barrierColor], and [shape] can override defaults.
+  /// [barrierColor], and [shape] can override defaults. Pass [showDragHandle],
+  /// [borderRadius], [padding] to override theme for this sheet.
   static Future<T?> show<T>(
     BuildContext context, {
     required Widget child,
@@ -168,13 +173,20 @@ class YakSheet extends StatelessWidget {
     bool isScrollControlled = true,
     bool isDismissible = true,
     bool enableDrag = true,
+    bool? showDragHandle,
+    double? borderRadius,
+    EdgeInsetsGeometry? padding,
   }) {
     final theme =
         Theme.of(context).extension<YakSheetThemeData>() ??
         YakSheetThemeData.fallback;
-    final radius = theme.borderRadius;
+    final radius = borderRadius ?? theme.borderRadius;
     final effectiveBg =
-        backgroundColor ?? theme.backgroundColor ?? YakColor.primitive.base.white;
+        backgroundColor ??
+        theme.backgroundColor ??
+        YakColor.primitive.base.white;
+
+    final topRadius = BorderRadius.vertical(top: Radius.circular(radius));
 
     return showModalBottomSheet<T>(
       context: context,
@@ -183,22 +195,24 @@ class YakSheet extends StatelessWidget {
       enableDrag: enableDrag,
       backgroundColor: Colors.transparent,
       barrierColor: barrierColor ?? Colors.black54,
-      shape: shape ??
-          RoundedRectangleBorder(
-            borderRadius: BorderRadius.vertical(top: Radius.circular(radius)),
+      shape:
+          shape ??
+          RoundedRectangleBorder(borderRadius: topRadius),
+      builder: (context) => ClipRRect(
+        borderRadius: topRadius,
+        child: Container(
+          color: effectiveBg,
+          child: YakSheet(
+            title: title,
+            backgroundColor: effectiveBg,
+            borderRadius: radius,
+            padding: padding ?? theme.padding,
+            showDragHandle: showDragHandle ?? theme.showDragHandle,
+            dragHandleColor: theme.dragHandleColor,
+            dragHandleWidth: theme.dragHandleWidth,
+            dragHandleHeight: theme.dragHandleHeight,
+            child: child,
           ),
-      builder: (context) => Container(
-        color: effectiveBg,
-        child: YakSheet(
-          title: title,
-          backgroundColor: effectiveBg,
-          borderRadius: radius,
-          padding: theme.padding,
-          showDragHandle: theme.showDragHandle,
-          dragHandleColor: theme.dragHandleColor,
-          dragHandleWidth: theme.dragHandleWidth,
-          dragHandleHeight: theme.dragHandleHeight,
-          child: child,
         ),
       ),
     );
@@ -212,11 +226,15 @@ class YakSheet extends StatelessWidget {
 
     final radius = borderRadius ?? theme.borderRadius;
     final effectiveColor =
-        backgroundColor ?? theme.backgroundColor ?? YakColor.primitive.base.white;
+        backgroundColor ??
+        theme.backgroundColor ??
+        YakColor.primitive.base.white;
     final effectivePadding = padding ?? theme.padding ?? EdgeInsets.zero;
     final showHandle = showDragHandle ?? theme.showDragHandle;
     final handleColor =
-        dragHandleColor ?? theme.dragHandleColor ?? YakColor.primitive.neutral.neutral700;
+        dragHandleColor ??
+        theme.dragHandleColor ??
+        YakColor.primitive.neutral.neutral700;
     final handleWidth = dragHandleWidth ?? theme.dragHandleWidth;
     final handleHeight = dragHandleHeight ?? theme.dragHandleHeight;
 
@@ -249,16 +267,10 @@ class YakSheet extends StatelessWidget {
             ] else
               SizedBox(height: 16),
           ] else if (title != null) ...[
-            Padding(
-              padding: EdgeInsets.fromLTRB(24, 24, 24, 0),
-              child: title,
-            ),
+            Padding(padding: EdgeInsets.fromLTRB(24, 24, 24, 0), child: title),
             SizedBox(height: 16),
           ],
-          SingleChildScrollView(
-            padding: effectivePadding,
-            child: child,
-          ),
+          SingleChildScrollView(padding: effectivePadding, child: child),
         ],
       ),
     );

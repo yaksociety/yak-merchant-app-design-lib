@@ -98,21 +98,13 @@ class SheetPage extends StatelessWidget {
               variant: YakButtonVariant.ghost,
               text: 'Open sheet (no handle)',
               onPressed: () {
-                showModalBottomSheet(
-                  context: context,
-                  backgroundColor: Colors.transparent,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.vertical(
-                      top: Radius.circular(24),
-                    ),
-                  ),
-                  builder: (context) => YakSheet(
-                    showDragHandle: false,
-                    borderRadius: 24,
-                    child: const Padding(
-                      padding: EdgeInsets.symmetric(vertical: 8),
-                      child: Text('This sheet has no drag handle.'),
-                    ),
+                YakSheet.show(
+                  context,
+                  showDragHandle: false,
+                  borderRadius: 24,
+                  child: const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 8),
+                    child: Text('This sheet has no drag handle.'),
                   ),
                 );
               },
@@ -127,52 +119,43 @@ class SheetPage extends StatelessWidget {
               variant: YakButtonVariant.primary,
               text: 'Custom modal + YakSheet',
               onPressed: () {
-                showModalBottomSheet(
-                  context: context,
-                  isScrollControlled: true,
-                  backgroundColor: Colors.transparent,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.vertical(
-                      top: Radius.circular(24),
+                YakSheet.show(
+                  context,
+                  title: Text(
+                    'Options',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                      color: YakColor.primitive.gray.gray800,
                     ),
                   ),
-                  builder: (context) => YakSheet(
-                    title: Text(
-                      'Options',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600,
-                        color: YakColor.primitive.gray.gray800,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      ListTile(
+                        leading: const Icon(Icons.edit),
+                        title: const Text('Edit'),
+                        onTap: () => Navigator.pop(context),
                       ),
-                    ),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        ListTile(
-                          leading: const Icon(Icons.edit),
-                          title: const Text('Edit'),
-                          onTap: () => Navigator.pop(context),
+                      ListTile(
+                        leading: const Icon(Icons.share),
+                        title: const Text('Share'),
+                        onTap: () => Navigator.pop(context),
+                      ),
+                      ListTile(
+                        leading: Icon(
+                          Icons.delete,
+                          color: YakColor.primitive.danger.danger500,
                         ),
-                        ListTile(
-                          leading: const Icon(Icons.share),
-                          title: const Text('Share'),
-                          onTap: () => Navigator.pop(context),
-                        ),
-                        ListTile(
-                          leading: Icon(
-                            Icons.delete,
+                        title: Text(
+                          'Delete',
+                          style: TextStyle(
                             color: YakColor.primitive.danger.danger500,
                           ),
-                          title: Text(
-                            'Delete',
-                            style: TextStyle(
-                              color: YakColor.primitive.danger.danger500,
-                            ),
-                          ),
-                          onTap: () => Navigator.pop(context),
                         ),
-                      ],
-                    ),
+                        onTap: () => Navigator.pop(context),
+                      ),
+                    ],
                   ),
                 );
               },
