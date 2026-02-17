@@ -1,6 +1,6 @@
 # YakOtpInput
 
-OTP/PIN input with separate boxes for each digit. Shows gold border and highlight on the active box.
+OTP/PIN input with separate boxes for each digit. Shows gold border and highlight on the active box, supports backspace-to-delete, and can display an error state with an error message.
 
 ---
 
@@ -17,6 +17,7 @@ OTP/PIN input with separate boxes for each digit. Shows gold border and highligh
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
 | `length` | `int` | `6` | Number of digit boxes. |
+| `errorMessage` | `String?` | — | Error message shown below the boxes. When non-empty, shows red borders on all boxes. |
 | `onChanged` | `ValueChanged<String>?` | — | Called when any digit changes. Returns full code. |
 | `onCompleted` | `ValueChanged<String>?` | — | Called when all digits are filled. |
 | `boxSize` | `double` | `48` | Width and height of each box. |
@@ -40,6 +41,15 @@ YakOtpInput(
     print('Complete: $code');
     // Verify OTP
   },
+)
+```
+
+### Error state (message + red borders)
+```dart
+YakOtpInput(
+  length: 6,
+  errorMessage: 'รหัสยืนยันตัวตนไม่ถูกต้อง โปรดลองอีกครั้ง',
+  onChanged: (code) {},
 )
 ```
 

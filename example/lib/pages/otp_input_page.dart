@@ -10,6 +10,7 @@ class OtpInputPage extends StatefulWidget {
 
 class _OtpInputPageState extends State<OtpInputPage> {
   String _otpCode = '';
+  bool _showError = true;
 
   void _showSnackBar(String message) {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
@@ -48,6 +49,29 @@ class _OtpInputPageState extends State<OtpInputPage> {
               const SizedBox(height: 16),
               Text('Current code: $_otpCode', style: TextStyle(fontSize: 14, color: Colors.grey[600])),
             ],
+            const SizedBox(height: 32),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  'Error state',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                ),
+                TextButton(
+                  onPressed: () => setState(() => _showError = !_showError),
+                  child: Text(_showError ? 'Hide error' : 'Show error'),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            YakOtpInput(
+              length: 6,
+              errorMessage: _showError ? 'รหัสยืนยันตัวตนไม่ถูกต้อง โปรดลองอีกครั้ง' : null,
+              boxSize: 48,
+              spacing: 12,
+              textStyle: const TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+              onCompleted: (code) => _showSnackBar('OTP completed: $code'),
+            ),
             const SizedBox(height: 32),
             const Text('4-digit PIN (obscured)', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
             const SizedBox(height: 16),

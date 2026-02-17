@@ -9,6 +9,11 @@ class YakOtpInput extends StatefulWidget {
   /// Number of digits in the OTP.
   final int length;
 
+  /// Error message shown below the boxes.
+  ///
+  /// When provided (non-empty), the input shows an error state (red borders).
+  final String? errorMessage;
+
   /// Callback when any digit changes. Returns the full current value.
   final ValueChanged<String>? onChanged;
 
@@ -33,6 +38,7 @@ class YakOtpInput extends StatefulWidget {
   const YakOtpInput({
     super.key,
     this.length = 6,
+    this.errorMessage,
     this.onChanged,
     this.onCompleted,
     this.boxSize = 48,
@@ -53,14 +59,8 @@ class _YakOtpInputState extends State<YakOtpInput> {
   @override
   void initState() {
     super.initState();
-    _controllers = List.generate(
-      widget.length,
-      (_) => TextEditingController(),
-    );
-    _focusNodes = List.generate(
-      widget.length,
-      (_) => FocusNode(),
-    );
+    _controllers = List.generate(widget.length, (_) => TextEditingController());
+    _focusNodes = List.generate(widget.length, (_) => FocusNode());
     for (var i = 0; i < _focusNodes.length; i++) {
       final node = _focusNodes[i];
       final index = i;
@@ -106,8 +106,9 @@ class _YakOtpInputState extends State<YakOtpInput> {
       // Take only the last character typed (e.g. paste).
       value = value.substring(value.length - 1);
       _controllers[index].text = value;
-      _controllers[index].selection =
-          TextSelection.collapsed(offset: _controllers[index].text.length);
+      _controllers[index].selection = TextSelection.collapsed(
+        offset: _controllers[index].text.length,
+      );
     }
 
     if (value.isNotEmpty && index < widget.length - 1) {
@@ -121,7 +122,8 @@ class _YakOtpInputState extends State<YakOtpInput> {
     final code = _controllers.map((c) => c.text).join();
     widget.onChanged?.call(code);
 
-    if (code.length == widget.length && !code.contains('')) {
+    final bool isComplete = _controllers.every((c) => c.text.isNotEmpty);
+    if (isComplete) {
       widget.onCompleted?.call(code);
     }
     setState(() {});
@@ -131,9 +133,13 @@ class _YakOtpInputState extends State<YakOtpInput> {
   Widget build(BuildContext context) {
     const Color borderDefault = Color(0xFFE0E0E0);
     const Color borderFocused = Color(0xFFF4C430);
-    const Color fillFocused = Color(0xFFFFF8E1);
+    const Color fillFocused = Colors.white;
+    const Color borderError = Color(0xFFE53935);
+    const Color fillError = Colors.white;
+    const Color fillDisabled = Colors.grey;
 
-    final TextStyle effectiveStyle = widget.textStyle ??
+    final TextStyle effectiveStyle =
+        widget.textStyle ??
         const TextStyle(
           fontSize: 20,
           fontWeight: FontWeight.w500,
@@ -144,6 +150,9 @@ class _YakOtpInputState extends State<YakOtpInput> {
     return LayoutBuilder(
       builder: (context, constraints) {
         final double maxWidth = constraints.maxWidth;
+        final bool hasError =
+            widget.errorMessage != null &&
+            widget.errorMessage!.trim().isNotEmpty;
 
         // Default to the configured boxSize.
         double boxSize = widget.boxSize;
@@ -161,55 +170,83 @@ class _YakOtpInputState extends State<YakOtpInput> {
           }
         }
 
-        return Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: List.generate(widget.length, (index) {
-            final bool isFocused = _focusNodes[index].hasFocus;
-            final Color borderColor = isFocused ? borderFocused : borderDefault;
-            final Color fillColor = isFocused ? fillFocused : Colors.white;
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: List.generate(widget.length, (index) {
+                final bool isFocused = _focusNodes[index].hasFocus;
+                final bool isEnabled = widget.enabled;
 
-            return Padding(
-              padding: EdgeInsets.only(
-                right: index == widget.length - 1 ? 0 : widget.spacing,
-              ),
-              child: SizedBox(
-                width: boxSize,
-                height: boxSize,
-                child: DecoratedBox(
-                  decoration: BoxDecoration(
-                    color: fillColor,
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(
-                      color: borderColor,
-                      width: 1.5,
-                    ),
+                final Color borderColor = !isEnabled
+                    ? borderDefault
+                    : hasError
+                    ? borderError
+                    : isFocused
+                    ? borderFocused
+                    : borderDefault;
+
+                final Color fillColor = !isEnabled
+                    ? fillDisabled
+                    : hasError
+                    ? fillError
+                    : isFocused
+                    ? fillFocused
+                    : Colors.white;
+
+                return Padding(
+                  padding: EdgeInsets.only(
+                    right: index == widget.length - 1 ? 0 : widget.spacing,
                   ),
-                  child: Center(
-                    child: TextField(
-                      controller: _controllers[index],
-                      focusNode: _focusNodes[index],
-                      enabled: widget.enabled,
-                      keyboardType: TextInputType.number,
-                      textAlign: TextAlign.center,
-                      style: effectiveStyle,
-                      obscureText: widget.obscureText,
-                      maxLength: 1,
-                      decoration: const InputDecoration(
-                        counterText: '',
-                        border: InputBorder.none,
-                        isDense: true,
-                        contentPadding: EdgeInsets.zero,
+                  child: SizedBox(
+                    width: boxSize,
+                    height: boxSize,
+                    child: DecoratedBox(
+                      decoration: BoxDecoration(
+                        color: fillColor,
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(color: borderColor, width: 1.5),
                       ),
-                      onChanged: (value) => _handleChange(index, value),
+                      child: Center(
+                        child: TextField(
+                          controller: _controllers[index],
+                          focusNode: _focusNodes[index],
+                          enabled: widget.enabled,
+                          keyboardType: TextInputType.number,
+                          textAlign: TextAlign.center,
+                          style: effectiveStyle,
+                          obscureText: widget.obscureText,
+                          maxLength: 1,
+                          decoration: const InputDecoration(
+                            counterText: '',
+                            border: InputBorder.none,
+                            isDense: true,
+                            contentPadding: EdgeInsets.zero,
+                          ),
+                          onChanged: (value) => _handleChange(index, value),
+                        ),
+                      ),
                     ),
                   ),
+                );
+              }),
+            ),
+            if (hasError) ...[
+              const SizedBox(height: 32),
+              Text(
+                widget.errorMessage!.trim(),
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w400,
+                  color: borderError,
                 ),
               ),
-            );
-          }),
+            ],
+          ],
         );
       },
     );
   }
 }
-
