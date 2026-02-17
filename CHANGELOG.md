@@ -8,17 +8,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [v1.5.2] - 2026-02-17
 
-**YakSelect icon rendering and example flag assets**
+**YakSelect icon rendering, YakOtpInput delete/focus, and example flag assets**
 
 **Added**
 
-- **YakSelect** – Item icons (e.g. `YakSelectItem(icon: SvgPicture.asset(...))`) use tight constraints so SVG assets render reliably; **compact** style applies a rounded clip (`ClipRRect`) to the icon in both the selector and the dropdown list
+- **YakSelect** – Item icons (e.g. `YakSelectItem(icon: SvgPicture.asset(...))`) use tight constraints so SVG assets render reliably; **compact** style applies a rounded clip (`ClipRRect`) only to the icon in the **selector**; overlay/dropdown list icons are not rounded
+- **YakOtpInput** – Backspace deletes the current digit and moves focus to the previous box when the current box is empty; focused digit box shows themed border and fill (`borderFocused`, `fillFocused`) so the active box is clearly visible
 - Example assets: **ic_flag_th.svg** and **ic_flag_en.svg** (Thai and UK/English flags, converted from Android vector XML) with rounded-rect clip; used for language select and "Sign in with" in the select page
 
 **Changed**
 
 - Example app: language select and all flag options now use **ic_flag_th.svg** and **ic_flag_en.svg** instead of ic_thai.svg / ic_english.svg
-- README: YakSelect description and docs link updated to mention item icons and compact rounded icon; Examples section notes select page flag icons (ic_flag_th, ic_flag_en)
+- README: YakSelect description and docs link updated to mention item icons and compact rounded icon; YakOtpInput line updated for backspace and focus border; Examples section notes select page flag icons (ic_flag_th, ic_flag_en)
 
 **Removed**
 

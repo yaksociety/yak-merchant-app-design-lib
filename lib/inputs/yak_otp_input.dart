@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 /// OTP / PIN input composed of multiple boxes.
 ///
@@ -60,10 +61,37 @@ class _YakOtpInputState extends State<YakOtpInput> {
       widget.length,
       (_) => FocusNode(),
     );
+    for (var i = 0; i < _focusNodes.length; i++) {
+      final node = _focusNodes[i];
+      final index = i;
+      node.addListener(_onFocusChange);
+      node.onKeyEvent = (_, KeyEvent event) {
+        if (event is KeyDownEvent &&
+            event.logicalKey == LogicalKeyboardKey.backspace &&
+            _controllers[index].text.isEmpty &&
+            index > 0) {
+          _controllers[index - 1].clear();
+          _focusNodes[index - 1].requestFocus();
+          final code = _controllers.map((c) => c.text).join();
+          widget.onChanged?.call(code);
+          setState(() {});
+          return KeyEventResult.handled;
+        }
+        return KeyEventResult.ignored;
+      };
+    }
+  }
+
+  void _onFocusChange() {
+    if (mounted) setState(() {});
   }
 
   @override
   void dispose() {
+    for (final node in _focusNodes) {
+      node.removeListener(_onFocusChange);
+      node.onKeyEvent = null;
+    }
     for (final c in _controllers) {
       c.dispose();
     }
@@ -75,7 +103,7 @@ class _YakOtpInputState extends State<YakOtpInput> {
 
   void _handleChange(int index, String value) {
     if (value.length > 1) {
-      // Take only the last character typed.
+      // Take only the last character typed (e.g. paste).
       value = value.substring(value.length - 1);
       _controllers[index].text = value;
       _controllers[index].selection =
@@ -84,6 +112,10 @@ class _YakOtpInputState extends State<YakOtpInput> {
 
     if (value.isNotEmpty && index < widget.length - 1) {
       _focusNodes[index + 1].requestFocus();
+    }
+    // When user deletes (backspace): move focus to previous box so they can keep deleting.
+    if (value.isEmpty && index > 0) {
+      _focusNodes[index - 1].requestFocus();
     }
 
     final code = _controllers.map((c) => c.text).join();

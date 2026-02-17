@@ -575,7 +575,7 @@ class _SelectOverlayState<T> extends State<_SelectOverlay<T>>
           child: CompositedTransformFollower(
             link: widget.layerLink,
             showWhenUnlinked: false,
-            offset: Offset(0, widget.size.height - 6),
+            offset: Offset(0, widget.size.height - 2),
             child: Material(
               color: Colors.transparent,
               child: FadeTransition(
