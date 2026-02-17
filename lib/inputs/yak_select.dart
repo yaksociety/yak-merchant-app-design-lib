@@ -73,6 +73,9 @@ class YakSelect<T> extends StatefulWidget {
   /// Optional override for the selector button text/placeholder color.
   final Color? buttonTextColor;
 
+  /// Corner radius for the selector and dropdown. When null, uses style default (compact: 8, minimal: 10, normal: 12).
+  final double? borderRadius;
+
   const YakSelect({
     super.key,
     this.label,
@@ -86,6 +89,7 @@ class YakSelect<T> extends StatefulWidget {
     this.style = YakSelectStyle.normal,
     this.visibleIcon = true,
     this.buttonTextColor,
+    this.borderRadius,
   });
 
   @override
@@ -163,6 +167,7 @@ class _YakSelectState<T> extends State<YakSelect<T>> {
         value: widget.value,
         style: widget.style,
         visibleIcon: widget.visibleIcon,
+        borderRadius: _radius,
         onSelected: (value) {
           _removeOverlay();
           widget.onChanged?.call(value);
@@ -178,11 +183,47 @@ class _YakSelectState<T> extends State<YakSelect<T>> {
     Overlay.of(context).insert(_overlayEntry!);
   }
 
-  static const double _radius = 12;
   static const double _borderWidth = 1;
-  static const double _paddingH = 16;
-  static const double _paddingV = 12;
-  static const double _chevronSize = 20;
+
+  double get _radius {
+    if (widget.borderRadius != null) return widget.borderRadius!;
+    switch (widget.style) {
+      case YakSelectStyle.compact:
+        return 8;
+      case YakSelectStyle.minimal:
+        return 10;
+      case YakSelectStyle.normal:
+        return 12;
+    }
+  }
+
+  EdgeInsets get _padding {
+    switch (widget.style) {
+      case YakSelectStyle.compact:
+        return const EdgeInsets.symmetric(horizontal: 8, vertical: 6);
+      case YakSelectStyle.minimal:
+        return const EdgeInsets.symmetric(horizontal: 12, vertical: 10);
+      case YakSelectStyle.normal:
+        return const EdgeInsets.symmetric(horizontal: 16, vertical: 12);
+    }
+  }
+
+  double get _selectorIconSize {
+    switch (widget.style) {
+      case YakSelectStyle.compact:
+        return 16;
+      case YakSelectStyle.minimal:
+        return 18;
+      case YakSelectStyle.normal:
+        return 20;
+    }
+  }
+
+  double get _chevronSize => _selectorIconSize;
+
+  /// Compact style uses fixed height 34 (language selector). Others size by content.
+  double? get _fixedHeight =>
+      widget.style == YakSelectStyle.compact ? 34 : null;
 
   TextStyle _selectorTextStyle() {
     switch (widget.style) {
@@ -200,6 +241,25 @@ class _YakSelectState<T> extends State<YakSelect<T>> {
           letterSpacing: 0.15,
         );
     }
+  }
+
+  /// Icon in selector; compact style gets rounded clip.
+  Widget _buildIconInSelector(Widget icon) {
+    const double iconRadius = 6;
+    final child = ConstrainedBox(
+      constraints: BoxConstraints.tightFor(
+        width: _selectorIconSize,
+        height: _selectorIconSize,
+      ),
+      child: icon,
+    );
+    if (widget.style == YakSelectStyle.compact) {
+      return ClipRRect(
+        borderRadius: BorderRadius.circular(iconRadius),
+        child: child,
+      );
+    }
+    return child;
   }
 
   @override
@@ -275,43 +335,82 @@ class _YakSelectState<T> extends State<YakSelect<T>> {
                   borderRadius: BorderRadius.circular(_radius),
                   border: Border.all(color: borderColor, width: _borderWidth),
                 ),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: _paddingH,
-                    vertical: _paddingV,
-                  ),
-                  child: Row(
-                    children: [
-                      if (_showIconInSelector) ...[
-                        SizedBox(
-                          width: 20,
-                          height: 20,
-                          child: Center(child: selectedItem!.icon),
-                        ),
-                        const SizedBox(width: 8),
-                      ],
-                      Expanded(
-                        child: Text(
-                          displayText,
-                          style: _selectorTextStyle().copyWith(
-                            color: isPlaceholder ? placeholderColor : textColor,
+                child: _fixedHeight != null
+                    ? SizedBox(
+                        height: _fixedHeight!,
+                        child: Padding(
+                          padding: _padding,
+                          child: Row(
+                            children: [
+                              if (_showIconInSelector) ...[
+                                _buildIconInSelector(selectedItem!.icon!),
+                                SizedBox(
+                                  width: widget.style == YakSelectStyle.compact
+                                      ? 6
+                                      : 8,
+                                ),
+                              ],
+                              Expanded(
+                                child: Text(
+                                  displayText,
+                                  style: _selectorTextStyle().copyWith(
+                                    color: isPlaceholder
+                                        ? placeholderColor
+                                        : textColor,
+                                  ),
+                                  overflow: TextOverflow.ellipsis,
+                                  textAlign: TextAlign.start,
+                                ),
+                              ),
+                              if (_showChevron)
+                                Transform.rotate(
+                                  angle: isOpen ? 3.14159 : 0,
+                                  child: Icon(
+                                    Icons.keyboard_arrow_down,
+                                    color: chevronColor,
+                                    size: _chevronSize,
+                                  ),
+                                ),
+                            ],
                           ),
-                          overflow: TextOverflow.ellipsis,
-                          textAlign: TextAlign.start,
+                        ),
+                      )
+                    : Padding(
+                        padding: _padding,
+                        child: Row(
+                          children: [
+                            if (_showIconInSelector) ...[
+                              _buildIconInSelector(selectedItem!.icon!),
+                              SizedBox(
+                                width: widget.style == YakSelectStyle.compact
+                                    ? 6
+                                    : 8,
+                              ),
+                            ],
+                            Expanded(
+                              child: Text(
+                                displayText,
+                                style: _selectorTextStyle().copyWith(
+                                  color: isPlaceholder
+                                      ? placeholderColor
+                                      : textColor,
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                                textAlign: TextAlign.start,
+                              ),
+                            ),
+                            if (_showChevron)
+                              Transform.rotate(
+                                angle: isOpen ? 3.14159 : 0,
+                                child: Icon(
+                                  Icons.keyboard_arrow_down,
+                                  color: chevronColor,
+                                  size: _chevronSize,
+                                ),
+                              ),
+                          ],
                         ),
                       ),
-                      if (_showChevron)
-                        Transform.rotate(
-                          angle: isOpen ? 3.14159 : 0,
-                          child: Icon(
-                            Icons.keyboard_arrow_down,
-                            color: chevronColor,
-                            size: _chevronSize,
-                          ),
-                        ),
-                    ],
-                  ),
-                ),
               ),
             ),
           ),
@@ -341,6 +440,7 @@ class _SelectOverlay<T> extends StatefulWidget {
   final T? value;
   final YakSelectStyle style;
   final bool visibleIcon;
+  final double borderRadius;
   final ValueChanged<T?> onSelected;
   final VoidCallback onTapOutside;
 
@@ -351,6 +451,7 @@ class _SelectOverlay<T> extends StatefulWidget {
     required this.value,
     required this.style,
     required this.visibleIcon,
+    required this.borderRadius,
     required this.onSelected,
     required this.onTapOutside,
   });
@@ -384,10 +485,19 @@ class _SelectOverlayState<T> extends State<_SelectOverlay<T>>
     super.dispose();
   }
 
-  static const double _radius = 12;
   static const double _itemIconSize = 16;
   static const double _checkSize = 12;
   static const double _dropdownMaxHeight = 200;
+
+  Widget _buildOverlayIcon(Widget icon) {
+    return ConstrainedBox(
+      constraints: BoxConstraints.tightFor(
+        width: _itemIconSize,
+        height: _itemIconSize,
+      ),
+      child: icon,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -395,7 +505,7 @@ class _SelectOverlayState<T> extends State<_SelectOverlay<T>>
       width: widget.size.width,
       decoration: BoxDecoration(
         color: YakColor.semantic.background.baseMain,
-        borderRadius: BorderRadius.circular(_radius),
+        borderRadius: BorderRadius.circular(widget.borderRadius),
         border: Border.all(color: YakColor.primitive.neutral.neutral700),
         boxShadow: [
           BoxShadow(
@@ -424,11 +534,7 @@ class _SelectOverlayState<T> extends State<_SelectOverlay<T>>
                 child: Row(
                   children: [
                     if (widget.visibleIcon && item.icon != null) ...[
-                      SizedBox(
-                        width: _itemIconSize,
-                        height: _itemIconSize,
-                        child: item.icon,
-                      ),
+                      _buildOverlayIcon(item.icon!),
                       const SizedBox(width: 8),
                     ],
                     Expanded(
@@ -469,7 +575,7 @@ class _SelectOverlayState<T> extends State<_SelectOverlay<T>>
           child: CompositedTransformFollower(
             link: widget.layerLink,
             showWhenUnlinked: false,
-            offset: Offset(0, widget.size.height - 16),
+            offset: Offset(0, widget.size.height - 6),
             child: Material(
               color: Colors.transparent,
               child: FadeTransition(

@@ -1,0 +1,23 @@
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip_en)">
+<!-- Blue base (rounded) -->
+<path d="M4 0h16c2.21 0 4 1.79 4 4v16c0 2.21-1.79 4-4 4H4c-2.21 0-4-1.79-4-4V4c0-2.21 1.79-4 4-4z" fill="#012169"/>
+<!-- White diagonals -->
+<path d="M0 3.5 L3.5 0 L24 20.5 L20.5 24 L0 3.5 Z" fill="#FFFFFF"/>
+<path d="M24 3.5 L20.5 0 L0 20.5 L3.5 24 L24 3.5 Z" fill="#FFFFFF"/>
+<!-- Red diagonals -->
+<path d="M0 1.5 L1.5 0 L24 22.5 L22.5 24 L0 1.5 Z" fill="#C8102E"/>
+<path d="M22.5 0 L24 1.5 L1.5 24 L0 22.5 Z" fill="#C8102E"/>
+<!-- White central cross -->
+<path d="M0 9h24v6H0V9z" fill="#FFFFFF"/>
+<path d="M9 0h6v24H9V0z" fill="#FFFFFF"/>
+<!-- Red central cross -->
+<path d="M0 10.5h24v3H0v-3z" fill="#C8102E"/>
+<path d="M10.5 0h3v24h-3V0z" fill="#C8102E"/>
+</g>
+<defs>
+<clipPath id="clip_en">
+<path d="M4 0h16c2.21 0 4 1.79 4 4v16c0 2.21-1.79 4-4 4H4c-2.21 0-4-1.79-4-4V4c0-2.21 1.79-4 4-4z"/>
+</clipPath>
+</defs>
+</svg>

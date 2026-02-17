@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:yak_merchant_app_design_lib/yak_merchant_app_design_lib.dart';
 
 class SelectPage extends StatefulWidget {
@@ -14,6 +15,7 @@ class _SelectPageState extends State<SelectPage> {
   String? _selectedCompact;
   String? _selectedCountry;
   String? _selectedSingle;
+  String? _selectedGoogle;
 
   Widget _section(String title, String subtitle, List<Widget> children) {
     return Column(
@@ -99,6 +101,42 @@ class _SelectPageState extends State<SelectPage> {
             ),
             const SizedBox(height: 32),
             _section(
+              'Compact (language selector) with SVG icons',
+              'Height 34, small padding — uses ic_flag_th.svg and ic_flag_en.svg.',
+              [
+                YakSelect<String>(
+                  label: 'Language',
+                  style: YakSelectStyle.compact,
+                  placeholder: 'Select language',
+                  items: [
+                    YakSelectItem(
+                      value: 'th',
+                      label: 'ไทย',
+                      icon: SvgPicture.asset(
+                        'assets/icons/ic_flag_th.svg',
+                        width: 16,
+                        height: 16,
+                        fit: BoxFit.contain,
+                      ),
+                    ),
+                    YakSelectItem(
+                      value: 'en',
+                      label: 'English',
+                      icon: SvgPicture.asset(
+                        'assets/icons/ic_flag_en.svg',
+                        width: 16,
+                        height: 16,
+                        fit: BoxFit.contain,
+                      ),
+                    ),
+                  ],
+                  value: _selectedCountry,
+                  onChanged: (v) => setState(() => _selectedCountry = v),
+                ),
+              ],
+            ),
+            const SizedBox(height: 32),
+            _section(
               'Required',
               'Label with red asterisk.',
               [
@@ -155,8 +193,8 @@ class _SelectPageState extends State<SelectPage> {
             ),
             const SizedBox(height: 32),
             _section(
-              'With icons',
-              'Country / Language with flag icons.',
+              'With icons (SVG)',
+              'Country / Language with SVG flag icons (ic_flag_th.svg, ic_flag_en.svg).',
               [
                 YakSelect<String>(
                   label: 'Country / Language',
@@ -165,42 +203,72 @@ class _SelectPageState extends State<SelectPage> {
                     YakSelectItem(
                       value: 'th',
                       label: 'ไทย',
-                      icon: Container(
-                    width: 24,
-                    height: 16,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(4),
-                      gradient: LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: [
-                          const Color(0xFFA51931),
-                          Colors.white,
-                          const Color(0xFF2D2A4A),
-                          Colors.white,
-                          const Color(0xFFA51931),
-                        ],
-                        stops: const [0.0, 0.2, 0.4, 0.6, 1.0],
-                      ),
-                        ),
+                      icon: SvgPicture.asset(
+                        'assets/icons/ic_flag_th.svg',
+                        width: 24,
+                        height: 24,
+                        fit: BoxFit.contain,
                       ),
                     ),
                     YakSelectItem(
                       value: 'en',
                       label: 'English',
-                      icon: Container(
+                      icon: SvgPicture.asset(
+                        'assets/icons/ic_flag_en.svg',
                         width: 24,
-                        height: 16,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(4),
-                          color: Colors.blue,
-                        ),
-                        child: const Icon(Icons.flag, size: 12, color: Colors.white),
+                        height: 24,
+                        fit: BoxFit.contain,
                       ),
                     ),
                   ],
                   value: _selectedCountry,
                   onChanged: (v) => setState(() => _selectedCountry = v),
+                ),
+              ],
+            ),
+            const SizedBox(height: 32),
+            _section(
+              'With Google icon (ic_google.svg)',
+              'Uses ic_google.svg from Downloads — sign-in / account options.',
+              [
+                YakSelect<String>(
+                  label: 'Sign in with',
+                  style: YakSelectStyle.compact,
+                  placeholder: 'Choose account',
+                  items: [
+                    YakSelectItem(
+                      value: 'google',
+                      label: 'Google',
+                      icon: SvgPicture.asset(
+                        'assets/icons/ic_google.svg',
+                        width: 16,
+                        height: 16,
+                        fit: BoxFit.contain,
+                      ),
+                    ),
+                    YakSelectItem(
+                      value: 'th',
+                      label: 'ไทย',
+                      icon: SvgPicture.asset(
+                        'assets/icons/ic_flag_th.svg',
+                        width: 16,
+                        height: 16,
+                        fit: BoxFit.contain,
+                      ),
+                    ),
+                    YakSelectItem(
+                      value: 'en',
+                      label: 'English',
+                      icon: SvgPicture.asset(
+                        'assets/icons/ic_flag_en.svg',
+                        width: 16,
+                        height: 16,
+                        fit: BoxFit.contain,
+                      ),
+                    ),
+                  ],
+                  value: _selectedGoogle,
+                  onChanged: (v) => setState(() => _selectedGoogle = v),
                 ),
               ],
             ),
