@@ -22,6 +22,7 @@ This library provides pre-built UI components for the Yak Merchant App:
 - **[YakTextArea](docs/widgets/yak_text_area.md)** - Multi-line text area for addresses and longer content
 - **[YakSelect](docs/widgets/yak_select.md)** - Dropdown/select aligned with Android DropdownStyle: label/required/error, border states (YakColor), style variants (compact/minimal/normal), optional `visibleIcon` with item icons (e.g. `YakSelectItem(icon: SvgPicture.asset(...))`), compact style uses rounded clip on the selector icon; check icon on selected item, chevron rotation when open
 - **[YakOtpInput](docs/widgets/yak_otp_input.md)** - OTP/PIN input with multiple digit boxes; backspace deletes and moves to previous box; focused digit shows themed border (e.g. gold); `errorMessage` shows red-border error state + message
+- **[YakPinInput](docs/widgets/yak_pin_input.md)** - PIN input where previous digits show as dots (•) and the current (focused) digit shows the actual number; gold border on active box, same behavior as YakOtpInput
 
 ### 📤 File Upload
 - **[YakFileUpload](docs/widgets/yak_file_upload.md)** - File upload with drag-and-drop, optional label, vertical/horizontal drop zone layout, image thumbnail, progress/success/failed states, and optional instructions. Supports custom upload sources (e.g. Take a photo, Choose file, Import from library) and configurable hint, max file size, and Change button label.
@@ -202,6 +203,7 @@ Each widget and theme token has its own doc with API reference and examples:
 - [**YakTextArea**](docs/widgets/yak_text_area.md) – Multi-line text area
 - [**YakSelect**](docs/widgets/yak_select.md) – Dropdown/select (YakSelectStyle, visibleIcon, item icons e.g. ic_flag_th/ic_flag_en, compact rounded icon, label/error, check icon on selected)
 - [**YakOtpInput**](docs/widgets/yak_otp_input.md) – OTP/PIN digit boxes (backspace to delete, focus border on active digit, error message support)
+- [**YakPinInput**](docs/widgets/yak_pin_input.md) – PIN input (previous digits as •, current digit visible, gold border on active box)
 - [**YakFileUpload**](docs/widgets/yak_file_upload.md) – File upload (drag-and-drop, label, horizontal/vertical layout, thumbnail, instructions)
 - [**YakIndicator**](docs/widgets/yak_indicator.md) – Progress indicator
 - [**YakCard**](docs/widgets/yak_card.md) – Universal card
@@ -217,7 +219,7 @@ Each widget and theme token has its own doc with API reference and examples:
 
 ## 📚 Examples
 
-Check out the `example/` directory for complete working examples of all components. The select page demonstrates **YakSelect** with SVG flag icons: language and “Sign in with” use `ic_flag_th.svg` and `ic_flag_en.svg` (Thai and UK flags) from `example/assets/icons/`. The OTP input page includes an **error state** demo using `YakOtpInput(errorMessage: ...)`.
+Check out the `example/` directory for complete working examples of all components. The select page demonstrates **YakSelect** with SVG flag icons: language and “Sign in with” use `ic_flag_th.svg` and `ic_flag_en.svg` (Thai and UK flags) from `example/assets/icons/`. The OTP input page includes an **error state** demo and **YakPinInput** (current digit visible, previous as •).
 
 To run the example app:
 ```bash

@@ -8,6 +8,7 @@ import 'pages/card_page.dart';
 import 'pages/indicator_page.dart';
 import 'pages/modal_page.dart';
 import 'pages/otp_input_page.dart';
+import 'pages/pin_input_page.dart';
 import 'pages/radio_page.dart';
 import 'pages/select_page.dart';
 import 'pages/sheet_page.dart';
@@ -39,6 +40,7 @@ class YakDesignExampleApp extends StatelessWidget {
         '/text-area': (_) => const TextAreaPage(),
         '/select': (_) => const SelectPage(),
         '/otp-input': (_) => const OtpInputPage(),
+        '/pin-input': (_) => const PinInputPage(),
         '/indicator': (_) => const IndicatorPage(),
         '/card': (_) => const CardPage(),
         '/sheet': (_) => const SheetPage(),
@@ -63,6 +65,7 @@ class HomePage extends StatelessWidget {
       _NavItem('YakTextArea', 'Multi-line text area', Icons.notes, '/text-area'),
       _NavItem('YakSelect', 'Dropdown select', Icons.arrow_drop_down_circle, '/select'),
       _NavItem('YakOtpInput', 'OTP / PIN digit boxes', Icons.pin, '/otp-input'),
+      _NavItem('YakPinInput', 'PIN: current digit visible, previous as dots', Icons.pin_outlined, '/pin-input'),
       _NavItem('YakIndicator', 'Progress bar with rounded ends & animation', Icons.trending_up, '/indicator'),
       _NavItem('YakCard', 'Card with image/overlay, globally themed', Icons.credit_card, '/card'),
       _NavItem('YakSheet', 'Bottom sheet with drag handle & title', Icons.call_made, '/sheet'),

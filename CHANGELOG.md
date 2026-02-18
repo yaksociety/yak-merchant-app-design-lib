@@ -6,6 +6,38 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ---
 
+## [v1.6.0] - 2026-02-18
+
+**Title:** `v1.6.0 — YakPinInput (PIN with current digit visible, previous as dots)`
+
+**Description:** Adds **YakPinInput**, a PIN entry widget where previously entered digits are shown as dots (•) and only the currently focused digit shows the actual number. Matches the design of rounded boxes, gold border on the active box, and light gray borders on filled/inactive boxes. Supports error state, backspace-to-previous-box, and completion callback. Documented in `docs/widgets/yak_pin_input.md` and demonstrated on the example app’s OTP input page.
+
+**Added**
+
+- **YakPinInput** – New widget in `lib/inputs/yak_pin_input.dart`:
+  - **Display:** Filled digits in non-focused boxes render as a single dot (•); the focused box shows the actual digit being entered.
+  - **Layout:** One box per digit (default 6), configurable `boxSize` and `spacing`; boxes use rounded corners (12px), white background; active box has gold border (`#F4C430`), others light gray (`#E0E0E0`); layout shrinks on small screens via `LayoutBuilder`.
+  - **Behavior:** Same as YakOtpInput: backspace in an empty box clears the previous box and moves focus back; typing a digit moves focus to the next box; `onChanged(String)` returns the full PIN; `onCompleted(String)` when all digits are filled.
+  - **Parameters:** `length` (default 6), `errorMessage` (optional; when set, red borders and message below boxes), `onChanged`, `onCompleted`, `boxSize` (default 48), `spacing` (default 12), `textStyle`, `enabled` (default true).
+  - **Implementation:** Each box uses a transparent `TextField` for input with an overlay `Text` that shows either the digit (when focused) or • (when filled); focus and key handling reuse the same pattern as YakOtpInput (per-box `FocusNode`, backspace handling in `onKeyEvent`).
+- **YakPinInput docs** – `docs/widgets/yak_pin_input.md`: when to use, props table, examples (6-digit PIN, error state, custom size/spacing).
+- **Example app** – OTP input page (`example/lib/pages/otp_input_page.dart`): new section “YakPinInput (current digit visible, previous as •)” with short description and a 6-digit `YakPinInput` wired to `onChanged` and `onCompleted`.
+
+**Changed**
+
+- **README** – Input Components: added YakPinInput with one-line description (previous as dots, current digit visible, gold border). Documentation widget list: added link to YakPinInput doc. Examples: OTP input page now mentions YakPinInput demo.
+- **Library export** – `lib/yak_merchant_app_design_lib.dart`: exports `inputs/yak_pin_input.dart`.
+
+**Fixed**
+
+- None
+
+**Removed**
+
+- None
+
+---
+
 ## [v1.5.2] - 2026-02-17
 
 **YakSelect icon rendering, YakOtpInput delete/focus, and example flag assets**

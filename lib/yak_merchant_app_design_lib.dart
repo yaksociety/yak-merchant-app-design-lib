@@ -11,6 +11,7 @@ export 'cards/yak_card.dart';
 // Indicators
 export 'indicators/yak_indicator.dart';
 export 'inputs/yak_otp_input.dart';
+export 'inputs/yak_pin_input.dart';
 export 'inputs/yak_select.dart';
 export 'inputs/yak_text_area.dart';
 // File uploads
