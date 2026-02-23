@@ -6,11 +6,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ---
 
-## [v1.6.0] - 2026-02-18
+## [v1.6.0] - 2026-02-23
 
-**Title:** `v1.6.0 — YakPinInput (PIN with current digit visible, previous as dots)`
+**Title:** `v1.6.0 — YakPinInput (PIN with current digit visible, previous as dots) & YakButton disabled param`
 
-**Description:** Adds **YakPinInput**, a PIN entry widget where previously entered digits are shown as dots (•) and only the currently focused digit shows the actual number. Matches the design of rounded boxes, gold border on the active box, and light gray borders on filled/inactive boxes. Supports error state, backspace-to-previous-box, and completion callback. Documented in `docs/widgets/yak_pin_input.md` and demonstrated on the example app’s OTP input page.
+**Description:** Adds **YakPinInput**, a PIN entry widget where previously entered digits are shown as dots (•) and only the currently focused digit shows the actual number. Matches the design of rounded boxes, gold border on the active box, and light gray borders on filled/inactive boxes. Supports error state, backspace-to-previous-box, and completion callback. Documented in `docs/widgets/yak_pin_input.md` and demonstrated on the example app’s OTP input page. **YakButton** now uses an explicit `disabled` boolean instead of inferring disabled state from `onPressed: null`.
 
 **Added**
 
@@ -25,6 +25,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 **Changed**
 
+- **YakButton** – Disabled state is now controlled by an explicit `disabled` parameter (default `false`) instead of `onPressed: null`. Use `disabled: true` to show a disabled button while still optionally providing `onPressed` for when it becomes enabled. Example and docs updated to use `disabled: true`; tests updated accordingly.
 - **README** – Input Components: added YakPinInput with one-line description (previous as dots, current digit visible, gold border). Documentation widget list: added link to YakPinInput doc. Examples: OTP input page now mentions YakPinInput demo.
 - **Library export** – `lib/yak_merchant_app_design_lib.dart`: exports `inputs/yak_pin_input.dart`.
 

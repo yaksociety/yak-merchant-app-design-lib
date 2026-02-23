@@ -21,7 +21,8 @@ Unified button component with 5 variants. Use it for all primary, secondary, and
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
 | `text` | `String` | required | Button label. Empty for icon-only. |
-| `onPressed` | `VoidCallback?` | — | Called on tap. `null` = disabled. |
+| `onPressed` | `VoidCallback?` | — | Called on tap. |
+| `disabled` | `bool` | `false` | When true, button is visually and interactively disabled. |
 | `variant` | `YakButtonVariant` | `primary` | Style variant. |
 | `leftIcon` | `Widget?` | — | Icon before text (primary/secondary/ghost). |
 | `rightIcon` | `Widget?` | — | Icon after text. |
@@ -183,6 +184,6 @@ YakButton(
 ```dart
 YakButton(
   text: 'Disabled',
-  onPressed: null,
+  disabled: true,
 )
 ```

@@ -27,6 +27,10 @@ class YakButton extends StatelessWidget {
   /// Callback when the button is pressed.
   final VoidCallback? onPressed;
 
+  /// When true, the button is visually and interactively disabled.
+  /// Use this instead of relying on [onPressed] being null.
+  final bool disabled;
+
   /// Optional icon before the text (primary/secondary/ghost only).
   final Widget? leftIcon;
 
@@ -98,6 +102,7 @@ class YakButton extends StatelessWidget {
     super.key,
     required this.text,
     this.onPressed,
+    this.disabled = false,
     this.leftIcon,
     this.rightIcon,
     this.leadingIcon,
@@ -120,7 +125,7 @@ class YakButton extends StatelessWidget {
     this.padding,
   });
 
-  bool get _isDisabled => onPressed == null;
+  bool get _isDisabled => disabled;
 
   /// Desaturates and lightens a color for disabled state.
   /// Creates a toned-down version of the original color.
@@ -281,7 +286,7 @@ class YakButton extends StatelessWidget {
                       Text(text, style: effectiveTextStyle),
                     ],
                   ),
-                  trailing!,
+                  trailing,
                 ],
               )
             : Row(

@@ -39,13 +39,13 @@ void main() {
       expect(pressed, true);
     });
 
-    testWidgets('is disabled when onPressed is null', (WidgetTester tester) async {
+    testWidgets('is disabled when disabled is true', (WidgetTester tester) async {
       await tester.pumpWidget(
         const MaterialApp(
           home: Scaffold(
             body: YakButton(
               text: 'Test Button',
-              onPressed: null,
+              disabled: true,
             ),
           ),
         ),

@@ -89,7 +89,7 @@ class _ButtonPageState extends State<ButtonPage> {
                 },
               ),
               const SizedBox(height: 16),
-              const YakButton(text: 'Disabled', onPressed: null),
+              const YakButton(text: 'Disabled', disabled: true),
             ]),
             const SizedBox(height: 32),
             _buildSection('Secondary', 'Outlined secondary button.', [
@@ -102,7 +102,7 @@ class _ButtonPageState extends State<ButtonPage> {
               const YakButton(
                 text: 'Disabled',
                 variant: YakButtonVariant.secondary,
-                onPressed: null,
+                disabled: true,
               ),
             ]),
             const SizedBox(height: 32),
@@ -186,7 +186,7 @@ class _ButtonPageState extends State<ButtonPage> {
                   borderRadius: 999,
                   stroke: BorderSide(color: Colors.grey[400]!, width: 1),
                   width: double.infinity,
-                  onPressed: null,
+                  disabled: true,
                 ),
                 const SizedBox(height: 16),
                 YakButton(
@@ -216,7 +216,7 @@ class _ButtonPageState extends State<ButtonPage> {
               const YakButton(
                 text: 'Disabled',
                 variant: YakButtonVariant.ghost,
-                onPressed: null,
+                disabled: true,
               ),
             ]),
             const SizedBox(height: 32),
@@ -249,7 +249,7 @@ class _ButtonPageState extends State<ButtonPage> {
                     text: '',
                     icon: Icons.delete,
                     variant: YakButtonVariant.icon,
-                    onPressed: null,
+                    disabled: true,
                   ),
                 ],
               ),
