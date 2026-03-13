@@ -5,6 +5,8 @@ import 'pages/alert_page.dart';
 import 'pages/button_page.dart';
 import 'pages/file_upload_page.dart';
 import 'pages/card_page.dart';
+import 'pages/date_input_page.dart';
+import 'pages/date_picker_page.dart';
 import 'pages/indicator_page.dart';
 import 'pages/modal_page.dart';
 import 'pages/otp_input_page.dart';
@@ -47,6 +49,8 @@ class YakDesignExampleApp extends StatelessWidget {
         '/modal': (_) => const ModalPage(),
         '/alert': (_) => const AlertPage(),
         '/file-upload': (_) => const FileUploadPage(),
+        '/date-input': (_) => const DateInputPage(),
+        '/date-picker': (_) => const DatePickerPage(),
       },
     );
   }
@@ -72,6 +76,8 @@ class HomePage extends StatelessWidget {
       _NavItem('YakModal', 'Dialog with icon, title, description, custom child', Icons.dashboard_customize, '/modal'),
       _NavItem('YakAlert', 'Top-of-screen alert (info, warning, error, success)', Icons.warning_amber_rounded, '/alert'),
       _NavItem('YakFileUpload', 'Drag-and-drop, choose file, progress, success/failed', Icons.upload_file, '/file-upload'),
+      _NavItem('YakDateInput', 'Date picker field with calendar icon', Icons.calendar_today, '/date-input'),
+      _NavItem('YakDatePicker', 'Calendar grid & wheel picker', Icons.date_range, '/date-picker'),
     ];
 
     return Scaffold(
