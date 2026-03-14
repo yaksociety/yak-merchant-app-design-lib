@@ -15,6 +15,7 @@ import 'pages/radio_page.dart';
 import 'pages/select_page.dart';
 import 'pages/sheet_page.dart';
 import 'pages/text_area_page.dart';
+import 'pages/search_input_page.dart';
 import 'pages/text_input_page.dart';
 import 'pages/toggle_button_page.dart';
 
@@ -39,6 +40,7 @@ class YakDesignExampleApp extends StatelessWidget {
         '/radio': (_) => const RadioPage(),
         '/toggle': (_) => const ToggleButtonPage(),
         '/text-input': (_) => const TextInputPage(),
+        '/search-input': (_) => const SearchInputPage(),
         '/text-area': (_) => const TextAreaPage(),
         '/select': (_) => const SelectPage(),
         '/otp-input': (_) => const OtpInputPage(),
@@ -66,6 +68,7 @@ class HomePage extends StatelessWidget {
       _NavItem('YakRadioButton', 'Single choice from options (delivery, payment, size)', Icons.radio_button_checked, '/radio'),
       _NavItem('YakToggleButton', 'On/off toggle switch', Icons.toggle_on, '/toggle'),
       _NavItem('YakTextInput', 'Single-line text input', Icons.text_fields, '/text-input'),
+      _NavItem('YakSearchInput', 'Search field with Text S/Regular', Icons.search, '/search-input'),
       _NavItem('YakTextArea', 'Multi-line text area', Icons.notes, '/text-area'),
       _NavItem('YakSelect', 'Dropdown select', Icons.arrow_drop_down_circle, '/select'),
       _NavItem('YakOtpInput', 'OTP / PIN digit boxes', Icons.pin, '/otp-input'),

@@ -22,6 +22,7 @@ export 'file_uploads/yak_file_upload.dart';
 export 'inputs/yak_date_input.dart';
 // Input Components
 export 'inputs/yak_text_input.dart';
+export 'inputs/yak_search_input.dart';
 // Modals
 export 'modals/yak_modal.dart';
 // Sheets

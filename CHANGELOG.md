@@ -6,6 +6,35 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ---
 
+## [v1.6.1] - 2026-02-23
+
+**Title:** `v1.6.1 — YakSearchInput & example`
+
+**Description:** Adds **YakSearchInput**, a search input that behaves like YakTextInput but uses Text S/Regular (YakTypography) for input and placeholder, with 150% line height and semantic text colors (YakColor). Supports label, required indicator, placeholder, optional controller/focus node, error message, and enabled state. Example app gains a dedicated Search Input page demonstrating basic, required, error, disabled, and unlabeled variants.
+
+**Added**
+
+- **YakSearchInput** – New widget in `lib/inputs/yak_search_input.dart`:
+  - **Styling:** Text S/Regular from `YakTypography.semantic.textS.regular`; input color `YakColor.semantic.textAndIcons.baseMain`, hint `baseSecond`; disabled uses `baseSecond`.
+  - **Layout:** Same as YakTextInput – 16px border radius, 1.5px border (grey default, gold focused, red error), white background, 16px horizontal / 14px vertical padding.
+  - **Parameters:** `label`, `isRequired`, `placeholder`, `controller`, `focusNode`, `errorMessage`, `onChanged`, `keyboardType`, `enabled` (default true). Owns and disposes controller/focus node when not provided.
+- **Example app** – New route `/search-input` and **YakSearchInput** entry on home; `example/lib/pages/search_input_page.dart` with demos: basic search, required, error state, disabled, without label.
+- **Library export** – `lib/yak_merchant_app_design_lib.dart`: exports `inputs/yak_search_input.dart`.
+
+**Changed**
+
+- None
+
+**Fixed**
+
+- None
+
+**Removed**
+
+- None
+
+---
+
 ## [v1.6.0] - 2026-02-23
 
 **Title:** `v1.6.0 — YakPinInput (PIN with current digit visible, previous as dots) & YakButton disabled param`
