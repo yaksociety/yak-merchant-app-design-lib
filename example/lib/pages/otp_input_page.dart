@@ -39,6 +39,7 @@ class _OtpInputPageState extends State<OtpInputPage> {
             const SizedBox(height: 16),
             YakOtpInput(
               length: 6,
+              autofocus: true,
               boxSize: 48,
               spacing: 12,
               textStyle: const TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
