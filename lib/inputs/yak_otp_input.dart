@@ -32,6 +32,9 @@ class YakOtpInput extends StatefulWidget {
   /// Whether to obscure the digits (e.g. show • instead of numbers).
   final bool obscureText;
 
+  /// Whether to autofocus the first digit box when the widget is built.
+  final bool autofocus;
+
   /// Whether the input is enabled.
   final bool enabled;
 
@@ -44,6 +47,7 @@ class YakOtpInput extends StatefulWidget {
     this.boxSize = 48,
     this.spacing = 12,
     this.textStyle,
+    this.autofocus = false,
     this.obscureText = false,
     this.enabled = true,
   }) : assert(length > 0, 'length must be greater than 0');
@@ -212,6 +216,7 @@ class _YakOtpInputState extends State<YakOtpInput> {
                         child: TextField(
                           controller: _controllers[index],
                           focusNode: _focusNodes[index],
+                          autofocus: widget.autofocus && index == 0,
                           enabled: widget.enabled,
                           keyboardType: TextInputType.number,
                           textAlign: TextAlign.center,

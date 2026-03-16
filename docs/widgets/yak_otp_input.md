@@ -23,6 +23,7 @@ OTP/PIN input with separate boxes for each digit. Shows gold border and highligh
 | `boxSize` | `double` | `48` | Width and height of each box. |
 | `spacing` | `double` | `12` | Space between boxes. |
 | `textStyle` | `TextStyle?` | — | Style for digits. |
+| `autofocus` | `bool` | `false` | Automatically focus the first digit box when the widget is built. |
 | `obscureText` | `bool` | `false` | Show • instead of digits. |
 | `enabled` | `bool` | `true` | Enable/disable input. |
 
@@ -34,6 +35,7 @@ OTP/PIN input with separate boxes for each digit. Shows gold border and highligh
 ```dart
 YakOtpInput(
   length: 6,
+  autofocus: true,
   onChanged: (code) {
     print('Current: $code');
   },

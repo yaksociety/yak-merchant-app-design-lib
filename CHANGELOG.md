@@ -6,6 +6,37 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ---
 
+## [v1.6.2] - 2026-03-16
+
+**Title:** `v1.6.2 — YakOtpInput autofocus`
+
+**Description:** Adds an `autofocus` parameter to YakOtpInput so the first digit box can automatically receive focus when the widget is built. Docs and the example OTP page are updated with a focused-by-default demo to make keyboard and soft keyboard behavior easy to test.
+
+**Added**
+
+- **YakOtpInput** – new `autofocus` (`bool`, default `false`) parameter:
+  - When `true`, the first digit box requests focus on build via `autofocus: true` on the first internal `TextField`
+  - When `false` (default), behavior is unchanged and the input does not grab focus automatically
+- **Docs** – `docs/widgets/yak_otp_input.md` updated:
+  - Props table now documents the `autofocus` parameter and its default
+  - 6-digit OTP example demonstrates `autofocus: true` for quick copy‑paste into apps
+- **Example app** – `example/lib/pages/otp_input_page.dart`:
+  - The primary “6-digit OTP” demo uses `autofocus: true` so the page opens with the first box focused for immediate typing
+
+**Changed**
+
+- None
+
+**Fixed**
+
+- None
+
+**Removed**
+
+- None
+
+---
+
 ## [v1.6.1] - 2026-02-23
 
 **Title:** `v1.6.1 — YakSearchInput & example`
