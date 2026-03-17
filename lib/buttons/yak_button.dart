@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../theme/yak_color.dart';
+import '../theme/yak_typography.dart';
+
 /// Visual variants for [YakButton].
 ///
 /// - [YakButtonVariant.primary]   → Regular primary button
@@ -13,6 +16,114 @@ enum YakButtonVariant {
   ghost,
   icon,
   floating,
+}
+
+class _YakOuterFocusRing extends StatefulWidget {
+  final bool enabled;
+  final double borderRadius;
+  final Color ringColor;
+  final double ringWidth;
+  final Color? idleFillColor;
+  final Color? activeFillColor;
+  final Color? disabledFillColor;
+  final Widget child;
+
+  const _YakOuterFocusRing({
+    required this.enabled,
+    required this.borderRadius,
+    required this.ringColor,
+    required this.ringWidth,
+    this.idleFillColor,
+    this.activeFillColor,
+    this.disabledFillColor,
+    required this.child,
+  });
+
+  @override
+  State<_YakOuterFocusRing> createState() => _YakOuterFocusRingState();
+}
+
+class _YakOuterFocusRingState extends State<_YakOuterFocusRing> {
+  bool _showFocus = false;
+  bool _showHover = false;
+  bool _pressed = false;
+  int _pressSeq = 0;
+
+  bool get _active => widget.enabled && (_showFocus || _showHover || _pressed);
+
+  void _schedulePressRelease() {
+    final int seq = ++_pressSeq;
+    Future.delayed(const Duration(milliseconds: 120), () {
+      if (!mounted) return;
+      if (seq != _pressSeq) return;
+      setState(() => _pressed = false);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final bool show = _active;
+    final Color? fill = widget.enabled
+        ? (show ? widget.activeFillColor : widget.idleFillColor)
+        : widget.disabledFillColor;
+
+    return FocusableActionDetector(
+      onShowFocusHighlight: (v) => setState(() => _showFocus = v),
+      onShowHoverHighlight: (v) => setState(() => _showHover = v),
+      child: GestureDetector(
+        behavior: HitTestBehavior.translucent,
+        onTapDown: widget.enabled
+            ? (_) {
+                _pressSeq++;
+                setState(() => _pressed = true);
+              }
+            : null,
+        onTapUp: widget.enabled ? (_) => _schedulePressRelease() : null,
+        onTapCancel: widget.enabled ? _schedulePressRelease : null,
+        child: Stack(
+          clipBehavior: Clip.none,
+          children: [
+            if (fill != null)
+              Positioned.fill(
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 140),
+                  curve: Curves.easeOutCubic,
+                  decoration: BoxDecoration(
+                    color: fill,
+                    borderRadius: BorderRadius.circular(widget.borderRadius),
+                  ),
+                ),
+              ),
+            widget.child,
+            Positioned(
+              left: -widget.ringWidth,
+              right: -widget.ringWidth,
+              top: -widget.ringWidth,
+              bottom: -widget.ringWidth,
+              child: IgnorePointer(
+                child: AnimatedOpacity(
+                  opacity: _active ? 1 : 0,
+                  duration: const Duration(milliseconds: 140),
+                  curve: Curves.easeOutCubic,
+                  child: DecoratedBox(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(
+                        widget.borderRadius + widget.ringWidth,
+                      ),
+                      border: Border.all(
+                        color: widget.ringColor,
+                        width: widget.ringWidth,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }
 
 /// Core button for the design system.
@@ -136,29 +247,25 @@ class YakButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const Color primaryBackground = Color(0xFFF4C430);
-    const Color primaryText = Colors.black;
-    const Color disabledText = Color(0xFF9E9E9E);
-    const Color ghostTextDefault = Color(0xFFF4C430);
+    final Color primaryBackground =
+        backgroundColor ?? YakColor.primitive.primary.primary500;
+    final Color primaryText = YakColor.semantic.textAndIcons.baseMain;
+    final Color disabledText = YakColor.semantic.textAndIcons.disabled;
+    final Color ghostTextDefault = YakColor.primitive.primary.primary500;
 
-    // Base text style from design system.
-    const TextStyle baseTextStyle = TextStyle(
-      fontSize: 16,
-      fontWeight: FontWeight.w600,
-      letterSpacing: 0.15,
-    );
+    final TextStyle baseTextStyle =
+        YakTypography.semantic.textM.semibold.merge(textStyle);
 
     final Color effectiveTextColor = textColor ??
         textStyle?.color ??
         (variant == YakButtonVariant.ghost ? ghostTextDefault : primaryText);
-    
-    // Tone down text color when disabled
-    final Color finalTextColor = _isDisabled 
-        ? _getDisabledColor(effectiveTextColor) 
+
+    final Color finalTextColor = _isDisabled
+        ? _getDisabledColor(effectiveTextColor)
         : effectiveTextColor;
 
     final TextStyle effectiveTextStyle =
-        baseTextStyle.merge(textStyle).copyWith(color: finalTextColor);
+        baseTextStyle.copyWith(color: finalTextColor);
 
     final Widget buttonWidget;
     switch (variant) {
@@ -203,10 +310,8 @@ class YakButton extends StatelessWidget {
   /// Label row with optional red asterisk for required fields.
   Widget _buildLabelRow() {
     final TextStyle base = labelStyle ??
-        TextStyle(
-          fontSize: 14,
-          fontWeight: FontWeight.w500,
-          color: Colors.grey[800],
+        YakTypography.semantic.textS.medium.copyWith(
+          color: YakColor.semantic.textAndIcons.baseMain,
         );
     return Row(
       mainAxisSize: MainAxisSize.min,
@@ -219,7 +324,7 @@ class YakButton extends StatelessWidget {
             child: Text(
               '*',
               style: base.copyWith(
-                color: Colors.red,
+                color: YakColor.primitive.danger.danger500,
                 fontWeight: FontWeight.w600,
               ),
             ),
@@ -235,7 +340,7 @@ class YakButton extends StatelessWidget {
     required TextStyle effectiveTextStyle,
     required Color effectiveTextColor,
   }) {
-    const Color ghostTextDefault = Color(0xFFF4C430);
+    final Color ghostTextDefault = YakColor.primitive.primary.primary500;
     final double radius = borderRadius ?? 8;
     final EdgeInsetsGeometry effectivePadding = padding ??
         const EdgeInsets.symmetric(horizontal: 24, vertical: 12);
@@ -305,58 +410,94 @@ class YakButton extends StatelessWidget {
     switch (variant) {
       case YakButtonVariant.primary:
         final Color buttonBackground = backgroundColor ?? primaryBackground;
-        final Color disabledBg = _isDisabled 
-            ? _getDisabledColor(buttonBackground) 
-            : buttonBackground;
-        final Color disabledTextColor = _getDisabledColor(effectiveTextColor);
-        style = ElevatedButton.styleFrom(
-          backgroundColor: buttonBackground,
-          foregroundColor: effectiveTextColor,
-          disabledBackgroundColor: disabledBg,
-          disabledForegroundColor: disabledTextColor,
-          elevation: 0,
-          shadowColor: Colors.transparent,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(radius),
-            side: primaryStroke,
+        final Color focusRingColor = YakColor.primitive.primary.primary100;
+        style = ButtonStyle(
+          backgroundColor: WidgetStateProperty.resolveWith((states) {
+            if (states.contains(WidgetState.disabled)) {
+              return _getDisabledColor(buttonBackground);
+            }
+            return buttonBackground;
+          }),
+          foregroundColor: WidgetStateProperty.resolveWith((states) {
+            if (states.contains(WidgetState.disabled)) {
+              return _getDisabledColor(effectiveTextColor);
+            }
+            return effectiveTextColor;
+          }),
+          overlayColor: WidgetStateProperty.all(Colors.transparent),
+          elevation: WidgetStateProperty.all(0),
+          shadowColor: WidgetStateProperty.all(Colors.transparent),
+          padding: WidgetStateProperty.all(effectivePadding),
+          shape: WidgetStateProperty.all(
+            RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(radius),
+            ),
           ),
-          padding: effectivePadding,
+          // Keep the button face clean; the outer ring is drawn by a wrapper.
+          side: WidgetStateProperty.all(primaryStroke),
         );
         return SizedBox(
           width: width,
           height: height,
-          child: ElevatedButton(
-            onPressed: _isDisabled || isLoading ? null : onPressed,
-            style: style,
-            child: content,
+          child: _YakOuterFocusRing(
+            enabled: !(_isDisabled || isLoading),
+            borderRadius: radius,
+            ringColor: focusRingColor,
+            ringWidth: 2,
+            child: ElevatedButton(
+              onPressed: _isDisabled || isLoading ? null : onPressed,
+              style: style,
+              child: content,
+            ),
           ),
         );
       case YakButtonVariant.secondary:
-        final Color strokeColor = _isDisabled 
-            ? _getDisabledColor(effectiveTextColor) 
-            : effectiveTextColor;
-        final BorderSide effectiveSecondaryStroke = stroke ??
+        final Color focusRingColor = YakColor.primitive.primary.primary100;
+        final BorderSide defaultStroke = stroke ??
             BorderSide(
-              color: strokeColor,
-              width: 1.5,
+              color: YakColor.primitive.primary.primary500,
+              width: 2,
             );
-        final Color disabledTextColor = _getDisabledColor(effectiveTextColor);
-        style = OutlinedButton.styleFrom(
-          foregroundColor: effectiveTextColor,
-          disabledForegroundColor: disabledTextColor,
-          side: effectiveSecondaryStroke,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(radius),
+        const BorderSide disabledStroke = BorderSide.none;
+        style = ButtonStyle(
+          // Background is animated by the outer wrapper (keeps it smooth).
+          backgroundColor: WidgetStateProperty.all(Colors.transparent),
+          foregroundColor: WidgetStateProperty.resolveWith((states) {
+            if (states.contains(WidgetState.disabled)) {
+              return YakColor.semantic.textAndIcons.disabled;
+            }
+            return effectiveTextColor;
+          }),
+          overlayColor: WidgetStateProperty.all(Colors.transparent),
+          elevation: WidgetStateProperty.all(0),
+          shadowColor: WidgetStateProperty.all(Colors.transparent),
+          padding: WidgetStateProperty.all(effectivePadding),
+          shape: WidgetStateProperty.all(
+            RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(radius),
+            ),
           ),
-          padding: effectivePadding,
+          side: WidgetStateProperty.resolveWith((states) {
+            if (states.contains(WidgetState.disabled)) return disabledStroke;
+            return defaultStroke;
+          }),
         );
         return SizedBox(
           width: width,
           height: height,
-          child: OutlinedButton(
-            onPressed: _isDisabled || isLoading ? null : onPressed,
-            style: style,
-            child: content,
+          child: _YakOuterFocusRing(
+            enabled: !(_isDisabled || isLoading),
+            borderRadius: radius,
+            ringColor: focusRingColor,
+            ringWidth: 2,
+            idleFillColor: YakColor.semantic.background.baseMain,
+            activeFillColor: YakColor.primitive.primary.primary50,
+            disabledFillColor: YakColor.primitive.primary.primary50,
+            child: OutlinedButton(
+              onPressed: _isDisabled || isLoading ? null : onPressed,
+              style: style,
+              child: content,
+            ),
           ),
         );
       case YakButtonVariant.ghost:
@@ -394,6 +535,8 @@ class YakButton extends StatelessWidget {
   }) {
     final double size = height;
     final double radius = borderRadius ?? 8;
+    final double ringRadius = isCircularIcon ? size / 2 : radius;
+    final Color ringColor = YakColor.primitive.primary.primary100;
     final Color buttonBackground = _isDisabled 
         ? _getDisabledColor(background) 
         : background;
@@ -415,21 +558,32 @@ class YakButton extends StatelessWidget {
     return SizedBox(
       width: size,
       height: size,
-      child: Material(
-        color: buttonBackground,
-        shape: isCircularIcon
-            ? const CircleBorder()
-            : RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(radius),
-              ),
-        child: InkWell(
-          onTap: _isDisabled || isLoading ? null : onPressed,
-          customBorder: isCircularIcon
+      child: _YakOuterFocusRing(
+        enabled: !(_isDisabled || isLoading),
+        borderRadius: ringRadius,
+        ringColor: ringColor,
+        ringWidth: 2,
+        child: Material(
+          color: buttonBackground,
+          shape: isCircularIcon
               ? const CircleBorder()
               : RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(radius),
                 ),
-          child: Center(child: child),
+          child: InkWell(
+            onTap: _isDisabled || isLoading ? null : onPressed,
+            splashFactory: NoSplash.splashFactory,
+            splashColor: Colors.transparent,
+            highlightColor: Colors.transparent,
+            hoverColor: Colors.transparent,
+            focusColor: Colors.transparent,
+            customBorder: isCircularIcon
+                ? const CircleBorder()
+                : RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(radius),
+                  ),
+            child: Center(child: child),
+          ),
         ),
       ),
     );

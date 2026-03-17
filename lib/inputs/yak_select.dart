@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../theme/yak_color.dart';
+import '../theme/yak_typography.dart';
 
 /// Style variant for [YakSelect], matching DropdownClass from the Android design.
 enum YakSelectStyle {
@@ -228,18 +229,10 @@ class _YakSelectState<T> extends State<YakSelect<T>> {
   TextStyle _selectorTextStyle() {
     switch (widget.style) {
       case YakSelectStyle.compact:
-        return const TextStyle(
-          fontSize: 12,
-          fontWeight: FontWeight.w600,
-          letterSpacing: 0.15,
-        );
+        return YakTypography.semantic.textXS.semibold;
       case YakSelectStyle.minimal:
       case YakSelectStyle.normal:
-        return const TextStyle(
-          fontSize: 14,
-          fontWeight: FontWeight.w400,
-          letterSpacing: 0.15,
-        );
+        return YakTypography.semantic.textS.regular;
     }
   }
 
@@ -304,18 +297,15 @@ class _YakSelectState<T> extends State<YakSelect<T>> {
             child: RichText(
               text: TextSpan(
                 text: widget.label!,
-                style: TextStyle(
-                  fontSize: 14,
+                style: YakTypography.semantic.textS.regular.copyWith(
                   color: labelColor,
-                  fontWeight: FontWeight.w400,
                 ),
                 children: widget.isRequired
                     ? [
                         TextSpan(
                           text: ' *',
-                          style: TextStyle(
+                          style: YakTypography.semantic.textS.semibold.copyWith(
                             color: YakColor.primitive.danger.danger500,
-                            fontWeight: FontWeight.w600,
                           ),
                         ),
                       ]
@@ -420,10 +410,8 @@ class _YakSelectState<T> extends State<YakSelect<T>> {
             padding: const EdgeInsets.only(left: 12, top: 4),
             child: Text(
               widget.errorMessage!,
-              style: TextStyle(
-                fontSize: 12,
+              style: YakTypography.semantic.textXS.regular.copyWith(
                 color: YakColor.primitive.danger.danger600,
-                fontWeight: FontWeight.w400,
               ),
             ),
           ),
@@ -540,9 +528,7 @@ class _SelectOverlayState<T> extends State<_SelectOverlay<T>>
                     Expanded(
                       child: Text(
                         item.label,
-                        style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w400,
+                        style: YakTypography.semantic.textXS.regular.copyWith(
                           color: YakColor.semantic.textAndIcons.baseMain,
                         ),
                         overflow: TextOverflow.ellipsis,

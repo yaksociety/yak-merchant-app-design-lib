@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../theme/yak_color.dart';
+import '../theme/yak_typography.dart';
+
 /// Text input field for the Yak design system.
 ///
 /// Matches the provided designs:
@@ -118,29 +121,28 @@ class _YakTextInputState extends State<YakTextInput> {
 
   @override
   Widget build(BuildContext context) {
-    const Color borderDefault = Color(0xFFE0E0E0);
-    const Color borderFocused = Color(0xFFF4C430);
-    const Color borderError = Color(0xFFEB5757);
-    const Color labelDefault = Color(0xFF000000);
-    const Color labelError = Color(0xFFEB5757);
-    const Color placeholderColor = Color(0xFFBDBDBD);
-
     final bool hasError = _hasError;
     final bool isFocused = _isFocused && widget.enabled;
 
-    final Color effectiveBorderColor =
-        hasError ? borderError : (isFocused ? borderFocused : borderDefault);
-    final Color effectiveLabelColor = hasError ? labelError : labelDefault;
-    // Background always stays white, only border changes on focus
-    final Color effectiveFillColor = Colors.white;
+    final Color effectiveBorderColor = hasError
+        ? YakColor.primitive.danger.danger600
+        : (isFocused
+            ? YakColor.primitive.primary.primary500
+            : YakColor.primitive.neutral.neutral700);
+    final Color effectiveLabelColor =
+        hasError ? YakColor.primitive.danger.danger600 : YakColor.semantic.textAndIcons.baseMain;
+    final Color effectiveFillColor = widget.enabled
+        ? YakColor.semantic.background.baseMain
+        : YakColor.primitive.neutral.neutral50;
 
-    final TextStyle effectiveTextStyle = (widget.textStyle ??
-            const TextStyle(
-              fontSize: 16,
-              color: Colors.black,
-            ))
-        .copyWith(
-      color: widget.enabled ? (widget.textStyle?.color ?? Colors.black) : Colors.grey,
+    final TextStyle effectiveTextStyle =
+        (widget.textStyle ?? YakTypography.semantic.textM.regular).copyWith(
+      color: widget.enabled
+          ? (widget.textStyle?.color ?? YakColor.semantic.textAndIcons.baseMain)
+          : YakColor.semantic.textAndIcons.disabled,
+    );
+    final TextStyle hintStyle = YakTypography.semantic.textM.regular.copyWith(
+      color: YakColor.semantic.textAndIcons.baseSecond,
     );
 
     return Column(
@@ -152,17 +154,15 @@ class _YakTextInputState extends State<YakTextInput> {
             child: RichText(
               text: TextSpan(
                 text: widget.label!,
-                style: TextStyle(
-                  fontSize: 14,
+                style: YakTypography.semantic.textS.medium.copyWith(
                   color: effectiveLabelColor,
-                  fontWeight: FontWeight.w500,
                 ),
                 children: widget.isRequired
-                    ? const [
+                    ? [
                         TextSpan(
                           text: ' *',
-                          style: TextStyle(
-                            color: Color(0xFFEB5757),
+                          style: YakTypography.semantic.textS.semibold.copyWith(
+                            color: YakColor.primitive.danger.danger500,
                           ),
                         ),
                       ]
@@ -193,10 +193,7 @@ class _YakTextInputState extends State<YakTextInput> {
                 border: InputBorder.none,
                 isDense: true,
                 hintText: widget.placeholder,
-                hintStyle: const TextStyle(
-                  fontSize: 16,
-                  color: placeholderColor,
-                ),
+                hintStyle: hintStyle,
                 contentPadding:
                     const EdgeInsets.symmetric(vertical: 14), // matches visual
               ),
@@ -207,9 +204,8 @@ class _YakTextInputState extends State<YakTextInput> {
           const SizedBox(height: 4),
           Text(
             widget.errorMessage!,
-            style: const TextStyle(
-              fontSize: 12,
-              color: Color(0xFFEB5757),
+            style: YakTypography.semantic.textXS.regular.copyWith(
+              color: YakColor.primitive.danger.danger600,
             ),
           ),
         ],
