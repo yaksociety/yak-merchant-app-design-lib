@@ -71,6 +71,9 @@ class _YakTextInputState extends State<YakTextInput> {
   bool get _hasLabel => (widget.label ?? '').trim().isNotEmpty;
   bool get _hasError => (widget.errorMessage ?? '').trim().isNotEmpty;
 
+  static const double _borderWidth = 1.5;
+  static const double _radius = 12; // more rounded to match Figma
+
   @override
   void initState() {
     super.initState();
@@ -124,45 +127,45 @@ class _YakTextInputState extends State<YakTextInput> {
     final bool hasError = _hasError;
     final bool isFocused = _isFocused && widget.enabled;
 
-    final Color effectiveBorderColor = hasError
-        ? YakColor.primitive.danger.danger600
+    final Color borderColor = hasError
+        ? YakColor.semantic.textAndIcons.danger
         : (isFocused
-            ? YakColor.primitive.primary.primary500
-            : YakColor.primitive.neutral.neutral700);
-    final Color effectiveLabelColor =
-        hasError ? YakColor.primitive.danger.danger600 : YakColor.semantic.textAndIcons.baseMain;
-    final Color effectiveFillColor = widget.enabled
+              ? YakColor.semantic.stroke.primary
+              : YakColor.semantic.stroke.base);
+    final Color labelColor = hasError
+        ? YakColor.semantic.textAndIcons.danger
+        : YakColor.semantic.textAndIcons.baseMain;
+    final Color fillColor = widget.enabled
         ? YakColor.semantic.background.baseMain
-        : YakColor.primitive.neutral.neutral50;
+        : YakColor.semantic.background.baseMain;
+    final Color textColor = widget.enabled
+        ? YakColor.semantic.textAndIcons.baseMain
+        : YakColor.semantic.textAndIcons.disabled;
+    final Color placeholderColor = YakColor.semantic.textAndIcons.baseSecond;
 
     final TextStyle effectiveTextStyle =
         (widget.textStyle ?? YakTypography.semantic.textM.regular).copyWith(
-      color: widget.enabled
-          ? (widget.textStyle?.color ?? YakColor.semantic.textAndIcons.baseMain)
-          : YakColor.semantic.textAndIcons.disabled,
-    );
-    final TextStyle hintStyle = YakTypography.semantic.textM.regular.copyWith(
-      color: YakColor.semantic.textAndIcons.baseSecond,
-    );
+          color: textColor,
+        );
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         if (_hasLabel)
           Padding(
-            padding: const EdgeInsets.only(bottom: 4),
+            padding: const EdgeInsets.only(bottom: 8),
             child: RichText(
               text: TextSpan(
                 text: widget.label!,
-                style: YakTypography.semantic.textS.medium.copyWith(
-                  color: effectiveLabelColor,
+                style: YakTypography.semantic.textS.regular.copyWith(
+                  color: labelColor,
                 ),
                 children: widget.isRequired
                     ? [
                         TextSpan(
                           text: ' *',
                           style: YakTypography.semantic.textS.semibold.copyWith(
-                            color: YakColor.primitive.danger.danger500,
+                            color: YakColor.semantic.textAndIcons.danger,
                           ),
                         ),
                       ]
@@ -172,15 +175,12 @@ class _YakTextInputState extends State<YakTextInput> {
           ),
         DecoratedBox(
           decoration: BoxDecoration(
-            color: effectiveFillColor,
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(
-              color: effectiveBorderColor,
-              width: 1.5,
-            ),
+            color: fillColor,
+            borderRadius: BorderRadius.circular(_radius),
+            border: Border.all(color: borderColor, width: _borderWidth),
           ),
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
+            padding: const EdgeInsets.symmetric(horizontal: 12),
             child: TextField(
               controller: _controller,
               focusNode: _focusNode,
@@ -193,9 +193,12 @@ class _YakTextInputState extends State<YakTextInput> {
                 border: InputBorder.none,
                 isDense: true,
                 hintText: widget.placeholder,
-                hintStyle: hintStyle,
-                contentPadding:
-                    const EdgeInsets.symmetric(vertical: 14), // matches visual
+                hintStyle: YakTypography.semantic.textS.regular.copyWith(
+                  color: placeholderColor,
+                ),
+                contentPadding: const EdgeInsets.symmetric(
+                  vertical: 12,
+                ), // matches visual
               ),
             ),
           ),
@@ -205,7 +208,7 @@ class _YakTextInputState extends State<YakTextInput> {
           Text(
             widget.errorMessage!,
             style: YakTypography.semantic.textXS.regular.copyWith(
-              color: YakColor.primitive.danger.danger600,
+              color: YakColor.semantic.textAndIcons.danger,
             ),
           ),
         ],
@@ -213,4 +216,3 @@ class _YakTextInputState extends State<YakTextInput> {
     );
   }
 }
-
