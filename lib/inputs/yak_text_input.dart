@@ -137,11 +137,13 @@ class _YakTextInputState extends State<YakTextInput> {
         : YakColor.semantic.textAndIcons.baseMain;
     final Color fillColor = widget.enabled
         ? YakColor.semantic.background.baseMain
-        : YakColor.semantic.background.baseMain;
+        : YakColor.semantic.background.baseSecond;
     final Color textColor = widget.enabled
         ? YakColor.semantic.textAndIcons.baseMain
         : YakColor.semantic.textAndIcons.disabled;
-    final Color placeholderColor = YakColor.semantic.textAndIcons.baseSecond;
+    final Color placeholderColor = widget.enabled
+        ? YakColor.semantic.textAndIcons.baseSecond
+        : YakColor.semantic.textAndIcons.disabled;
 
     final TextStyle effectiveTextStyle =
         (widget.textStyle ?? YakTypography.semantic.textM.regular).copyWith(
