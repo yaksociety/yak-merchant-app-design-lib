@@ -38,11 +38,11 @@ Unified button component with 5 variants. Use it for all primary, secondary, and
 | `textColor` | `Color?` | — | Override text/icon color. |
 | `textStyle` | `TextStyle?` | — | Override text style. |
 | `stroke` | `BorderSide?` | — | Custom border/stroke. Overrides default outline for secondary; adds border to primary/ghost. |
-| `borderRadius` | `double?` | `8` | Corner radius. Ignored for circular icon variant. |
+| `borderRadius` | `double?` | `12` | Corner radius. Ignored for circular icon variant. |
 | `label` | `String?` | — | Optional label shown above the button (e.g. form field label). |
 | `isRequired` | `bool` | `false` | When true, shows a red asterisk (*) after the label. |
 | `labelStyle` | `TextStyle?` | — | Text style for the label. |
-| `padding` | `EdgeInsetsGeometry?` | `EdgeInsets.symmetric(horizontal: 24, vertical: 12)` | Inner padding (primary/secondary/ghost). |
+| `padding` | `EdgeInsetsGeometry?` | `EdgeInsets.symmetric(horizontal: 12, vertical: 12)` | Inner padding (primary/secondary/ghost). |
 
 ---
 
@@ -148,15 +148,38 @@ YakButton(
 YakButton(
   label: 'ที่ตั้งร้านค้า',
   isRequired: true,
-  text: 'เลือกตำแหน่งร้านค้า',
+  text: '99/2 ซอยสุขุมวิท 26 ถนนสุขุมวิท แขวงคลอง...',
   variant: YakButtonVariant.secondary,
-  backgroundColor: Colors.white,
-  textColor: Colors.grey[600],
-  leftIcon: const Icon(Icons.location_on, color: Color(0xFFF4C430), size: 22),
-  trailingIcon: Icons.chevron_right,
-  borderRadius: 12,
-  stroke: BorderSide(color: Colors.grey[400]!, width: 1),
   width: double.infinity,
+  borderRadius: 16,
+  stroke: BorderSide(color: YakColor.semantic.stroke.base, width: 1),
+  leftIcon: Icon(
+    Icons.location_on,
+    color: YakColor.semantic.background.primaryMain,
+    size: 22,
+  ),
+  rightIcon: Icon(
+    Icons.chevron_right,
+    color: YakColor.semantic.textAndIcons.baseSecond,
+    size: 22,
+  ),
+  width: double.infinity,
+  onPressed: () {},
+)
+
+YakButton(
+  label: 'จังหวัด',
+  isRequired: true,
+  text: 'กรุงเทพมหานคร',
+  variant: YakButtonVariant.secondary,
+  width: double.infinity,
+  borderRadius: 16,
+  stroke: BorderSide(color: YakColor.semantic.stroke.base, width: 1),
+  rightIcon: Icon(
+    Icons.keyboard_arrow_down,
+    color: YakColor.semantic.textAndIcons.baseSecond,
+    size: 24,
+  ),
   onPressed: () {},
 )
 ```
