@@ -46,6 +46,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
   - Floating (FAB) variant now supports `heroTag` (default `null`) to prevent duplicate Hero tag crashes when multiple FABs are shown on the same route
 - **Example app / docs**:
   - Updated YakButton “field-style” examples to match the provided UI screenshots and rely on defaults
+  - **YakModal** updated to be a **container-only** dialog (users compose title/description/actions via `child`), with defaults: radius `12`, padding `24`, and recommended gap `16` (`YakModal.gap`)
+  - `YakModal.show(...)` now uses a smooth, modern open transition (fade + subtle scale)
 
 - **YakTextInput / YakTextArea**:
   - Updated to use **YakColor**/**YakTypography** tokens for borders, labels, placeholders, error, and disabled states
