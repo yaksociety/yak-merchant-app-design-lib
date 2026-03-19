@@ -2,16 +2,7 @@ import 'dart:ui' show lerpDouble;
 
 import 'package:flutter/material.dart';
 
-import '../buttons/yak_button.dart';
 import '../theme/yak_color.dart';
-
-/// Icon type for the optional header icon (colored circle with symbol).
-enum YakModalIconType {
-  info,
-  success,
-  warning,
-  error,
-}
 
 /// Global theme for [YakModal]. Set via [ThemeData.extensions] to customize
 /// all modals app-wide; each [YakModal] can override per property.
@@ -23,11 +14,7 @@ class YakModalThemeData extends ThemeExtension<YakModalThemeData> {
     this.shadowColor,
     this.backgroundColor,
     this.padding = 24.0,
-    this.headerIconSize = 48.0,
-    this.titleDescriptionSpacing = 8.0,
-    this.contentTopSpacing = 20.0,
-    this.actionsTopSpacing = 24.0,
-    this.actionsSpacing = 12.0,
+    this.gap = 16.0,
   });
 
   final double borderRadius;
@@ -35,11 +22,7 @@ class YakModalThemeData extends ThemeExtension<YakModalThemeData> {
   final Color? shadowColor;
   final Color? backgroundColor;
   final double padding;
-  final double headerIconSize;
-  final double titleDescriptionSpacing;
-  final double contentTopSpacing;
-  final double actionsTopSpacing;
-  final double actionsSpacing;
+  final double gap;
 
   @override
   YakModalThemeData copyWith({
@@ -48,11 +31,7 @@ class YakModalThemeData extends ThemeExtension<YakModalThemeData> {
     Color? shadowColor,
     Color? backgroundColor,
     double? padding,
-    double? headerIconSize,
-    double? titleDescriptionSpacing,
-    double? contentTopSpacing,
-    double? actionsTopSpacing,
-    double? actionsSpacing,
+    double? gap,
   }) {
     return YakModalThemeData(
       borderRadius: borderRadius ?? this.borderRadius,
@@ -60,11 +39,7 @@ class YakModalThemeData extends ThemeExtension<YakModalThemeData> {
       shadowColor: shadowColor ?? this.shadowColor,
       backgroundColor: backgroundColor ?? this.backgroundColor,
       padding: padding ?? this.padding,
-      headerIconSize: headerIconSize ?? this.headerIconSize,
-      titleDescriptionSpacing: titleDescriptionSpacing ?? this.titleDescriptionSpacing,
-      contentTopSpacing: contentTopSpacing ?? this.contentTopSpacing,
-      actionsTopSpacing: actionsTopSpacing ?? this.actionsTopSpacing,
-      actionsSpacing: actionsSpacing ?? this.actionsSpacing,
+      gap: gap ?? this.gap,
     );
   }
 
@@ -77,211 +52,111 @@ class YakModalThemeData extends ThemeExtension<YakModalThemeData> {
       shadowColor: Color.lerp(shadowColor, other.shadowColor, t),
       backgroundColor: Color.lerp(backgroundColor, other.backgroundColor, t),
       padding: lerpDouble(padding, other.padding, t)!,
-      headerIconSize: lerpDouble(headerIconSize, other.headerIconSize, t)!,
-      titleDescriptionSpacing:
-          lerpDouble(titleDescriptionSpacing, other.titleDescriptionSpacing, t)!,
-      contentTopSpacing:
-          lerpDouble(contentTopSpacing, other.contentTopSpacing, t)!,
-      actionsTopSpacing:
-          lerpDouble(actionsTopSpacing, other.actionsTopSpacing, t)!,
-      actionsSpacing: lerpDouble(actionsSpacing, other.actionsSpacing, t)!,
+      gap: lerpDouble(gap, other.gap, t)!,
     );
   }
 
   static YakModalThemeData get fallback => YakModalThemeData(
-        borderRadius: 12.0,
-        elevation: 8.0,
-        shadowColor: const Color(0x1A000000),
-        backgroundColor: YakColor.primitive.base.white,
-        padding: 24.0,
-        headerIconSize: 48.0,
-        titleDescriptionSpacing: 8.0,
-        contentTopSpacing: 20.0,
-        actionsTopSpacing: 24.0,
-        actionsSpacing: 12.0,
-      );
+    borderRadius: 12.0,
+    elevation: 8.0,
+    shadowColor: const Color(0x1A000000),
+    backgroundColor: YakColor.primitive.base.white,
+    padding: 24.0,
+    gap: 16.0,
+  );
 }
 
-Color _iconColorForType(YakModalIconType type) {
-  switch (type) {
-    case YakModalIconType.info:
-      return YakColor.primitive.blue.blue500;
-    case YakModalIconType.success:
-      return YakColor.primitive.success.success500;
-    case YakModalIconType.warning:
-      return YakColor.primitive.warning.warning500;
-    case YakModalIconType.error:
-      return YakColor.primitive.danger.danger500;
-  }
-}
-
-IconData _iconDataForType(YakModalIconType type) {
-  switch (type) {
-    case YakModalIconType.info:
-      return Icons.info_outline;
-    case YakModalIconType.success:
-      return Icons.check;
-    case YakModalIconType.warning:
-      return Icons.warning_amber_rounded;
-    case YakModalIconType.error:
-      return Icons.error_outline;
-  }
-}
-
-/// A centered modal dialog with optional header icon/image, title, description,
-/// user-defined [child] content, and optional Cancel + Continue actions.
-/// Use [YakModal.show] to display via [showDialog], or build [YakModal] as the
-/// dialog content. Styling via [YakModalThemeData].
+/// A centered modal container.
 ///
-/// Example:
-/// ```dart
-/// YakModal.show(
-///   context,
-///   title: 'Photo',
-///   description: 'Add a photo to your profile.',
-///   child: Image.asset(...),
-///   primaryLabel: 'Continue',
-///   onPrimary: () => Navigator.pop(context),
-///   cancelLabel: 'Cancel',
-///   onCancel: () => Navigator.pop(context),
-/// );
-/// ```
+/// This widget does **not** impose any internal structure (no title/description/actions).
+/// Provide all content yourself via [child].
+///
+/// Defaults:
+/// - Rounded corners: 12
+/// - Padding: 24
+/// - Recommended vertical gap between elements: 16 (see [YakModal.gap])
 class YakModal extends StatelessWidget {
   const YakModal({
     super.key,
     required this.child,
-    this.title,
-    this.description,
-    this.headerIcon,
-    this.headerIconType,
-    this.headerImage,
-    this.cancelLabel,
-    this.onCancel,
-    this.primaryLabel,
-    this.onPrimary,
-    this.primaryIsDanger = false,
     this.onClose,
     this.backgroundColor,
     this.borderRadius,
+    this.padding,
     this.theme,
   });
 
-  /// Main content; add any widgets (forms, images, checkboxes, toggles, etc.).
+  /// Recommended gap between content blocks inside the modal.
+  static const double gap = 16.0;
+
+  /// Main content; provide your own layout (title, text, actions, etc.).
   final Widget child;
-
-  /// Optional title below header icon/image.
-  final String? title;
-
-  /// Optional description below title.
-  final String? description;
-
-  /// Optional custom header widget (e.g. custom icon). If [headerIconType] is set, that is used instead.
-  final Widget? headerIcon;
-
-  /// Optional preset icon (colored circle with info/success/warning/error icon).
-  final YakModalIconType? headerIconType;
-
-  /// Optional image or widget at the very top (e.g. large image for "Photo" modal).
-  final Widget? headerImage;
-
-  /// Cancel button label (e.g. "Cancel"). If null, no cancel button.
-  final String? cancelLabel;
-
-  /// Called when cancel is pressed. Typically `Navigator.pop(context)`.
-  final VoidCallback? onCancel;
-
-  /// Primary button label (e.g. "Continue"). If null, no primary button.
-  final String? primaryLabel;
-
-  /// Called when primary is pressed. Typically `Navigator.pop(context)`.
-  final VoidCallback? onPrimary;
-
-  /// When true, primary button uses danger (red) style.
-  final bool primaryIsDanger;
 
   /// Called when the close (X) button is pressed. Typically `Navigator.pop(context)`.
   final VoidCallback? onClose;
 
   final Color? backgroundColor;
   final double? borderRadius;
+  final double? padding;
   final YakModalThemeData? theme;
 
   /// Shows a modal dialog with [YakModal] as content.
   ///
-  /// [child] is the main content. Optionally set [title], [description],
-  /// [headerIconType] or [headerImage], and [cancelLabel]/[primaryLabel] with callbacks.
+  /// [child] is the full modal content (title/description/actions are up to you).
   /// Returns a [Future] that completes when the dialog is closed.
   static Future<T?> show<T>(
     BuildContext context, {
     required Widget child,
-    String? title,
-    String? description,
-    Widget? headerIcon,
-    YakModalIconType? headerIconType,
-    Widget? headerImage,
-    String? cancelLabel,
-    VoidCallback? onCancel,
-    String? primaryLabel,
-    VoidCallback? onPrimary,
-    bool primaryIsDanger = false,
     VoidCallback? onClose,
     Color? backgroundColor,
     double? borderRadius,
+    double? padding,
     bool barrierDismissible = true,
   }) {
-    return showDialog<T>(
+    final navigator = Navigator.of(context, rootNavigator: true);
+    return showGeneralDialog<T>(
       context: context,
       barrierDismissible: barrierDismissible,
-      builder: (context) => YakModal(
-        title: title,
-        description: description,
-        headerIcon: headerIcon,
-        headerIconType: headerIconType,
-        headerImage: headerImage,
-        cancelLabel: cancelLabel,
-        onCancel: onCancel ?? () => Navigator.of(context).pop(),
-        primaryLabel: primaryLabel,
-        onPrimary: onPrimary ?? () => Navigator.of(context).pop(),
-        primaryIsDanger: primaryIsDanger,
-        onClose: onClose ?? () => Navigator.of(context).pop(),
-        backgroundColor: backgroundColor,
-        borderRadius: borderRadius,
-        child: child,
-      ),
+      barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
+      barrierColor: Colors.black.withValues(alpha: 0.45),
+      transitionDuration: const Duration(milliseconds: 240),
+      transitionBuilder: (context, animation, secondaryAnimation, pageChild) {
+        final curved = CurvedAnimation(parent: animation, curve: Curves.easeOutCubic);
+        final scale = Tween<double>(begin: 0.98, end: 1.0).animate(curved);
+        return FadeTransition(
+          opacity: curved,
+          child: ScaleTransition(
+            scale: scale,
+            child: pageChild,
+          ),
+        );
+      },
+      pageBuilder: (context, animation, secondaryAnimation) {
+        return SafeArea(
+          child: Builder(
+            builder: (context) => YakModal(
+              onClose: onClose ?? () => navigator.pop(),
+              backgroundColor: backgroundColor,
+              borderRadius: borderRadius,
+              padding: padding,
+              child: child,
+            ),
+          ),
+        );
+      },
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    final t = theme ??
+    final t =
+        theme ??
         Theme.of(context).extension<YakModalThemeData>() ??
         YakModalThemeData.fallback;
     final radius = borderRadius ?? t.borderRadius;
-    final bg = backgroundColor ?? t.backgroundColor ?? YakColor.primitive.base.white;
-    final padding = t.padding;
-
-    Widget? leadingWidget;
-    if (headerImage != null) {
-      leadingWidget = headerImage;
-    } else if (headerIcon != null) {
-      leadingWidget = headerIcon;
-    } else if (headerIconType != null) {
-      final iconColor = _iconColorForType(headerIconType!);
-      final iconData = _iconDataForType(headerIconType!);
-      leadingWidget = Container(
-        width: t.headerIconSize,
-        height: t.headerIconSize,
-        decoration: BoxDecoration(
-          color: iconColor,
-          shape: BoxShape.circle,
-        ),
-        child: Icon(
-          iconData,
-          color: YakColor.primitive.base.white,
-          size: t.headerIconSize * 0.55,
-        ),
-      );
-    }
+    final bg =
+        backgroundColor ?? t.backgroundColor ?? YakColor.primitive.base.white;
+    final contentPadding = padding ?? t.padding;
 
     return Dialog(
       backgroundColor: Colors.transparent,
@@ -304,79 +179,7 @@ class YakModal extends StatelessWidget {
         child: Stack(
           clipBehavior: Clip.none,
           children: [
-            Padding(
-              padding: EdgeInsets.all(padding),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  if (leadingWidget != null) ...[
-                    Center(child: leadingWidget),
-                    SizedBox(height: t.titleDescriptionSpacing),
-                  ],
-                  if (title != null && title!.isNotEmpty) ...[
-                    Text(
-                      title!,
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w600,
-                        color: YakColor.primitive.gray.gray800,
-                      ),
-                    ),
-                    if (description != null && description!.isNotEmpty) ...[
-                      SizedBox(height: t.titleDescriptionSpacing),
-                      Text(
-                        description!,
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: YakColor.primitive.gray.gray500,
-                        ),
-                      ),
-                    ],
-                    SizedBox(height: t.contentTopSpacing),
-                  ] else if (description != null && description!.isNotEmpty) ...[
-                    Text(
-                      description!,
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: YakColor.primitive.gray.gray500,
-                      ),
-                    ),
-                    SizedBox(height: t.contentTopSpacing),
-                  ] else if (leadingWidget != null)
-                    SizedBox(height: t.contentTopSpacing),
-                  child,
-                  if (cancelLabel != null || primaryLabel != null) ...[
-                    SizedBox(height: t.actionsTopSpacing),
-                    Wrap(
-                      alignment: WrapAlignment.end,
-                      spacing: t.actionsSpacing,
-                      runSpacing: t.actionsSpacing,
-                      children: [
-                        if (cancelLabel != null)
-                          YakButton(
-                            text: cancelLabel!,
-                            variant: YakButtonVariant.secondary,
-                            onPressed: onCancel,
-                          ),
-                        if (primaryLabel != null)
-                          YakButton(
-                            text: primaryLabel!,
-                            variant: YakButtonVariant.primary,
-                            backgroundColor: primaryIsDanger
-                                ? YakColor.primitive.danger.danger500
-                                : null,
-                            textColor: primaryIsDanger
-                                ? YakColor.primitive.base.white
-                                : null,
-                            onPressed: onPrimary,
-                          ),
-                      ],
-                    ),
-                  ],
-                ],
-              ),
-            ),
+            Padding(padding: EdgeInsets.all(contentPadding), child: child),
             Positioned(
               top: 12,
               right: 12,

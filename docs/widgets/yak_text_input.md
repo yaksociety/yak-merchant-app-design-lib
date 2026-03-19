@@ -34,6 +34,7 @@ Single-line text input with label, placeholder, and error handling. Matches Yak 
 - **Default** – Grey border
 - **Focused** – Gold border
 - **Error** – Red border and label, error message below
+- **Disabled** – Muted colors and non-editable field
 
 ---
 
@@ -78,6 +79,15 @@ YakTextInput(
   placeholder: 'name@email.com',
   errorMessage: 'Invalid email address',
   onChanged: (value) {},
+)
+```
+
+### Disabled
+```dart
+YakTextInput(
+  label: 'Label',
+  placeholder: 'Input text',
+  enabled: false,
 )
 ```
 

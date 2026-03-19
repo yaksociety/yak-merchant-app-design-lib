@@ -5,6 +5,7 @@ import 'pages/alert_page.dart';
 import 'pages/button_page.dart';
 import 'pages/file_upload_page.dart';
 import 'pages/card_page.dart';
+import 'pages/checkbox_page.dart';
 import 'pages/date_input_page.dart';
 import 'pages/date_picker_page.dart';
 import 'pages/indicator_page.dart';
@@ -37,6 +38,7 @@ class YakDesignExampleApp extends StatelessWidget {
       home: const HomePage(),
       routes: {
         '/button': (_) => const ButtonPage(),
+        '/checkbox': (_) => const CheckboxPage(),
         '/radio': (_) => const RadioPage(),
         '/toggle': (_) => const ToggleButtonPage(),
         '/text-input': (_) => const TextInputPage(),
@@ -65,6 +67,7 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     final items = [
       _NavItem('YakButton', 'Primary, secondary, ghost, icon, FAB', Icons.smart_button, '/button'),
+      _NavItem('YakCheckboxButton', 'Stroke/fill, circle/square, sizes S/M/L', Icons.check_box_outlined, '/checkbox'),
       _NavItem('YakRadioButton', 'Single choice from options (delivery, payment, size)', Icons.radio_button_checked, '/radio'),
       _NavItem('YakToggleButton', 'On/off toggle switch', Icons.toggle_on, '/toggle'),
       _NavItem('YakTextInput', 'Single-line text input', Icons.text_fields, '/text-input'),

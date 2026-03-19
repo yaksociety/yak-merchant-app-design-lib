@@ -78,6 +78,13 @@ class _TextInputPageState extends State<TextInputPage> {
             ),
             const SizedBox(height: 24),
             YakTextInput(
+              label: 'Label',
+              placeholder: 'Input text',
+              enabled: false,
+              onChanged: (_) {},
+            ),
+            const SizedBox(height: 24),
+            YakTextInput(
               placeholder: 'Without label',
               onChanged: (_) {},
             ),

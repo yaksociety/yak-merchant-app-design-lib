@@ -163,6 +163,7 @@ class YakColorSemanticBackground {
   Color get baseSecond => YakColor.primitive.neutral.neutral100;
   Color get primaryMain => YakColor.primitive.primary.primary500;
   Color get primarySecond => YakColor.primitive.primary.primary50;
+  Color get primaryThird => YakColor.primitive.primary.primary25;
   Color get successMain => YakColor.primitive.success.success500;
   Color get successSecond => YakColor.primitive.success.success50;
   Color get dangerMain => YakColor.primitive.danger.danger500;

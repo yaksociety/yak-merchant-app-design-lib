@@ -15,7 +15,8 @@ This library provides pre-built UI components for the Yak Merchant App:
   - `floating` - Floating action button (FAB)
   - Custom styling: `stroke`, `borderRadius`, `padding`; leading/trailing icons (`leadingIcon`, `trailingIcon`, or `leftIcon`/`rightIcon`); optional `label` with `isRequired` (red asterisk) for field-style buttons; content uses space-between layout when a trailing icon is set.
 - **[YakToggleButton](docs/widgets/yak_toggle_button.md)** - Toggle switch button for on/off states
-- **[YakRadioButton & YakRadioGroup](docs/widgets/yak_radio_button.md)** - Radio options for single-choice selection (delivery method, payment, size, etc.) with optional label, subtitle, and per-option or group-level helper text
+- **YakCheckboxButton** - Checkbox option (stroke/fill, circle/rounded-square, sizes S/M/L) with customizable `color`, `checkColor`, `labelStyle`, `subtitleStyle`
+- **[YakRadioButton & YakRadioGroup](docs/widgets/yak_radio_button.md)** - Radio options (radio-dot style) for single-choice selection (delivery method, payment, size, etc.) with optional label/subtitle/helper text and style controls: `size` (S/M/L), `color` (ring/fill), `checkColor` (inner dot), `labelStyle`, `subtitleStyle`
 
 ### 📝 Input Components
 - **[YakTextInput](docs/widgets/yak_text_input.md)** - Single-line text input with label, error states, and validation
@@ -37,7 +38,7 @@ This library provides pre-built UI components for the Yak Merchant App:
 - **[YakSheet](docs/widgets/yak_sheet.md)** - Bottom sheet with optional drag handle and title; themed via `YakSheetThemeData`. Use `YakSheet.show(context, child: ...)` with optional `showDragHandle`, `borderRadius`, `padding`; top corners clip correctly with the set radius.
 
 ### 🪟 Modals
-- **[YakModal](docs/widgets/yak_modal.md)** - Centered dialog with optional header icon (info/success/warning/error), title, description, and **custom child** (forms, images, checkboxes, toggles, etc.); optional Cancel + Continue buttons; close (X); themed via `YakModalThemeData`. Use `YakModal.show(context, child: ...)`.
+- **[YakModal](docs/widgets/yak_modal.md)** - Centered dialog container with close (X), rounded corners, and padding; **you provide all content** (title/description/actions) via `child`; themed via `YakModalThemeData`. Use `YakModal.show(context, child: ...)`.
 
 ### 🔔 Alerts
 - **[YakAlert](docs/widgets/yak_alert.md)** - Banner alert at the top of the screen with icon, title, message, optional action link, and dismiss; types: info, warning, error, success. Use `YakAlert.show(context, ...)` to display as overlay.
@@ -125,18 +126,86 @@ showModalBottomSheet(
 ```dart
 YakModal.show(
   context,
-  title: 'Subscribe',
-  description: 'Choose what you want to receive.',
-  headerIconType: YakModalIconType.info,
   child: Column(
+    mainAxisSize: MainAxisSize.min,
     children: [
+      const Text('Subscribe', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600)),
+      const SizedBox(height: YakModal.gap),
       CheckboxListTile(title: Text('Guides'), value: false, onChanged: (_) {}),
       CheckboxListTile(title: Text('Resources'), value: true, onChanged: (_) {}),
+      const SizedBox(height: YakModal.gap),
+      YakButton(
+        text: 'Done',
+        variant: YakButtonVariant.primary,
+        onPressed: () => Navigator.pop(context),
+      ),
     ],
   ),
-  primaryLabel: 'Continue',
-  cancelLabel: 'Cancel',
 );
+```
+
+**YakRadioGroup / YakRadioButton**
+```dart
+YakRadioGroup<String>(
+  groupValue: _value,
+  onChanged: (v) => setState(() => _value = v),
+  children: const [
+    YakRadioButton<String>(
+      value: 'S',
+      label: 'S',
+      size: YakRadioSize.s,
+    ),
+    YakRadioButton<String>(
+      value: 'M',
+      label: 'M',
+      size: YakRadioSize.m,
+    ),
+    YakRadioButton<String>(
+      value: 'L',
+      label: 'L',
+      size: YakRadioSize.l,
+    ),
+  ],
+)
+
+// Custom color + dot color
+YakRadioButton<String>(
+  value: 'custom',
+  groupValue: _value,
+  onChanged: (v) => setState(() => _value = v),
+  label: 'Custom',
+  color: YakColor.semantic.textAndIcons.success,
+  checkColor: YakColor.semantic.textAndIcons.success, // dot matches ring
+)
+
+// Custom label and subtitle text styles
+YakRadioButton<String>(
+  value: 'bank',
+  groupValue: _value,
+  onChanged: (v) => setState(() => _value = v),
+  label: 'Bank transfer',
+  subtitle: 'Pay within 24 hours',
+  labelStyle: YakTypography.semantic.textM.medium,
+  subtitleStyle: YakTypography.semantic.textXS.regular,
+)
+```
+
+**YakCheckboxButton**
+```dart
+YakCheckboxButton(
+  value: _checked,
+  onChanged: (v) => setState(() => _checked = v),
+  label: 'Option',
+  subtitle: 'Optional subtitle',
+  // Styling
+  size: YakCheckboxSize.m,
+  shape: YakCheckboxShape.roundedSquare,
+  variant: YakCheckboxVariant.fill,
+  color: YakColor.semantic.textAndIcons.primary,
+  // Typography override
+  labelStyle: YakTypography.semantic.textS.medium,
+  subtitleStyle: YakTypography.semantic.textXS.regular,
+)
 ```
 
 **YakAlert**
@@ -198,7 +267,8 @@ Each widget and theme token has its own doc with API reference and examples:
 **Widgets**
 - [**YakButton**](docs/widgets/yak_button.md) – Buttons (primary, secondary, ghost, icon, FAB; label/required, stroke, rounded, padding, leading/trailing icons)
 - [**YakToggleButton**](docs/widgets/yak_toggle_button.md) – On/off toggle switch
-- [**YakRadioButton & YakRadioGroup**](docs/widgets/yak_radio_button.md) – Radio options for single-choice (label, subtitle, helper text)
+- **YakCheckboxButton** – Checkbox options (stroke/fill, circle/rounded-square, sizes S/M/L, `color`, `checkColor`, `labelStyle`, `subtitleStyle`)
+- [**YakRadioButton & YakRadioGroup**](docs/widgets/yak_radio_button.md) – Radio-dot options for single-choice (sizes S/M/L, `color`, `checkColor`, `labelStyle`, `subtitleStyle`, label/subtitle/helper text)
 - [**YakTextInput**](docs/widgets/yak_text_input.md) – Single-line text input
 - [**YakTextArea**](docs/widgets/yak_text_area.md) – Multi-line text area
 - [**YakSelect**](docs/widgets/yak_select.md) – Dropdown/select (YakSelectStyle, visibleIcon, item icons e.g. ic_flag_th/ic_flag_en, compact rounded icon, label/error, check icon on selected)
