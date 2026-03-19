@@ -18,8 +18,9 @@ enum YakButtonContentAlignment { start, center }
 class _YakOuterFocusRing extends StatefulWidget {
   final bool enabled;
   final double borderRadius;
-  final Color ringColor;
-  final double ringWidth;
+  final Color idleBorderColor;
+  final Color activeBorderColor;
+  final double borderWidth;
   final Color? idleFillColor;
   final Color? activeFillColor;
   final Color? disabledFillColor;
@@ -28,8 +29,9 @@ class _YakOuterFocusRing extends StatefulWidget {
   const _YakOuterFocusRing({
     required this.enabled,
     required this.borderRadius,
-    required this.ringColor,
-    required this.ringWidth,
+    required this.idleBorderColor,
+    required this.activeBorderColor,
+    required this.borderWidth,
     this.idleFillColor,
     this.activeFillColor,
     this.disabledFillColor,
@@ -63,6 +65,7 @@ class _YakOuterFocusRingState extends State<_YakOuterFocusRing> {
     final Color? fill = widget.enabled
         ? (show ? widget.activeFillColor : widget.idleFillColor)
         : widget.disabledFillColor;
+    final Color borderColor = show ? widget.activeBorderColor : widget.idleBorderColor;
 
     return FocusableActionDetector(
       onShowFocusHighlight: (v) => setState(() => _showFocus = v),
@@ -93,24 +96,19 @@ class _YakOuterFocusRingState extends State<_YakOuterFocusRing> {
               ),
             widget.child,
             Positioned(
-              left: -widget.ringWidth,
-              right: -widget.ringWidth,
-              top: -widget.ringWidth,
-              bottom: -widget.ringWidth,
+              left: 0,
+              right: 0,
+              top: 0,
+              bottom: 0,
               child: IgnorePointer(
-                child: AnimatedOpacity(
-                  opacity: _active ? 1 : 0,
+                child: AnimatedContainer(
                   duration: const Duration(milliseconds: 140),
                   curve: Curves.easeOutCubic,
-                  child: DecoratedBox(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(
-                        widget.borderRadius + widget.ringWidth,
-                      ),
-                      border: Border.all(
-                        color: widget.ringColor,
-                        width: widget.ringWidth,
-                      ),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(widget.borderRadius),
+                    border: Border.all(
+                      color: borderColor,
+                      width: widget.borderWidth,
                     ),
                   ),
                 ),
@@ -451,7 +449,7 @@ class YakButton extends StatelessWidget {
     switch (variant) {
       case YakButtonVariant.primary:
         final Color buttonBackground = backgroundColor ?? primaryBackground;
-        final Color focusRingColor = YakColor.primitive.primary.primary100;
+        final Color focusBorderColor = YakColor.semantic.stroke.primary;
         style = ButtonStyle(
           backgroundColor: WidgetStateProperty.all(buttonBackground),
           foregroundColor: WidgetStateProperty.all(effectiveTextColor),
@@ -462,8 +460,8 @@ class YakButton extends StatelessWidget {
           shape: WidgetStateProperty.all(
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(radius)),
           ),
-          // Keep the button face clean; the outer ring is drawn by a wrapper.
-          side: WidgetStateProperty.all(primaryStroke),
+          // Border is drawn by the wrapper so we don't get double borders.
+          side: WidgetStateProperty.all(BorderSide.none),
         );
         return SizedBox(
           width: width,
@@ -471,8 +469,9 @@ class YakButton extends StatelessWidget {
           child: _YakOuterFocusRing(
             enabled: !(_isDisabled || isLoading),
             borderRadius: radius,
-            ringColor: focusRingColor,
-            ringWidth: 2,
+            idleBorderColor: YakColor.semantic.stroke.base,
+            activeBorderColor: focusBorderColor,
+            borderWidth: primaryStroke == BorderSide.none ? 1 : primaryStroke.width,
             child: ElevatedButton(
               onPressed: _isDisabled || isLoading ? null : onPressed,
               style: style,
@@ -481,7 +480,7 @@ class YakButton extends StatelessWidget {
           ),
         );
       case YakButtonVariant.secondary:
-        final Color focusRingColor = YakColor.semantic.textAndIcons.baseMain;
+        final Color focusBorderColor = YakColor.semantic.stroke.primary;
         final BorderSide defaultStroke =
             stroke ??
             BorderSide(color: YakColor.semantic.stroke.base, width: 1);
@@ -496,7 +495,8 @@ class YakButton extends StatelessWidget {
           shape: WidgetStateProperty.all(
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(radius)),
           ),
-          side: WidgetStateProperty.all(defaultStroke),
+          // Border is drawn by the wrapper so we don't get double borders.
+          side: WidgetStateProperty.all(BorderSide.none),
         );
         return SizedBox(
           width: width,
@@ -504,10 +504,12 @@ class YakButton extends StatelessWidget {
           child: _YakOuterFocusRing(
             enabled: !(_isDisabled || isLoading),
             borderRadius: radius,
-            ringColor: focusRingColor,
-            ringWidth: 2,
+            idleBorderColor: defaultStroke.color,
+            activeBorderColor: focusBorderColor,
+            borderWidth: defaultStroke.width,
             idleFillColor: YakColor.semantic.background.baseMain,
-            activeFillColor: YakColor.primitive.primary.primary50,
+            // Keep fill the same on focus/press; only the outer ring changes.
+            activeFillColor: YakColor.semantic.background.baseMain,
             disabledFillColor: YakColor.semantic.background.baseMain,
             child: OutlinedButton(
               onPressed: _isDisabled || isLoading ? null : onPressed,
@@ -551,7 +553,7 @@ class YakButton extends StatelessWidget {
     final double size = height;
     final double radius = borderRadius ?? 12;
     final double ringRadius = isCircularIcon ? size / 2 : radius;
-    final Color ringColor = YakColor.primitive.primary.primary100;
+    final Color ringColor = YakColor.semantic.textAndIcons.primary;
     final Color buttonBackground = background;
     final Color effectiveIconColor = iconColor;
 
@@ -572,8 +574,9 @@ class YakButton extends StatelessWidget {
       child: _YakOuterFocusRing(
         enabled: !(_isDisabled || isLoading),
         borderRadius: ringRadius,
-        ringColor: ringColor,
-        ringWidth: 2,
+        idleBorderColor: Colors.transparent,
+        activeBorderColor: ringColor,
+        borderWidth: 1,
         child: Material(
           color: buttonBackground,
           shape: isCircularIcon
