@@ -4,6 +4,7 @@ library;
 export 'alerts/yak_alert.dart';
 // Button Components
 export 'buttons/yak_button.dart';
+export 'buttons/yak_checkbox_button.dart';
 export 'buttons/yak_radio_button.dart';
 export 'buttons/yak_toggle_button.dart';
 // Cards

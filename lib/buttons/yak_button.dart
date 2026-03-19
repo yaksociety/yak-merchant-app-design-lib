@@ -10,19 +10,17 @@ import '../theme/yak_typography.dart';
 /// - [YakButtonVariant.ghost]     → Transparent ghost button
 /// - [YakButtonVariant.icon]      → Icon-only button
 /// - [YakButtonVariant.floating]  → Floating action button (FAB)
-enum YakButtonVariant {
-  primary,
-  secondary,
-  ghost,
-  icon,
-  floating,
-}
+enum YakButtonVariant { primary, secondary, ghost, icon, floating }
+
+/// Alignment behavior for text/icon content inside a full-width button.
+enum YakButtonContentAlignment { start, center }
 
 class _YakOuterFocusRing extends StatefulWidget {
   final bool enabled;
   final double borderRadius;
-  final Color ringColor;
-  final double ringWidth;
+  final Color idleBorderColor;
+  final Color activeBorderColor;
+  final double borderWidth;
   final Color? idleFillColor;
   final Color? activeFillColor;
   final Color? disabledFillColor;
@@ -31,8 +29,9 @@ class _YakOuterFocusRing extends StatefulWidget {
   const _YakOuterFocusRing({
     required this.enabled,
     required this.borderRadius,
-    required this.ringColor,
-    required this.ringWidth,
+    required this.idleBorderColor,
+    required this.activeBorderColor,
+    required this.borderWidth,
     this.idleFillColor,
     this.activeFillColor,
     this.disabledFillColor,
@@ -66,6 +65,7 @@ class _YakOuterFocusRingState extends State<_YakOuterFocusRing> {
     final Color? fill = widget.enabled
         ? (show ? widget.activeFillColor : widget.idleFillColor)
         : widget.disabledFillColor;
+    final Color borderColor = show ? widget.activeBorderColor : widget.idleBorderColor;
 
     return FocusableActionDetector(
       onShowFocusHighlight: (v) => setState(() => _showFocus = v),
@@ -96,24 +96,19 @@ class _YakOuterFocusRingState extends State<_YakOuterFocusRing> {
               ),
             widget.child,
             Positioned(
-              left: -widget.ringWidth,
-              right: -widget.ringWidth,
-              top: -widget.ringWidth,
-              bottom: -widget.ringWidth,
+              left: 0,
+              right: 0,
+              top: 0,
+              bottom: 0,
               child: IgnorePointer(
-                child: AnimatedOpacity(
-                  opacity: _active ? 1 : 0,
+                child: AnimatedContainer(
                   duration: const Duration(milliseconds: 140),
                   curve: Curves.easeOutCubic,
-                  child: DecoratedBox(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(
-                        widget.borderRadius + widget.ringWidth,
-                      ),
-                      border: Border.all(
-                        color: widget.ringColor,
-                        width: widget.ringWidth,
-                      ),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(widget.borderRadius),
+                    border: Border.all(
+                      color: borderColor,
+                      width: widget.borderWidth,
                     ),
                   ),
                 ),
@@ -130,6 +125,8 @@ class _YakOuterFocusRingState extends State<_YakOuterFocusRing> {
 ///
 /// Use [variant] to select the style you want instead of different widgets.
 class YakButton extends StatelessWidget {
+  static const double _disabledOpacity = 0.45;
+
   /// Text label of the button.
   ///
   /// For [YakButtonVariant.icon] you can leave this empty.
@@ -161,6 +158,13 @@ class YakButton extends StatelessWidget {
 
   /// Icon data for [YakButtonVariant.icon] and [YakButtonVariant.floating].
   final IconData? icon;
+
+  /// Hero tag for the floating action button variant.
+  ///
+  /// Defaults to `null` to disable the Hero wrapper, preventing
+  /// "multiple heroes share the same tag" when multiple FABs exist on a page.
+  /// Set a custom tag to re-enable Hero transitions.
+  final Object? heroTag;
 
   /// Whether icon-style buttons should be circular.
   ///
@@ -209,6 +213,12 @@ class YakButton extends StatelessWidget {
   /// Inner padding of the button (primary/secondary/ghost). When null, uses 24 horizontal, 12 vertical.
   final EdgeInsetsGeometry? padding;
 
+  /// Controls how content is aligned when [width] is set (full-width buttons).
+  ///
+  /// - [YakButtonContentAlignment.center] (default): centered content (current behavior).
+  /// - [YakButtonContentAlignment.start]: left-aligned content (useful for "field-style" buttons without a trailing icon).
+  final YakButtonContentAlignment contentAlignment;
+
   const YakButton({
     super.key,
     required this.text,
@@ -220,6 +230,7 @@ class YakButton extends StatelessWidget {
     this.trailingIcon,
     this.iconSize = 20.0,
     this.icon,
+    this.heroTag,
     this.isCircularIcon = true,
     this.isLoading = false,
     this.width,
@@ -234,16 +245,10 @@ class YakButton extends StatelessWidget {
     this.isRequired = false,
     this.labelStyle,
     this.padding,
+    this.contentAlignment = YakButtonContentAlignment.center,
   });
 
   bool get _isDisabled => disabled;
-
-  /// Desaturates and lightens a color for disabled state.
-  /// Creates a toned-down version of the original color.
-  Color _getDisabledColor(Color originalColor) {
-    // Blend with white to lighten and desaturate
-    return Color.lerp(originalColor, Colors.white, 0.6) ?? originalColor;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -254,18 +259,19 @@ class YakButton extends StatelessWidget {
     final Color ghostTextDefault = YakColor.primitive.primary.primary500;
 
     final TextStyle baseTextStyle =
-        YakTypography.semantic.textM.semibold.merge(textStyle);
+        (variant == YakButtonVariant.primary
+                ? YakTypography.semantic.textS.semibold
+                : YakTypography.semantic.textS.regular)
+            .merge(textStyle);
 
-    final Color effectiveTextColor = textColor ??
+    final Color effectiveTextColor =
+        textColor ??
         textStyle?.color ??
         (variant == YakButtonVariant.ghost ? ghostTextDefault : primaryText);
 
-    final Color finalTextColor = _isDisabled
-        ? _getDisabledColor(effectiveTextColor)
-        : effectiveTextColor;
-
-    final TextStyle effectiveTextStyle =
-        baseTextStyle.copyWith(color: finalTextColor);
+    final TextStyle effectiveTextStyle = baseTextStyle.copyWith(
+      color: effectiveTextColor,
+    );
 
     final Widget buttonWidget;
     switch (variant) {
@@ -293,23 +299,25 @@ class YakButton extends StatelessWidget {
         break;
     }
 
+    final Widget fadedButton = Opacity(
+      opacity: _isDisabled ? _disabledOpacity : 1,
+      child: buttonWidget,
+    );
+
     if (label != null && label!.isNotEmpty) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
-        children: [
-          _buildLabelRow(),
-          const SizedBox(height: 8),
-          buttonWidget,
-        ],
+        children: [_buildLabelRow(), const SizedBox(height: 8), fadedButton],
       );
     }
-    return buttonWidget;
+    return fadedButton;
   }
 
   /// Label row with optional red asterisk for required fields.
   Widget _buildLabelRow() {
-    final TextStyle base = labelStyle ??
+    final TextStyle base =
+        labelStyle ??
         YakTypography.semantic.textS.medium.copyWith(
           color: YakColor.semantic.textAndIcons.baseMain,
         );
@@ -324,8 +332,7 @@ class YakButton extends StatelessWidget {
             child: Text(
               '*',
               style: base.copyWith(
-                color: YakColor.primitive.danger.danger500,
-                fontWeight: FontWeight.w600,
+                color: YakColor.semantic.textAndIcons.danger,
               ),
             ),
           ),
@@ -341,100 +348,118 @@ class YakButton extends StatelessWidget {
     required Color effectiveTextColor,
   }) {
     final Color ghostTextDefault = YakColor.primitive.primary.primary500;
-    final double radius = borderRadius ?? 8;
-    final EdgeInsetsGeometry effectivePadding = padding ??
-        const EdgeInsets.symmetric(horizontal: 24, vertical: 12);
-    final BorderSide primaryStroke = stroke ?? BorderSide.none;
+    final double radius = borderRadius ?? 12;
+    final EdgeInsetsGeometry effectivePadding =
+        padding ?? const EdgeInsets.symmetric(horizontal: 12, vertical: 12);
+    final bool shouldExpand = width != null;
     final BorderSide ghostStroke = stroke ?? BorderSide.none;
 
-    // Tone down text color when disabled
-    final Color finalTextColor = _isDisabled 
-        ? _getDisabledColor(effectiveTextColor) 
-        : effectiveTextColor;
-    
-    final Color iconColor = _isDisabled 
-        ? _getDisabledColor(effectiveTextColor) 
-        : effectiveTextColor;
-    
-    final Widget? leading = leftIcon ?? (leadingIcon != null
-        ? Icon(leadingIcon, size: iconSize, color: iconColor)
-        : null);
-    final Widget? trailing = rightIcon ?? (trailingIcon != null
-        ? Icon(trailingIcon, size: iconSize, color: iconColor)
-        : null);
+    final Color finalTextColor = effectiveTextColor;
+    final Color iconColor = effectiveTextColor;
+
+    final Widget? leading =
+        leftIcon ??
+        (leadingIcon != null
+            ? Icon(leadingIcon, size: iconSize, color: iconColor)
+            : null);
+    final Widget? trailing =
+        rightIcon ??
+        (trailingIcon != null
+            ? Icon(trailingIcon, size: iconSize, color: iconColor)
+            : null);
 
     final Widget content = isLoading
         ? SizedBox(
             width: 20,
             height: 20,
             child: CircularProgressIndicator(
-              strokeWidth: 2,
+              strokeWidth: 1,
               valueColor: AlwaysStoppedAnimation<Color>(
-                variant == YakButtonVariant.ghost 
-                    ? (_isDisabled ? _getDisabledColor(ghostTextDefault) : ghostTextDefault)
+                variant == YakButtonVariant.ghost
+                    ? ghostTextDefault
                     : finalTextColor,
               ),
             ),
           )
         : trailing != null
-            ? Row(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
+        ? Row(
+            mainAxisSize: shouldExpand ? MainAxisSize.max : MainAxisSize.min,
+            children: [
+              if (shouldExpand)
+                Expanded(
+                  child: Row(
+                    mainAxisSize: MainAxisSize.max,
                     children: [
                       if (leading != null) ...[
                         leading,
-                        const SizedBox(width: 8),
+                        const SizedBox(width: 12),
                       ],
-                      Text(text, style: effectiveTextStyle),
+                      Expanded(
+                        child: Text(
+                          text,
+                          style: effectiveTextStyle,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                          softWrap: false,
+                        ),
+                      ),
                     ],
                   ),
-                  trailing,
-                ],
-              )
-            : Row(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  if (leading != null) ...[
-                    leading,
-                    const SizedBox(width: 8),
+                )
+              else
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    if (leading != null) ...[
+                      leading,
+                      const SizedBox(width: 12),
+                    ],
+                    Text(text, style: effectiveTextStyle),
                   ],
-                  Text(text, style: effectiveTextStyle),
-                ],
-              );
+                ),
+              trailing,
+            ],
+          )
+        : Row(
+            mainAxisSize: shouldExpand ? MainAxisSize.max : MainAxisSize.min,
+            mainAxisAlignment: shouldExpand
+                ? (contentAlignment == YakButtonContentAlignment.start
+                      ? MainAxisAlignment.start
+                      : MainAxisAlignment.center)
+                : MainAxisAlignment.center,
+            children: [
+              if (leading != null) ...[leading, const SizedBox(width: 12)],
+              if (shouldExpand)
+                Flexible(
+                  child: Text(
+                    text,
+                    style: effectiveTextStyle,
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                    softWrap: false,
+                  ),
+                )
+              else
+                Text(text, style: effectiveTextStyle),
+            ],
+          );
 
     final ButtonStyle style;
     switch (variant) {
       case YakButtonVariant.primary:
         final Color buttonBackground = backgroundColor ?? primaryBackground;
-        final Color focusRingColor = YakColor.primitive.primary.primary100;
         style = ButtonStyle(
-          backgroundColor: WidgetStateProperty.resolveWith((states) {
-            if (states.contains(WidgetState.disabled)) {
-              return _getDisabledColor(buttonBackground);
-            }
-            return buttonBackground;
-          }),
-          foregroundColor: WidgetStateProperty.resolveWith((states) {
-            if (states.contains(WidgetState.disabled)) {
-              return _getDisabledColor(effectiveTextColor);
-            }
-            return effectiveTextColor;
-          }),
+          backgroundColor: WidgetStateProperty.all(buttonBackground),
+          foregroundColor: WidgetStateProperty.all(effectiveTextColor),
           overlayColor: WidgetStateProperty.all(Colors.transparent),
           elevation: WidgetStateProperty.all(0),
           shadowColor: WidgetStateProperty.all(Colors.transparent),
           padding: WidgetStateProperty.all(effectivePadding),
           shape: WidgetStateProperty.all(
-            RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(radius),
-            ),
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(radius)),
           ),
-          // Keep the button face clean; the outer ring is drawn by a wrapper.
-          side: WidgetStateProperty.all(primaryStroke),
+          // Border is drawn by the wrapper so we don't get double borders.
+          side: WidgetStateProperty.all(BorderSide.none),
         );
         return SizedBox(
           width: width,
@@ -442,8 +467,10 @@ class YakButton extends StatelessWidget {
           child: _YakOuterFocusRing(
             enabled: !(_isDisabled || isLoading),
             borderRadius: radius,
-            ringColor: focusRingColor,
-            ringWidth: 2,
+            // Primary buttons don't show an outline; keep border hidden even on focus/press.
+            idleBorderColor: Colors.transparent,
+            activeBorderColor: Colors.transparent,
+            borderWidth: 0,
             child: ElevatedButton(
               onPressed: _isDisabled || isLoading ? null : onPressed,
               style: style,
@@ -452,35 +479,23 @@ class YakButton extends StatelessWidget {
           ),
         );
       case YakButtonVariant.secondary:
-        final Color focusRingColor = YakColor.primitive.primary.primary100;
-        final BorderSide defaultStroke = stroke ??
-            BorderSide(
-              color: YakColor.primitive.primary.primary500,
-              width: 2,
-            );
-        const BorderSide disabledStroke = BorderSide.none;
+        final Color focusBorderColor = YakColor.semantic.stroke.primary;
+        final BorderSide defaultStroke =
+            stroke ??
+            BorderSide(color: YakColor.semantic.stroke.base, width: 1);
         style = ButtonStyle(
           // Background is animated by the outer wrapper (keeps it smooth).
           backgroundColor: WidgetStateProperty.all(Colors.transparent),
-          foregroundColor: WidgetStateProperty.resolveWith((states) {
-            if (states.contains(WidgetState.disabled)) {
-              return YakColor.semantic.textAndIcons.disabled;
-            }
-            return effectiveTextColor;
-          }),
+          foregroundColor: WidgetStateProperty.all(effectiveTextColor),
           overlayColor: WidgetStateProperty.all(Colors.transparent),
           elevation: WidgetStateProperty.all(0),
           shadowColor: WidgetStateProperty.all(Colors.transparent),
           padding: WidgetStateProperty.all(effectivePadding),
           shape: WidgetStateProperty.all(
-            RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(radius),
-            ),
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(radius)),
           ),
-          side: WidgetStateProperty.resolveWith((states) {
-            if (states.contains(WidgetState.disabled)) return disabledStroke;
-            return defaultStroke;
-          }),
+          // Border is drawn by the wrapper so we don't get double borders.
+          side: WidgetStateProperty.all(BorderSide.none),
         );
         return SizedBox(
           width: width,
@@ -488,11 +503,13 @@ class YakButton extends StatelessWidget {
           child: _YakOuterFocusRing(
             enabled: !(_isDisabled || isLoading),
             borderRadius: radius,
-            ringColor: focusRingColor,
-            ringWidth: 2,
+            idleBorderColor: defaultStroke.color,
+            activeBorderColor: focusBorderColor,
+            borderWidth: defaultStroke.width,
             idleFillColor: YakColor.semantic.background.baseMain,
-            activeFillColor: YakColor.primitive.primary.primary50,
-            disabledFillColor: YakColor.primitive.primary.primary50,
+            // Keep fill the same on focus/press; only the outer ring changes.
+            activeFillColor: YakColor.semantic.background.baseMain,
+            disabledFillColor: YakColor.semantic.background.baseMain,
             child: OutlinedButton(
               onPressed: _isDisabled || isLoading ? null : onPressed,
               style: style,
@@ -501,10 +518,9 @@ class YakButton extends StatelessWidget {
           ),
         );
       case YakButtonVariant.ghost:
-        final Color disabledTextColor = _getDisabledColor(effectiveTextColor);
         style = TextButton.styleFrom(
           foregroundColor: effectiveTextColor,
-          disabledForegroundColor: disabledTextColor,
+          disabledForegroundColor: effectiveTextColor,
           backgroundColor: Colors.transparent,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(radius),
@@ -534,22 +550,18 @@ class YakButton extends StatelessWidget {
     required Color iconColor,
   }) {
     final double size = height;
-    final double radius = borderRadius ?? 8;
+    final double radius = borderRadius ?? 12;
     final double ringRadius = isCircularIcon ? size / 2 : radius;
-    final Color ringColor = YakColor.primitive.primary.primary100;
-    final Color buttonBackground = _isDisabled 
-        ? _getDisabledColor(background) 
-        : background;
-    final Color effectiveIconColor = _isDisabled 
-        ? _getDisabledColor(iconColor) 
-        : iconColor;
+    final Color ringColor = YakColor.semantic.textAndIcons.primary;
+    final Color buttonBackground = background;
+    final Color effectiveIconColor = iconColor;
 
     final Widget child = isLoading
         ? SizedBox(
             width: size / 2,
             height: size / 2,
             child: CircularProgressIndicator(
-              strokeWidth: 2,
+              strokeWidth: 1,
               valueColor: AlwaysStoppedAnimation<Color>(effectiveIconColor),
             ),
           )
@@ -561,8 +573,9 @@ class YakButton extends StatelessWidget {
       child: _YakOuterFocusRing(
         enabled: !(_isDisabled || isLoading),
         borderRadius: ringRadius,
-        ringColor: ringColor,
-        ringWidth: 2,
+        idleBorderColor: Colors.transparent,
+        activeBorderColor: ringColor,
+        borderWidth: 1,
         child: Material(
           color: buttonBackground,
           shape: isCircularIcon
@@ -595,18 +608,16 @@ class YakButton extends StatelessWidget {
     required Color iconColor,
   }) {
     final bool hasLabel = text.isNotEmpty;
-    final Color effectiveIconColor = _isDisabled 
-        ? _getDisabledColor(iconColor) 
-        : iconColor;
-    final Widget? fabIcon =
-        icon != null ? Icon(icon, color: effectiveIconColor, size: 24) : null;
-    final Color buttonBackground = _isDisabled 
-        ? _getDisabledColor(background) 
-        : background;
+    final Color effectiveIconColor = iconColor;
+    final Widget? fabIcon = icon != null
+        ? Icon(icon, color: effectiveIconColor, size: 24)
+        : null;
+    final Color buttonBackground = background;
 
     if (hasLabel) {
       return FloatingActionButton.extended(
         onPressed: _isDisabled || isLoading ? null : onPressed,
+        heroTag: heroTag,
         backgroundColor: buttonBackground,
         foregroundColor: effectiveIconColor,
         elevation: 6,
@@ -616,7 +627,7 @@ class YakButton extends StatelessWidget {
                 width: 20,
                 height: 20,
                 child: CircularProgressIndicator(
-                  strokeWidth: 2,
+                  strokeWidth: 1,
                   valueColor: AlwaysStoppedAnimation<Color>(effectiveIconColor),
                 ),
               )
@@ -638,6 +649,7 @@ class YakButton extends StatelessWidget {
       height: size,
       child: FloatingActionButton(
         onPressed: _isDisabled || isLoading ? null : onPressed,
+        heroTag: heroTag,
         backgroundColor: buttonBackground,
         foregroundColor: effectiveIconColor,
         elevation: 6,
@@ -646,7 +658,7 @@ class YakButton extends StatelessWidget {
                 width: size / 2,
                 height: size / 2,
                 child: CircularProgressIndicator(
-                  strokeWidth: 2,
+                  strokeWidth: 1,
                   valueColor: AlwaysStoppedAnimation<Color>(effectiveIconColor),
                 ),
               )
@@ -655,4 +667,3 @@ class YakButton extends StatelessWidget {
     );
   }
 }
-

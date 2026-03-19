@@ -6,6 +6,75 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ---
 
+## [v1.7.0] - 2026-03-19
+
+**Title:** `v1.7.0 — Form controls refresh (buttons, radio, checkbox)`
+
+**Description:** A major refresh of form controls to match the latest Figma/Supernova styles. Adds **YakCheckboxButton**, rewrites **YakRadioButton** with radio-dot visuals and sizing variants, and refines **YakButton** layout, disabled behavior, focus styling, and typography defaults. Also updates examples, docs, README, and missing semantic color tokens used by components.
+
+**Added**
+
+- **YakColor** – semantic background tokens:
+  - `YakColor.semantic.background.primaryThird` → `Primary/25`
+  - `YakColor.semantic.background.primaryFocus` → `Primary/100` (used for button focus ring)
+- **YakButton** – new alignment control:
+  - `contentAlignment` (`YakButtonContentAlignment.center` | `YakButtonContentAlignment.start`) for full-width buttons
+- **YakCheckboxButton** – new checkbox control:
+  - Stroke/fill variants, circle/rounded-square shapes, sizes S/M/L
+  - Customizable `color`, `checkColor`, `labelStyle`, `subtitleStyle`
+- **YakRadioButton** – new style controls:
+  - `color` (main ring/fill color, default `YakColor.semantic.textAndIcons.primary`)
+  - `checkColor` (inner dot color; if `color` is set, dot follows `color`)
+  - `size` (`YakRadioSize.s`, `YakRadioSize.m`, `YakRadioSize.l`)
+  - `labelStyle` and `subtitleStyle` for text style customization
+
+**Changed**
+
+- **YakButton** – styling & behavior:
+  - Uses **YakColor semantic tokens** for button styling (background/text/stroke), plus new semantic focus token for the outer ring
+  - Default **corner radius** is now **12**
+  - Default **padding** is now **12×12** and default **icon/text gap** is **12**
+  - Disabled state now **fades** (opacity) instead of swapping/deriving new colors
+  - Full-width behavior: button only expands when `width` is set; otherwise sizes to content
+  - Full-width centered layout now properly centers content even with a trailing icon
+  - Focus/hover/press:
+    - Secondary uses **border color change** (neutral → primary) without a separate ring, keeping fill unchanged
+    - Primary keeps its **filled style** and does not draw an outline/ring overlay
+  - Default text styles:
+    - Primary → `YakTypography.semantic.textS.semibold`
+    - Secondary/Ghost → `YakTypography.semantic.textS.regular`
+  - Floating (FAB) variant now supports `heroTag` (default `null`) to prevent duplicate Hero tag crashes when multiple FABs are shown on the same route
+- **Example app / docs**:
+  - Updated YakButton “field-style” examples to match the provided UI screenshots and rely on defaults
+  - **YakModal** updated to be a **container-only** dialog (users compose title/description/actions via `child`), with defaults: radius `12`, padding `24`, and recommended gap `16` (`YakModal.gap`)
+  - `YakModal.show(...)` now uses a smooth, modern open transition (fade + subtle scale)
+
+- **YakTextInput / YakTextArea**:
+  - Updated to use **YakColor**/**YakTypography** tokens for borders, labels, placeholders, error, and disabled states
+  - Disabled state styling refined for YakTextInput, plus example & docs updates
+- **YakRadioButton**:
+  - Rewritten from native `RadioListTile` rendering to custom radio indicator rendering for closer design matching
+  - Indicator now uses radio-dot style (instead of checkmark), with tuned focused glow and disabled states
+  - Indicator/text spacing tightened and large-size label alignment corrected (centered for single-line labels)
+- **YakCheckboxButton**:
+  - New checkbox indicator rendering with stroke/fill styles, focus glow, and bolder checkmark
+- **Radio example page**:
+  - `example/lib/pages/radio_page.dart` simplified to style-focused demos only (sizes, custom colors, disabled)
+- **Checkbox example page**:
+  - Added `example/lib/pages/checkbox_page.dart` and wired into example app routes/home list
+- **README**:
+  - Updated usage/docs for YakRadioButton and YakCheckboxButton (including label/subtitle style overrides)
+
+**Fixed**
+
+- **YakButton** – prevents text/icon row overflow by constraining and ellipsizing long labels when needed
+
+**Removed**
+
+- None
+
+---
+
 ## [v1.6.2] - 2026-03-16
 
 **Title:** `v1.6.2 — YakOtpInput autofocus`

@@ -1,8 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:yak_merchant_app_design_lib/yak_merchant_app_design_lib.dart';
 
-class ModalPage extends StatelessWidget {
+class ModalPage extends StatefulWidget {
   const ModalPage({super.key});
+
+  @override
+  State<ModalPage> createState() => _ModalPageState();
+}
+
+class _ModalPageState extends State<ModalPage> {
+  bool _subscribeGuides = false;
+  bool _subscribeResources = true;
+  bool _subscribeAcademy = false;
 
   @override
   Widget build(BuildContext context) {
@@ -14,133 +23,168 @@ class ModalPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             const Text(
-              'Centered modal with optional icon, title, description. Add any content via child.',
+              'YakModal is a container only.',
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
             Text(
-              'Use YakModal.show() or build YakModal as dialog content. Cancel + Continue buttons optional.',
+              'You provide all content (title, description, actions) yourself via the `child`.',
               style: TextStyle(fontSize: 14, color: Colors.grey[600]),
             ),
             const SizedBox(height: 24),
-            const Text('Simple modal (title + child)', style: TextStyle(fontWeight: FontWeight.w600)),
+            const Text(
+              'Basic modal',
+              style: TextStyle(fontWeight: FontWeight.w600),
+            ),
             const SizedBox(height: 12),
             YakButton(
-              text: 'Open simple modal',
+              text: 'Open basic modal',
               variant: YakButtonVariant.primary,
               onPressed: () {
                 YakModal.show(
                   context,
-                  title: 'Photo',
-                  description: 'Add a photo to your profile.',
-                  child: Container(
-                    height: 120,
-                    decoration: BoxDecoration(
-                      color: YakColor.primitive.neutral.neutral200,
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: const Center(child: Icon(Icons.image, size: 48)),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      const Text(
+                        'Photo',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      const SizedBox(height: YakModal.gap),
+                      Text(
+                        'Add a photo to your profile.',
+                        style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+                      ),
+                      const SizedBox(height: YakModal.gap),
+                      Container(
+                        height: 120,
+                        decoration: BoxDecoration(
+                          color: YakColor.primitive.neutral.neutral200,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: const Center(child: Icon(Icons.image, size: 48)),
+                      ),
+                      const SizedBox(height: YakModal.gap),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: YakButton(
+                              text: 'Cancel',
+                              variant: YakButtonVariant.secondary,
+                              onPressed: () => Navigator.of(context).pop(),
+                            ),
+                          ),
+                          const SizedBox(width: YakModal.gap),
+                          Expanded(
+                            child: YakButton(
+                              text: 'Continue',
+                              variant: YakButtonVariant.primary,
+                              onPressed: () => Navigator.of(context).pop(),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
-                  primaryLabel: 'Continue',
-                  cancelLabel: 'Cancel',
                 );
               },
             ),
             const SizedBox(height: 24),
-            const Text('With header icon (info)', style: TextStyle(fontWeight: FontWeight.w600)),
+            const Text(
+              'Custom content (checkboxes)',
+              style: TextStyle(fontWeight: FontWeight.w600),
+            ),
             const SizedBox(height: 12),
             YakButton(
-              text: 'Open modal with info icon',
+              text: 'Open subscribe modal',
               variant: YakButtonVariant.secondary,
               onPressed: () {
                 YakModal.show(
                   context,
-                  headerIconType: YakModalIconType.info,
-                  title: 'Label',
-                  description: 'Add a note or choose an option below.',
-                  child: const Text('Put any widgets here: inputs, checkboxes, toggles.'),
-                  primaryLabel: 'Continue',
-                  cancelLabel: 'Cancel',
-                );
-              },
-            ),
-            const SizedBox(height: 24),
-            const Text('Success & error icons', style: TextStyle(fontWeight: FontWeight.w600)),
-            const SizedBox(height: 12),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                YakButton(
-                  text: 'Success icon',
-                  variant: YakButtonVariant.secondary,
-                  onPressed: () {
-                    YakModal.show(
-                      context,
-                      headerIconType: YakModalIconType.success,
-                      title: 'Done',
-                      description: 'Your changes have been saved.',
-                      child: const SizedBox.shrink(),
-                      primaryLabel: 'OK',
-                    );
-                  },
-                ),
-                const SizedBox(height: 12),
-                YakButton(
-                  text: 'Error (red primary)',
-                  variant: YakButtonVariant.secondary,
-                  onPressed: () {
-                    YakModal.show(
-                      context,
-                      headerIconType: YakModalIconType.error,
-                      title: 'Error',
-                      description: 'Something went wrong.',
-                      child: const SizedBox.shrink(),
-                      primaryLabel: 'Continue',
-                      primaryIsDanger: true,
-                      cancelLabel: 'Cancel',
-                    );
-                  },
-                ),
-              ],
-            ),
-            const SizedBox(height: 24),
-            const Text('Custom content (checkboxes)', style: TextStyle(fontWeight: FontWeight.w600)),
-            const SizedBox(height: 12),
-            YakButton(
-              text: 'Subscribe modal',
-              variant: YakButtonVariant.primary,
-              onPressed: () {
-                YakModal.show(
-                  context,
-                  headerIconType: YakModalIconType.info,
-                  title: 'Subscribe',
-                  description: 'Choose what you want to receive.',
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      CheckboxListTile(
-                        title: const Text('Guides'),
-                        value: false,
-                        onChanged: (_) {},
+                      const Text(
+                        'Subscribe',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
-                      CheckboxListTile(
-                        title: const Text('Resources'),
-                        value: true,
-                        onChanged: (_) {},
+                      const SizedBox(height: YakModal.gap),
+                      Text(
+                        'Choose what you want to receive.',
+                        style: TextStyle(fontSize: 14, color: Colors.grey[600]),
                       ),
-                      CheckboxListTile(
-                        title: const Text('Academy'),
-                        value: false,
-                        onChanged: (_) {},
+                      const SizedBox(height: YakModal.gap),
+                      _ModalCheckboxRow(
+                        label: 'Guides',
+                        value: _subscribeGuides,
+                        onChanged: (v) => setState(() => _subscribeGuides = v),
+                      ),
+                      const SizedBox(height: 12),
+                      _ModalCheckboxRow(
+                        label: 'Resources',
+                        value: _subscribeResources,
+                        onChanged: (v) =>
+                            setState(() => _subscribeResources = v),
+                      ),
+                      const SizedBox(height: 12),
+                      _ModalCheckboxRow(
+                        label: 'Academy',
+                        value: _subscribeAcademy,
+                        onChanged: (v) => setState(() => _subscribeAcademy = v),
+                      ),
+                      const SizedBox(height: YakModal.gap),
+                      YakButton(
+                        text: 'Done',
+                        variant: YakButtonVariant.primary,
+                        onPressed: () => Navigator.of(context).pop(),
                       ),
                     ],
                   ),
-                  primaryLabel: 'Continue',
-                  cancelLabel: 'Cancel',
                 );
               },
             ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _ModalCheckboxRow extends StatelessWidget {
+  const _ModalCheckboxRow({
+    required this.label,
+    required this.value,
+    required this.onChanged,
+  });
+
+  final String label;
+  final bool value;
+  final ValueChanged<bool> onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      borderRadius: BorderRadius.circular(12),
+      onTap: () => onChanged(!value),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+        child: Row(
+          children: [
+            Expanded(
+              child: Text(
+                label,
+                style: const TextStyle(fontWeight: FontWeight.w500),
+              ),
+            ),
+            Checkbox(value: value, onChanged: (v) => onChanged(v ?? false)),
           ],
         ),
       ),
