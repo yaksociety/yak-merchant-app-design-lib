@@ -29,6 +29,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
   - Disabled state now **fades** (opacity) instead of swapping/deriving new colors
   - Full-width behavior: button only expands when `width` is set; otherwise sizes to content
   - Full-width centered layout now properly centers content even with a trailing icon
+  - Focus/hover/press:
+    - Secondary uses **border color change** (neutral → primary) without a separate ring, keeping fill unchanged
+    - Primary keeps its **filled style** and does not draw an outline/ring overlay
   - Default text styles:
     - Primary → `YakTypography.semantic.textS.semibold`
     - Secondary/Ghost → `YakTypography.semantic.textS.regular`

@@ -352,7 +352,6 @@ class YakButton extends StatelessWidget {
     final EdgeInsetsGeometry effectivePadding =
         padding ?? const EdgeInsets.symmetric(horizontal: 12, vertical: 12);
     final bool shouldExpand = width != null;
-    final BorderSide primaryStroke = stroke ?? BorderSide.none;
     final BorderSide ghostStroke = stroke ?? BorderSide.none;
 
     final Color finalTextColor = effectiveTextColor;
@@ -449,7 +448,6 @@ class YakButton extends StatelessWidget {
     switch (variant) {
       case YakButtonVariant.primary:
         final Color buttonBackground = backgroundColor ?? primaryBackground;
-        final Color focusBorderColor = YakColor.semantic.stroke.primary;
         style = ButtonStyle(
           backgroundColor: WidgetStateProperty.all(buttonBackground),
           foregroundColor: WidgetStateProperty.all(effectiveTextColor),
@@ -469,9 +467,10 @@ class YakButton extends StatelessWidget {
           child: _YakOuterFocusRing(
             enabled: !(_isDisabled || isLoading),
             borderRadius: radius,
-            idleBorderColor: YakColor.semantic.stroke.base,
-            activeBorderColor: focusBorderColor,
-            borderWidth: primaryStroke == BorderSide.none ? 1 : primaryStroke.width,
+            // Primary buttons don't show an outline; keep border hidden even on focus/press.
+            idleBorderColor: Colors.transparent,
+            activeBorderColor: Colors.transparent,
+            borderWidth: 0,
             child: ElevatedButton(
               onPressed: _isDisabled || isLoading ? null : onPressed,
               style: style,
