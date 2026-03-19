@@ -9,16 +9,10 @@ class RadioPage extends StatefulWidget {
 }
 
 class _RadioPageState extends State<RadioPage> {
-  String? _taxConfirm = 'yes';
-  String? _deliveryMethod = 'standard';
-  String? _paymentMethod;
-  String _size = 'M';
-
-  void _showSnackBar(String message) {
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text(message)));
-  }
+  String _sizeS = 'M';
+  String _sizeM = 'M';
+  String _sizeL = 'M';
+  String _customColor = 'selected';
 
   Widget _buildSection(
     String title,
@@ -53,119 +47,142 @@ class _RadioPageState extends State<RadioPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildSection(
-              'With helper text (config like design)',
-              'Each YakRadioButton can have its own helperText below that option. Layout: Yes, then No with grey helper under it.',
+              'Styles (S / M / L)',
+              'Preview sizes and focus glow. Try tab/keyboard focus on each row.',
               [
-                Container(
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: YakRadioGroup<String>(
-                    groupValue: _taxConfirm,
-                    onChanged: (v) => setState(() => _taxConfirm = v),
-                    children: [
-                      YakRadioButton<String>(value: 'yes', label: 'ใช่'),
-                      YakRadioButton<String>(
-                        value: 'no',
-                        label: 'ไม่ใช่',
-                        helperText:
-                            'กรณีมีรายได้ไม่เกิน 1.8 ล้านบาทต่อปี หรือได้รับการยกเว้นภาษี '
-                            'โปรดระบุในหนังสือรับรองการจดทะเบียนบริษัท',
-                        helperStyle: YakTypography.semantic.textS.regular
-                            .copyWith(
-                              color: YakColor.semantic.textAndIcons.baseSecond,
-                              height: 1.4,
-                            ),
-                      ),
-                    ],
-                  ),
+                const Text(
+                  'Small (S)',
+                  style: TextStyle(fontWeight: FontWeight.w600),
+                ),
+                const SizedBox(height: 8),
+                YakRadioGroup<String>(
+                  groupValue: _sizeS,
+                  onChanged: (v) => setState(() => _sizeS = v ?? 'M'),
+                  children: const [
+                    YakRadioButton<String>(
+                      value: 'S',
+                      label: 'S',
+                      size: YakRadioSize.s,
+                    ),
+                    YakRadioButton<String>(
+                      value: 'M',
+                      label: 'M',
+                      size: YakRadioSize.s,
+                    ),
+                    YakRadioButton<String>(
+                      value: 'L',
+                      label: 'L',
+                      size: YakRadioSize.s,
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                const Text(
+                  'Medium (M)',
+                  style: TextStyle(fontWeight: FontWeight.w600),
+                ),
+                const SizedBox(height: 8),
+                YakRadioGroup<String>(
+                  groupValue: _sizeM,
+                  onChanged: (v) => setState(() => _sizeM = v ?? 'M'),
+                  children: const [
+                    YakRadioButton<String>(
+                      value: 'S',
+                      label: 'S',
+                      size: YakRadioSize.m,
+                    ),
+                    YakRadioButton<String>(
+                      value: 'M',
+                      label: 'M',
+                      size: YakRadioSize.m,
+                    ),
+                    YakRadioButton<String>(
+                      value: 'L',
+                      label: 'L',
+                      size: YakRadioSize.m,
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                const Text(
+                  'Large (L)',
+                  style: TextStyle(fontWeight: FontWeight.w600),
+                ),
+                const SizedBox(height: 8),
+                YakRadioGroup<String>(
+                  groupValue: _sizeL,
+                  onChanged: (v) => setState(() => _sizeL = v ?? 'M'),
+                  children: const [
+                    YakRadioButton<String>(
+                      value: 'S',
+                      label: 'S',
+                      size: YakRadioSize.l,
+                    ),
+                    YakRadioButton<String>(
+                      value: 'M',
+                      label: 'M',
+                      size: YakRadioSize.l,
+                    ),
+                    YakRadioButton<String>(
+                      value: 'L',
+                      label: 'L',
+                      size: YakRadioSize.l,
+                    ),
+                  ],
                 ),
               ],
             ),
             const SizedBox(height: 32),
             _buildSection(
-              'Delivery method',
-              'Single choice: standard, express, or pickup.',
+              'Custom colors',
+              'Change main color and dot color.',
               [
-                YakRadioButton<String>(
-                  value: 'standard',
-                  groupValue: _deliveryMethod,
-                  onChanged: (v) {
-                    setState(() => _deliveryMethod = v);
-                    _showSnackBar('Delivery: $v');
-                  },
-                  label: 'Standard (3–5 days)',
-                ),
-                YakRadioButton<String>(
-                  value: 'express',
-                  groupValue: _deliveryMethod,
-                  onChanged: (v) {
-                    setState(() => _deliveryMethod = v);
-                    _showSnackBar('Delivery: $v');
-                  },
-                  label: 'Express (1–2 days)',
-                ),
-                YakRadioButton<String>(
-                  value: 'pickup',
-                  groupValue: _deliveryMethod,
-                  onChanged: (v) {
-                    setState(() => _deliveryMethod = v);
-                    _showSnackBar('Delivery: $v');
-                  },
-                  label: 'Store pickup',
+                YakRadioGroup<String>(
+                  groupValue: _customColor,
+                  onChanged: (v) => setState(() => _customColor = v ?? 'selected'),
+                  children: [
+                    YakRadioButton<String>(
+                      value: 'selected',
+                      label: 'Default (semantic primary + white dot)',
+                      color: YakColor.semantic.textAndIcons.primary,
+                      checkColor: YakColor.semantic.textAndIcons.onColor,
+                    ),
+                    YakRadioButton<String>(
+                      value: 'success',
+                      label: 'Success (green) + black dot',
+                      color: YakColor.semantic.textAndIcons.success,
+                      checkColor: YakColor.primitive.base.black,
+                    ),
+                    YakRadioButton<String>(
+                      value: 'danger',
+                      label: 'Danger (red) + white dot',
+                      color: YakColor.semantic.textAndIcons.danger,
+                      checkColor: YakColor.semantic.textAndIcons.onColor,
+                    ),
+                  ],
                 ),
               ],
             ),
             const SizedBox(height: 32),
             _buildSection(
-              'Payment method',
-              'With optional subtitles for extra info.',
+              'Disabled',
+              'Shows disabled styles and prevents selection.',
               [
                 YakRadioButton<String>(
-                  value: 'card',
-                  groupValue: _paymentMethod,
-                  onChanged: (v) => setState(() => _paymentMethod = v),
-                  label: 'Card',
-                  subtitle: 'Visa, Mastercard, or Amex',
+                  value: 'disabled-1',
+                  groupValue: 'disabled-1',
+                  onChanged: null,
+                  label: 'Disabled (selected)',
+                  subtitle: 'Cannot change selection',
                 ),
                 YakRadioButton<String>(
-                  value: 'bank',
-                  groupValue: _paymentMethod,
-                  onChanged: (v) => setState(() => _paymentMethod = v),
-                  label: 'Bank transfer',
-                  subtitle: 'Pay within 24 hours',
-                ),
-                YakRadioButton<String>(
-                  value: 'cash',
-                  groupValue: _paymentMethod,
-                  onChanged: (v) => setState(() => _paymentMethod = v),
-                  label: 'Cash on delivery',
-                  subtitle: 'Pay when you receive',
+                  value: 'disabled-2',
+                  groupValue: 'disabled-1',
+                  onChanged: null,
+                  label: 'Disabled (unselected)',
                 ),
               ],
             ),
-            const SizedBox(height: 32),
-            _buildSection('Size', 'Simple options (S / M / L).', [
-              YakRadioButton<String>(
-                value: 'S',
-                groupValue: _size,
-                onChanged: (v) => setState(() => _size = v ?? 'M'),
-                label: 'S',
-              ),
-              YakRadioButton<String>(
-                value: 'M',
-                groupValue: _size,
-                onChanged: (v) => setState(() => _size = v ?? 'M'),
-                label: 'M',
-              ),
-              YakRadioButton<String>(
-                value: 'L',
-                groupValue: _size,
-                onChanged: (v) => setState(() => _size = v ?? 'M'),
-                label: 'L',
-              ),
-            ]),
           ],
         ),
       ),

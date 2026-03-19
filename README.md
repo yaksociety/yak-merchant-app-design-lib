@@ -15,7 +15,7 @@ This library provides pre-built UI components for the Yak Merchant App:
   - `floating` - Floating action button (FAB)
   - Custom styling: `stroke`, `borderRadius`, `padding`; leading/trailing icons (`leadingIcon`, `trailingIcon`, or `leftIcon`/`rightIcon`); optional `label` with `isRequired` (red asterisk) for field-style buttons; content uses space-between layout when a trailing icon is set.
 - **[YakToggleButton](docs/widgets/yak_toggle_button.md)** - Toggle switch button for on/off states
-- **[YakRadioButton & YakRadioGroup](docs/widgets/yak_radio_button.md)** - Radio options for single-choice selection (delivery method, payment, size, etc.) with optional label, subtitle, and per-option or group-level helper text
+- **[YakRadioButton & YakRadioGroup](docs/widgets/yak_radio_button.md)** - Radio options (radio-dot style) for single-choice selection (delivery method, payment, size, etc.) with optional label/subtitle/helper text and style controls: `size` (S/M/L), `color` (ring/fill), `checkColor` (inner dot), `labelStyle`, `subtitleStyle`
 
 ### 📝 Input Components
 - **[YakTextInput](docs/widgets/yak_text_input.md)** - Single-line text input with label, error states, and validation
@@ -139,6 +139,52 @@ YakModal.show(
 );
 ```
 
+**YakRadioGroup / YakRadioButton**
+```dart
+YakRadioGroup<String>(
+  groupValue: _value,
+  onChanged: (v) => setState(() => _value = v),
+  children: const [
+    YakRadioButton<String>(
+      value: 'S',
+      label: 'S',
+      size: YakRadioSize.s,
+    ),
+    YakRadioButton<String>(
+      value: 'M',
+      label: 'M',
+      size: YakRadioSize.m,
+    ),
+    YakRadioButton<String>(
+      value: 'L',
+      label: 'L',
+      size: YakRadioSize.l,
+    ),
+  ],
+)
+
+// Custom color + dot color
+YakRadioButton<String>(
+  value: 'custom',
+  groupValue: _value,
+  onChanged: (v) => setState(() => _value = v),
+  label: 'Custom',
+  color: YakColor.semantic.textAndIcons.success,
+  checkColor: YakColor.semantic.textAndIcons.success, // dot matches ring
+)
+
+// Custom label and subtitle text styles
+YakRadioButton<String>(
+  value: 'bank',
+  groupValue: _value,
+  onChanged: (v) => setState(() => _value = v),
+  label: 'Bank transfer',
+  subtitle: 'Pay within 24 hours',
+  labelStyle: YakTypography.semantic.textM.medium,
+  subtitleStyle: YakTypography.semantic.textXS.regular,
+)
+```
+
 **YakAlert**
 ```dart
 // Show at top of screen (e.g. login failed)
@@ -198,7 +244,7 @@ Each widget and theme token has its own doc with API reference and examples:
 **Widgets**
 - [**YakButton**](docs/widgets/yak_button.md) – Buttons (primary, secondary, ghost, icon, FAB; label/required, stroke, rounded, padding, leading/trailing icons)
 - [**YakToggleButton**](docs/widgets/yak_toggle_button.md) – On/off toggle switch
-- [**YakRadioButton & YakRadioGroup**](docs/widgets/yak_radio_button.md) – Radio options for single-choice (label, subtitle, helper text)
+- [**YakRadioButton & YakRadioGroup**](docs/widgets/yak_radio_button.md) – Radio-dot options for single-choice (sizes S/M/L, `color`, `checkColor`, `labelStyle`, `subtitleStyle`, label/subtitle/helper text)
 - [**YakTextInput**](docs/widgets/yak_text_input.md) – Single-line text input
 - [**YakTextArea**](docs/widgets/yak_text_area.md) – Multi-line text area
 - [**YakSelect**](docs/widgets/yak_select.md) – Dropdown/select (YakSelectStyle, visibleIcon, item icons e.g. ic_flag_th/ic_flag_en, compact rounded icon, label/error, check icon on selected)

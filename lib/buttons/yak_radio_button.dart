@@ -3,6 +3,29 @@ import 'package:flutter/material.dart';
 import '../theme/yak_color.dart';
 import '../theme/yak_typography.dart';
 
+enum YakRadioSize { s, m, l }
+
+double _indicatorSize(YakRadioSize size) {
+  switch (size) {
+    case YakRadioSize.s:
+      return 16;
+    case YakRadioSize.m:
+      return 20;
+    case YakRadioSize.l:
+      return 24;
+  }
+}
+
+double _strokeWidth(YakRadioSize size) {
+  switch (size) {
+    case YakRadioSize.s:
+      return 1.5;
+    case YakRadioSize.m:
+    case YakRadioSize.l:
+      return 2;
+  }
+}
+
 /// Wraps a group of [YakRadioButton]s in a [RadioGroup] and optional helper text below.
 ///
 /// Pass [groupValue] and [onChanged] here; [YakRadioButton] children need only [value] and [label].
@@ -143,6 +166,12 @@ class YakRadioButton<T> extends StatelessWidget {
   /// Optional secondary text below [label] (inside the tile).
   final String? subtitle;
 
+  /// Style for [label]. Defaults to semantic text S medium.
+  final TextStyle? labelStyle;
+
+  /// Style for [subtitle]. Defaults to semantic text S regular.
+  final TextStyle? subtitleStyle;
+
   /// Optional helper text shown below this option only, indented to align with the label.
   /// Use for per-option description (e.g. tax note under "No").
   final String? helperText;
@@ -153,12 +182,21 @@ class YakRadioButton<T> extends StatelessWidget {
   /// Called when the user taps close on this option's helper. When set, a close icon is shown.
   final VoidCallback? onHelperClose;
 
-  /// Color when selected. Defaults to [YakColor.primitive.primary.primary500].
-  /// Use e.g. [YakColor.primitive.blue.blue600] for dark blue.
-  final Color? activeColor;
+  /// Main color for the control (selected border/fill).
+  ///
+  /// Defaults to `YakColor.semantic.textAndIcons.primary`.
+  final Color? color;
+
+  /// Checkmark color when selected.
+  ///
+  /// Defaults to `YakColor.semantic.textAndIcons.onColor` (white).
+  final Color? checkColor;
 
   /// Color for unselected border/circle. Defaults to [YakColor.primitive.gray.gray300].
   final Color? inactiveColor;
+
+  /// Size of the control.
+  final YakRadioSize size;
 
   const YakRadioButton({
     super.key,
@@ -167,102 +205,157 @@ class YakRadioButton<T> extends StatelessWidget {
     this.onChanged,
     required this.label,
     this.subtitle,
+    this.labelStyle,
+    this.subtitleStyle,
     this.helperText,
     this.helperStyle,
     this.onHelperClose,
-    this.activeColor,
+    this.color,
+    this.checkColor,
     this.inactiveColor,
+    this.size = YakRadioSize.m,
   });
 
   @override
   Widget build(BuildContext context) {
-    final Color active = activeColor ?? YakColor.semantic.textAndIcons.primary;
+    final Color active = color ?? YakColor.semantic.textAndIcons.primary;
     final Color inactive =
         inactiveColor ?? YakColor.semantic.textAndIcons.baseSecond;
 
-    final RadioThemeData radioTheme = RadioThemeData(
-      fillColor: WidgetStateProperty.resolveWith<Color>((
-        Set<WidgetState> states,
-      ) {
-        if (states.contains(WidgetState.selected)) return active;
-        return inactive;
-      }),
-    );
-
-    final bool inRadioGroup = RadioGroup.maybeOf(context) != null;
+    final RadioGroup<T>? group = context
+        .findAncestorWidgetOfExactType<RadioGroup<T>>();
+    final bool inRadioGroup = group != null;
     final bool enabled = inRadioGroup || onChanged != null;
 
-    final ThemeData theme = Theme.of(context);
-    final ThemeData tileTheme = theme.copyWith(
-      radioTheme: radioTheme,
-      listTileTheme: theme.listTileTheme.copyWith(horizontalTitleGap: 0),
-    );
+    final T? effectiveGroupValue = group?.groupValue ?? groupValue;
+    final ValueChanged<T?>? effectiveOnChanged = group?.onChanged ?? onChanged;
+    final bool selected =
+        effectiveGroupValue != null && effectiveGroupValue == value;
 
-    final Widget tile = Theme(
-      data: tileTheme,
-      child: inRadioGroup
-          ? RadioListTile<T>(
-              value: value,
-              title: Text(
-                label,
-                style: YakTypography.semantic.textM.medium.copyWith(
-                  color: YakColor.semantic.textAndIcons.baseMain,
+    final Color effectiveInactive = enabled
+        ? inactive
+        : YakColor.semantic.textAndIcons.disabled;
+    final Color effectiveActive = enabled
+        ? active
+        : YakColor.semantic.textAndIcons.disabled;
+
+    final Color effectiveDotColor = enabled
+        ? (color != null ? effectiveActive : (checkColor ?? effectiveActive))
+        : YakColor.semantic.textAndIcons.disabled;
+
+    final double indicatorSize = _indicatorSize(size);
+    final double borderWidth = _strokeWidth(size);
+
+    Widget indicator({required bool focused}) {
+      final Color borderColor = focused
+          ? effectiveActive
+          : (selected ? effectiveActive : effectiveInactive);
+      final Color fillColor = focused
+          ? effectiveActive.withValues(alpha: selected ? 0.12 : 0.14)
+          : (selected
+                ? YakColor.semantic.background.baseMain
+                : Colors.transparent);
+      final double dotSize = indicatorSize * 0.52;
+
+      // Focused state in the reference shows a soft glow.
+      final List<BoxShadow> glow = focused && enabled
+          ? [
+              BoxShadow(
+                color: effectiveActive.withValues(alpha: 0.22),
+                blurRadius: 7,
+                spreadRadius: 1,
+              ),
+            ]
+          : const [];
+
+      return AnimatedContainer(
+        duration: const Duration(milliseconds: 140),
+        curve: Curves.easeOutCubic,
+        width: indicatorSize,
+        height: indicatorSize,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: fillColor,
+          boxShadow: glow,
+          border: Border.all(color: borderColor, width: borderWidth),
+        ),
+        child: selected
+            ? Center(
+                child: Container(
+                  width: dotSize,
+                  height: dotSize,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: effectiveDotColor,
+                  ),
                 ),
+              )
+            : null,
+      );
+    }
+
+    final TextStyle effectiveLabelStyle = (this.labelStyle ??
+            YakTypography.semantic.textS.medium)
+        .copyWith(
+      color: enabled
+          ? YakColor.semantic.textAndIcons.baseMain
+          : YakColor.semantic.textAndIcons.disabled,
+    );
+    final TextStyle effectiveSubtitleStyle = (this.subtitleStyle ??
+            YakTypography.semantic.textS.regular)
+        .copyWith(
+          color: enabled
+              ? YakColor.semantic.textAndIcons.baseSecond
+              : YakColor.semantic.textAndIcons.disabled,
+        );
+
+    final Widget tile = Focus(
+      canRequestFocus: enabled,
+      child: Builder(
+        builder: (context) {
+          final bool focused = Focus.of(context).hasFocus;
+          final bool hasSubtitle = subtitle != null && subtitle!.isNotEmpty;
+          return InkWell(
+            onTap: enabled ? () => effectiveOnChanged?.call(value) : null,
+            borderRadius: BorderRadius.circular(12),
+            splashFactory: NoSplash.splashFactory,
+            highlightColor: Colors.transparent,
+            hoverColor: Colors.transparent,
+            focusColor: Colors.transparent,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8),
+              child: Row(
+                crossAxisAlignment: hasSubtitle
+                    ? CrossAxisAlignment.start
+                    : CrossAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    width: 28,
+                    child: Align(
+                      alignment: hasSubtitle
+                          ? Alignment.topLeft
+                          : Alignment.centerLeft,
+                      child: indicator(focused: focused),
+                    ),
+                  ),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(label, style: effectiveLabelStyle),
+                        if (subtitle != null && subtitle!.isNotEmpty) ...[
+                          const SizedBox(height: 4),
+                          Text(subtitle!, style: effectiveSubtitleStyle),
+                        ],
+                      ],
+                    ),
+                  ),
+                ],
               ),
-              subtitle: subtitle != null && subtitle!.isNotEmpty
-                  ? Padding(
-                      padding: const EdgeInsets.only(top: 4),
-                      child: Text(
-                        subtitle!,
-                        style: YakTypography.semantic.textS.regular.copyWith(
-                          color: YakColor.semantic.textAndIcons.baseSecond,
-                        ),
-                      ),
-                    )
-                  : null,
-              dense: true,
-              contentPadding: const EdgeInsets.symmetric(
-                vertical: 0,
-                horizontal: 0,
-              ),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
-              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-              enabled: enabled,
-            )
-          : RadioListTile<T>(
-              value: value,
-              groupValue: groupValue, // ignore: deprecated_member_use
-              // ignore: deprecated_member_use -- standalone use without RadioGroup
-              onChanged: enabled ? (T? v) => onChanged?.call(v) : null,
-              title: Text(
-                label,
-                style: YakTypography.semantic.textM.medium.copyWith(
-                  color: YakColor.semantic.textAndIcons.baseMain,
-                ),
-              ),
-              subtitle: subtitle != null && subtitle!.isNotEmpty
-                  ? Padding(
-                      padding: const EdgeInsets.only(top: 4),
-                      child: Text(
-                        subtitle!,
-                        style: YakTypography.semantic.textS.regular.copyWith(
-                          color: YakColor.semantic.textAndIcons.baseSecond,
-                        ),
-                      ),
-                    )
-                  : null,
-              dense: true,
-              contentPadding: const EdgeInsets.symmetric(
-                vertical: 0,
-                horizontal: 0,
-              ),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
-              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
             ),
+          );
+        },
+      ),
     );
 
     final bool hasHelper = helperText != null && helperText!.isNotEmpty;

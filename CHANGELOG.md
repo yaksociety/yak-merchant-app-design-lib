@@ -8,9 +8,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [v1.6.3] - 2026-03-18
 
-**Title:** `v1.6.3 — YakButton & input styling alignment`
+**Title:** `v1.6.3 — YakButton, YakRadioButton & input styling alignment`
 
-**Description:** Aligns core form controls with the design system tokens and Figma behavior. **YakButton** now uses semantic color tokens, improved default sizing (rounded + padding), better full-width behavior, and safer text layout (no overflow). **YakTextInput/YakTextArea** are updated to use YakColor/YakTypography tokens and improve disabled styling. Semantic color mapping gains missing tokens for consistent usage across components.
+**Description:** Aligns core form controls with the design system tokens and Figma behavior. **YakButton** now uses semantic color tokens, improved default sizing (rounded + padding), better full-width behavior, and safer text layout (no overflow). **YakRadioButton** is rewritten to use radio-dot visuals with configurable color, dot color, and size variants. **YakTextInput/YakTextArea** are updated to use YakColor/YakTypography tokens and improve disabled styling. Semantic color mapping gains missing tokens for consistent usage across components.
 
 **Added**
 
@@ -19,6 +19,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
   - `YakColor.semantic.background.primaryFocus` → `Primary/100` (used for button focus ring)
 - **YakButton** – new alignment control:
   - `contentAlignment` (`YakButtonContentAlignment.center` | `YakButtonContentAlignment.start`) for full-width buttons
+- **YakRadioButton** – new style controls:
+  - `color` (main ring/fill color, default `YakColor.semantic.textAndIcons.primary`)
+  - `checkColor` (inner dot color; if `color` is set, dot follows `color`)
+  - `size` (`YakRadioSize.s`, `YakRadioSize.m`, `YakRadioSize.l`)
+  - `labelStyle` and `subtitleStyle` for text style customization
 
 **Changed**
 
@@ -42,6 +47,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - **YakTextInput / YakTextArea**:
   - Updated to use **YakColor**/**YakTypography** tokens for borders, labels, placeholders, error, and disabled states
   - Disabled state styling refined for YakTextInput, plus example & docs updates
+- **YakRadioButton**:
+  - Rewritten from native `RadioListTile` rendering to custom radio indicator rendering for closer design matching
+  - Indicator now uses radio-dot style (instead of checkmark), with tuned focused glow and disabled states
+  - Indicator/text spacing tightened and large-size label alignment corrected (centered for single-line labels)
+- **Radio example page**:
+  - `example/lib/pages/radio_page.dart` simplified to style-focused demos only (sizes, custom colors, disabled)
+- **README**:
+  - Updated YakRadioButton usage/docs to include `labelStyle` and `subtitleStyle`
 
 **Fixed**
 
