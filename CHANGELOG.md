@@ -6,11 +6,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ---
 
-## [v1.6.3] - 2026-03-18
+## [v1.7.0] - 2026-03-19
 
-**Title:** `v1.6.3 — YakButton, YakRadioButton & input styling alignment`
+**Title:** `v1.7.0 — Form controls refresh (buttons, radio, checkbox)`
 
-**Description:** Aligns core form controls with the design system tokens and Figma behavior. **YakButton** now uses semantic color tokens, improved default sizing (rounded + padding), better full-width behavior, and safer text layout (no overflow). **YakRadioButton** is rewritten to use radio-dot visuals with configurable color, dot color, and size variants. **YakTextInput/YakTextArea** are updated to use YakColor/YakTypography tokens and improve disabled styling. Semantic color mapping gains missing tokens for consistent usage across components.
+**Description:** A major refresh of form controls to match the latest Figma/Supernova styles. Adds **YakCheckboxButton**, rewrites **YakRadioButton** with radio-dot visuals and sizing variants, and refines **YakButton** layout, disabled behavior, focus styling, and typography defaults. Also updates examples, docs, README, and missing semantic color tokens used by components.
 
 **Added**
 
@@ -19,6 +19,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
   - `YakColor.semantic.background.primaryFocus` → `Primary/100` (used for button focus ring)
 - **YakButton** – new alignment control:
   - `contentAlignment` (`YakButtonContentAlignment.center` | `YakButtonContentAlignment.start`) for full-width buttons
+- **YakCheckboxButton** – new checkbox control:
+  - Stroke/fill variants, circle/rounded-square shapes, sizes S/M/L
+  - Customizable `color`, `checkColor`, `labelStyle`, `subtitleStyle`
 - **YakRadioButton** – new style controls:
   - `color` (main ring/fill color, default `YakColor.semantic.textAndIcons.primary`)
   - `checkColor` (inner dot color; if `color` is set, dot follows `color`)
@@ -51,10 +54,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
   - Rewritten from native `RadioListTile` rendering to custom radio indicator rendering for closer design matching
   - Indicator now uses radio-dot style (instead of checkmark), with tuned focused glow and disabled states
   - Indicator/text spacing tightened and large-size label alignment corrected (centered for single-line labels)
+- **YakCheckboxButton**:
+  - New checkbox indicator rendering with stroke/fill styles, focus glow, and bolder checkmark
 - **Radio example page**:
   - `example/lib/pages/radio_page.dart` simplified to style-focused demos only (sizes, custom colors, disabled)
+- **Checkbox example page**:
+  - Added `example/lib/pages/checkbox_page.dart` and wired into example app routes/home list
 - **README**:
-  - Updated YakRadioButton usage/docs to include `labelStyle` and `subtitleStyle`
+  - Updated usage/docs for YakRadioButton and YakCheckboxButton (including label/subtitle style overrides)
 
 **Fixed**
 

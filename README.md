@@ -15,6 +15,7 @@ This library provides pre-built UI components for the Yak Merchant App:
   - `floating` - Floating action button (FAB)
   - Custom styling: `stroke`, `borderRadius`, `padding`; leading/trailing icons (`leadingIcon`, `trailingIcon`, or `leftIcon`/`rightIcon`); optional `label` with `isRequired` (red asterisk) for field-style buttons; content uses space-between layout when a trailing icon is set.
 - **[YakToggleButton](docs/widgets/yak_toggle_button.md)** - Toggle switch button for on/off states
+- **YakCheckboxButton** - Checkbox option (stroke/fill, circle/rounded-square, sizes S/M/L) with customizable `color`, `checkColor`, `labelStyle`, `subtitleStyle`
 - **[YakRadioButton & YakRadioGroup](docs/widgets/yak_radio_button.md)** - Radio options (radio-dot style) for single-choice selection (delivery method, payment, size, etc.) with optional label/subtitle/helper text and style controls: `size` (S/M/L), `color` (ring/fill), `checkColor` (inner dot), `labelStyle`, `subtitleStyle`
 
 ### 📝 Input Components
@@ -185,6 +186,24 @@ YakRadioButton<String>(
 )
 ```
 
+**YakCheckboxButton**
+```dart
+YakCheckboxButton(
+  value: _checked,
+  onChanged: (v) => setState(() => _checked = v),
+  label: 'Option',
+  subtitle: 'Optional subtitle',
+  // Styling
+  size: YakCheckboxSize.m,
+  shape: YakCheckboxShape.roundedSquare,
+  variant: YakCheckboxVariant.fill,
+  color: YakColor.semantic.textAndIcons.primary,
+  // Typography override
+  labelStyle: YakTypography.semantic.textS.medium,
+  subtitleStyle: YakTypography.semantic.textXS.regular,
+)
+```
+
 **YakAlert**
 ```dart
 // Show at top of screen (e.g. login failed)
@@ -244,6 +263,7 @@ Each widget and theme token has its own doc with API reference and examples:
 **Widgets**
 - [**YakButton**](docs/widgets/yak_button.md) – Buttons (primary, secondary, ghost, icon, FAB; label/required, stroke, rounded, padding, leading/trailing icons)
 - [**YakToggleButton**](docs/widgets/yak_toggle_button.md) – On/off toggle switch
+- **YakCheckboxButton** – Checkbox options (stroke/fill, circle/rounded-square, sizes S/M/L, `color`, `checkColor`, `labelStyle`, `subtitleStyle`)
 - [**YakRadioButton & YakRadioGroup**](docs/widgets/yak_radio_button.md) – Radio-dot options for single-choice (sizes S/M/L, `color`, `checkColor`, `labelStyle`, `subtitleStyle`, label/subtitle/helper text)
 - [**YakTextInput**](docs/widgets/yak_text_input.md) – Single-line text input
 - [**YakTextArea**](docs/widgets/yak_text_area.md) – Multi-line text area
