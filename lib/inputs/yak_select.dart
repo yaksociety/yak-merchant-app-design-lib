@@ -297,14 +297,14 @@ class _YakSelectState<T> extends State<YakSelect<T>> {
             child: RichText(
               text: TextSpan(
                 text: widget.label!,
-                style: YakTypography.semantic.textS.regular.copyWith(
+                style: YakTypography.semantic.textS.medium.copyWith(
                   color: labelColor,
                 ),
                 children: widget.isRequired
                     ? [
                         TextSpan(
                           text: ' *',
-                          style: YakTypography.semantic.textS.semibold.copyWith(
+                          style: YakTypography.semantic.textS.medium.copyWith(
                             color: YakColor.primitive.danger.danger500,
                           ),
                         ),

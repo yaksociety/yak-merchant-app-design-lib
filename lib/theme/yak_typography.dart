@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 /// Google Sans is bundled in this package; apps that depend on
 /// [yak_merchant_app_design_lib] get the font automatically.
 const String yakFontFamily = 'GoogleSans';
+const List<String> yakFontFallback = <String>['NotoSansThai'];
+const String yakTypographyPackage = 'yak_merchant_app_design_lib';
 
 /// Yak design system typography.
 ///
@@ -134,6 +136,8 @@ class YakTypographyHeading {
 
   TextStyle get semibold => TextStyle(
         fontFamily: yakFontFamily,
+        fontFamilyFallback: yakFontFallback,
+        package: yakTypographyPackage,
         fontSize: fontSize,
         fontWeight: fontWeight,
         letterSpacing: letterSpacing,
@@ -151,6 +155,8 @@ class YakTypographyTextSize {
 
   TextStyle get regular => TextStyle(
         fontFamily: yakFontFamily,
+        fontFamilyFallback: yakFontFallback,
+        package: yakTypographyPackage,
         fontSize: fontSize,
         fontWeight: FontWeight.w400,
         letterSpacing: letterSpacing,
@@ -158,6 +164,8 @@ class YakTypographyTextSize {
 
   TextStyle get medium => TextStyle(
         fontFamily: yakFontFamily,
+        fontFamilyFallback: yakFontFallback,
+        package: yakTypographyPackage,
         fontSize: fontSize,
         fontWeight: FontWeight.w500,
         letterSpacing: letterSpacing,
@@ -165,6 +173,8 @@ class YakTypographyTextSize {
 
   TextStyle get semibold => TextStyle(
         fontFamily: yakFontFamily,
+        fontFamilyFallback: yakFontFallback,
+        package: yakTypographyPackage,
         fontSize: fontSize,
         fontWeight: FontWeight.w600,
         letterSpacing: letterSpacing,

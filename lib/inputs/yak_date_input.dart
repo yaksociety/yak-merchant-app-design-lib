@@ -81,8 +81,9 @@ class YakDateInput extends StatelessWidget {
         ? YakColor.semantic.textAndIcons.baseSecond
         : YakColor.semantic.textAndIcons.disabled;
 
-    final String displayText =
-        hasValue ? _formatDate(value!) : (placeholder ?? 'DD/MM/YYYY');
+    final String displayText = hasValue
+        ? _formatDate(value!)
+        : (placeholder ?? 'DD/MM/YYYY');
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -94,14 +95,14 @@ class YakDateInput extends StatelessWidget {
             child: RichText(
               text: TextSpan(
                 text: label!,
-                style: YakTypography.semantic.textS.regular.copyWith(
+                style: YakTypography.semantic.textS.medium.copyWith(
                   color: labelColor,
                 ),
                 children: isRequired
                     ? [
                         TextSpan(
                           text: ' *',
-                          style: YakTypography.semantic.textS.semibold.copyWith(
+                          style: YakTypography.semantic.textS.medium.copyWith(
                             color: YakColor.primitive.danger.danger500,
                           ),
                         ),
@@ -119,8 +120,7 @@ class YakDateInput extends StatelessWidget {
               border: Border.all(color: borderColor, width: 1),
             ),
             child: Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
               child: Row(
                 children: [
                   Icon(
