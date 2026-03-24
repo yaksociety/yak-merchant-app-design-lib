@@ -149,8 +149,8 @@ class _YakTextAreaState extends State<YakTextArea> {
 
     final TextStyle effectiveTextStyle =
         (widget.textStyle ?? YakTypography.semantic.textM.regular).copyWith(
-      color: textColor,
-    );
+          color: textColor,
+        );
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -161,14 +161,14 @@ class _YakTextAreaState extends State<YakTextArea> {
             child: RichText(
               text: TextSpan(
                 text: widget.label!,
-                style: YakTypography.semantic.textS.regular.copyWith(
+                style: YakTypography.semantic.textS.medium.copyWith(
                   color: labelColor,
                 ),
                 children: widget.isRequired
                     ? [
                         TextSpan(
                           text: ' *',
-                          style: YakTypography.semantic.textS.semibold.copyWith(
+                          style: YakTypography.semantic.textS.medium.copyWith(
                             color: YakColor.primitive.danger.danger500,
                           ),
                         ),
@@ -181,10 +181,7 @@ class _YakTextAreaState extends State<YakTextArea> {
           decoration: BoxDecoration(
             color: fillColor,
             borderRadius: BorderRadius.circular(_radius),
-            border: Border.all(
-              color: borderColor,
-              width: _borderWidth,
-            ),
+            border: Border.all(color: borderColor, width: _borderWidth),
           ),
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),

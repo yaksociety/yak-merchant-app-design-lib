@@ -159,14 +159,14 @@ class _YakTextInputState extends State<YakTextInput> {
             child: RichText(
               text: TextSpan(
                 text: widget.label!,
-                style: YakTypography.semantic.textS.regular.copyWith(
+                style: YakTypography.semantic.textS.medium.copyWith(
                   color: labelColor,
                 ),
                 children: widget.isRequired
                     ? [
                         TextSpan(
                           text: ' *',
-                          style: YakTypography.semantic.textS.semibold.copyWith(
+                          style: YakTypography.semantic.textS.medium.copyWith(
                             color: YakColor.semantic.textAndIcons.danger,
                           ),
                         ),

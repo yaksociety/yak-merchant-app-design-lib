@@ -6,6 +6,47 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ---
 
+## [v1.7.1] - 2026-03-24
+
+**Title:** `v1.7.1 — Thai font fallback and input label alignment`
+
+**Description:** Improves typography rendering for multilingual apps by adding Thai fallback font support to Yak typography styles (resolved from the package directly for consumers), and aligns input label styling across form controls. Also includes the latest modal refresh and smooth dialog animation updates.
+
+**Added**
+
+- **Typography fonts**:
+  - Added bundled `NotoSansThai` font family (Regular/Medium/SemiBold/Bold) to support Thai glyph fallback consistently
+
+**Changed**
+
+- **YakTypography**:
+  - All semantic text styles now use `fontFamilyFallback: ['NotoSansThai']`
+  - Added `package: 'yak_merchant_app_design_lib'` in generated `TextStyle`s so consumer apps resolve package fonts correctly
+- **Input labels**:
+  - Aligned label + required asterisk style to `YakTypography.semantic.textS.medium` across:
+    - `YakTextInput`
+    - `YakTextArea`
+    - `YakSelect`
+    - `YakDateInput`
+    - `YakSearchInput`
+- **YakSearchInput**:
+  - Updated to semantic token-based label/border/error colors to match other inputs
+  - Refined hint typography to `textXS.regular` and consistent label spacing
+- **YakModal**:
+  - Simplified to container-only API where users provide full content via `child`
+  - `YakModal.show(...)` now uses smooth fade + subtle scale transition
+  - Updated modal examples/docs in `README` and widget docs
+
+**Fixed**
+
+- Thai text in package typography now falls back reliably in consumer apps without requiring app-level font overrides
+
+**Removed**
+
+- None
+
+---
+
 ## [v1.7.0] - 2026-03-19
 
 **Title:** `v1.7.0 — Form controls refresh (buttons, radio, checkbox)`

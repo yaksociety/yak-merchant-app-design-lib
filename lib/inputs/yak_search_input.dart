@@ -60,17 +60,11 @@ class _YakSearchInputState extends State<YakSearchInput> {
   bool get _hasError => (widget.errorMessage ?? '').trim().isNotEmpty;
 
   /// Text S/Regular: design token for size, 150% line height, Base-Main color.
-  static TextStyle get _textStyle =>
-      YakTypography.semantic.textS.regular.copyWith(
-        color: YakColor.semantic.textAndIcons.baseMain,
-        height: 1.5,
-      );
+  static TextStyle get _textStyle => YakTypography.semantic.textS.medium
+      .copyWith(color: YakColor.semantic.textAndIcons.baseMain, height: 1.5);
 
-  static TextStyle get _hintStyle =>
-      YakTypography.semantic.textS.regular.copyWith(
-        color: YakColor.semantic.textAndIcons.baseSecond,
-        height: 1.5,
-      );
+  static TextStyle get _hintStyle => YakTypography.semantic.textXS.regular
+      .copyWith(color: YakColor.semantic.textAndIcons.baseSecond, height: 1.5);
 
   @override
   void initState() {
@@ -133,37 +127,36 @@ class _YakSearchInputState extends State<YakSearchInput> {
 
   @override
   Widget build(BuildContext context) {
-    const Color borderDefault = Color(0xFFE0E0E0);
-    const Color borderFocused = Color(0xFFF4C430);
-    const Color borderError = Color(0xFFEB5757);
-    const Color labelDefault = Color(0xFF000000);
-    const Color labelError = Color(0xFFEB5757);
-
     final bool hasError = _hasError;
     final bool isFocused = _isFocused && widget.enabled;
-    final Color effectiveBorderColor =
-        hasError ? borderError : (isFocused ? borderFocused : borderDefault);
-    final Color effectiveLabelColor = hasError ? labelError : labelDefault;
+    final Color effectiveBorderColor = hasError
+        ? YakColor.semantic.textAndIcons.danger
+        : (isFocused
+              ? YakColor.semantic.stroke.primary
+              : YakColor.semantic.stroke.base);
+    final Color effectiveLabelColor = hasError
+        ? YakColor.semantic.textAndIcons.danger
+        : YakColor.semantic.textAndIcons.baseMain;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         if (_hasLabel)
           Padding(
-            padding: const EdgeInsets.only(bottom: 4),
+            padding: const EdgeInsets.only(bottom: 8),
             child: RichText(
               text: TextSpan(
-                text: widget.label,
-                style: TextStyle(
-                  fontSize: 14,
+                text: widget.label!,
+                style: YakTypography.semantic.textS.medium.copyWith(
                   color: effectiveLabelColor,
-                  fontWeight: FontWeight.w500,
                 ),
                 children: widget.isRequired
-                    ? const [
+                    ? [
                         TextSpan(
                           text: ' *',
-                          style: TextStyle(color: Color(0xFFEB5757)),
+                          style: YakTypography.semantic.textS.medium.copyWith(
+                            color: YakColor.semantic.textAndIcons.danger,
+                          ),
                         ),
                       ]
                     : const [],
@@ -203,9 +196,8 @@ class _YakSearchInputState extends State<YakSearchInput> {
           const SizedBox(height: 4),
           Text(
             widget.errorMessage!,
-            style: const TextStyle(
-              fontSize: 12,
-              color: Color(0xFFEB5757),
+            style: YakTypography.semantic.textXS.regular.copyWith(
+              color: YakColor.semantic.textAndIcons.danger,
             ),
           ),
         ],
