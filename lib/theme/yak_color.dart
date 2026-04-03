@@ -150,7 +150,8 @@ class YakColorBlue {
 class YakColorSemantic {
   const YakColorSemantic();
 
-  YakColorSemanticBackground get background => const YakColorSemanticBackground();
+  YakColorSemanticBackground get background =>
+      const YakColorSemanticBackground();
   YakColorSemanticTextAndIcons get textAndIcons =>
       const YakColorSemanticTextAndIcons();
   YakColorSemanticStroke get stroke => const YakColorSemanticStroke();

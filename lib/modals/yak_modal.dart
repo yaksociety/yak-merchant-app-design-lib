@@ -92,7 +92,9 @@ class YakModal extends StatelessWidget {
   /// Main content; provide your own layout (title, text, actions, etc.).
   final Widget child;
 
-  /// Called when the close (X) button is pressed. Typically `Navigator.pop(context)`.
+  /// Optional close callback for consumers to use in their own actions.
+  ///
+  /// Note: `YakModal` does not render a built-in close (X) button.
   final VoidCallback? onClose;
 
   final Color? backgroundColor;
@@ -176,29 +178,7 @@ class YakModal extends StatelessWidget {
                 ]
               : null,
         ),
-        child: Stack(
-          clipBehavior: Clip.none,
-          children: [
-            Padding(padding: EdgeInsets.all(contentPadding), child: child),
-            Positioned(
-              top: 12,
-              right: 12,
-              child: IconButton(
-                onPressed: onClose,
-                icon: Icon(
-                  Icons.close,
-                  size: 20,
-                  color: YakColor.primitive.gray.gray700,
-                ),
-                padding: EdgeInsets.zero,
-                constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
-                style: IconButton.styleFrom(
-                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                ),
-              ),
-            ),
-          ],
-        ),
+        child: Padding(padding: EdgeInsets.all(contentPadding), child: child),
       ),
     );
   }

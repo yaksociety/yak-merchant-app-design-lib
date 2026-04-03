@@ -228,6 +228,35 @@ void main() {
 
       expect(toggleValue, true);
     });
+
+    testWidgets('calls onChanged when label is tapped', (WidgetTester tester) async {
+      bool toggleValue = false;
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: StatefulBuilder(
+              builder: (context, setState) {
+                return YakToggleButton(
+                  value: toggleValue,
+                  label: 'Notifications',
+                  onChanged: (value) {
+                    setState(() {
+                      toggleValue = value;
+                    });
+                  },
+                );
+              },
+            ),
+          ),
+        ),
+      );
+
+      await tester.tap(find.text('Notifications'));
+      await tester.pumpAndSettle();
+
+      expect(toggleValue, true);
+    });
   });
 }
 

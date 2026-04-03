@@ -36,9 +36,9 @@ double _strokeWidth(YakCheckboxSize size) {
 double _squareRadius(YakCheckboxSize size) {
   switch (size) {
     case YakCheckboxSize.s:
-      return 4;
+      return 6;
     case YakCheckboxSize.m:
-      return 5;
+      return 6;
     case YakCheckboxSize.l:
       return 6;
   }
@@ -116,10 +116,12 @@ class YakCheckboxButton extends StatelessWidget {
     final Color active = color ?? YakColor.semantic.textAndIcons.primary;
     final Color inactive = inactiveColor ?? YakColor.semantic.stroke.base;
 
-    final Color effectiveInactive =
-        _enabled ? inactive : YakColor.semantic.textAndIcons.disabled;
-    final Color effectiveActive =
-        _enabled ? active : YakColor.semantic.textAndIcons.disabled;
+    final Color effectiveInactive = _enabled
+        ? inactive
+        : YakColor.semantic.textAndIcons.disabled;
+    final Color effectiveActive = _enabled
+        ? active
+        : YakColor.semantic.textAndIcons.disabled;
 
     final double indicatorSize = _indicatorSize(size);
     final double borderWidth = _strokeWidth(size);
@@ -128,23 +130,22 @@ class YakCheckboxButton extends StatelessWidget {
     final Color defaultCheck = variant == YakCheckboxVariant.fill
         ? YakColor.semantic.textAndIcons.onColor
         : effectiveActive;
-    final Color effectiveCheckColor =
-        _enabled ? (checkColor ?? defaultCheck) : YakColor.semantic.textAndIcons.disabled;
+    final Color effectiveCheckColor = _enabled
+        ? (checkColor ?? defaultCheck)
+        : YakColor.semantic.textAndIcons.disabled;
 
-    final TextStyle effectiveLabelStyle = (labelStyle ??
-            YakTypography.semantic.textS.medium)
-        .copyWith(
-      color: _enabled
-          ? YakColor.semantic.textAndIcons.baseMain
-          : YakColor.semantic.textAndIcons.disabled,
-    );
-    final TextStyle effectiveSubtitleStyle = (subtitleStyle ??
-            YakTypography.semantic.textS.regular)
-        .copyWith(
-      color: _enabled
-          ? YakColor.semantic.textAndIcons.baseSecond
-          : YakColor.semantic.textAndIcons.disabled,
-    );
+    final TextStyle effectiveLabelStyle =
+        (labelStyle ?? YakTypography.semantic.textS.medium).copyWith(
+          color: _enabled
+              ? YakColor.semantic.textAndIcons.baseMain
+              : YakColor.semantic.textAndIcons.disabled,
+        );
+    final TextStyle effectiveSubtitleStyle =
+        (subtitleStyle ?? YakTypography.semantic.textS.regular).copyWith(
+          color: _enabled
+              ? YakColor.semantic.textAndIcons.baseSecond
+              : YakColor.semantic.textAndIcons.disabled,
+        );
 
     return Focus(
       canRequestFocus: _enabled,
@@ -229,8 +230,9 @@ class YakCheckboxButton extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 8),
               child: Row(
-                crossAxisAlignment:
-                    hasSubtitle ? CrossAxisAlignment.start : CrossAxisAlignment.center,
+                crossAxisAlignment: hasSubtitle
+                    ? CrossAxisAlignment.start
+                    : CrossAxisAlignment.center,
                 children: [
                   SizedBox(
                     width: 28,
@@ -262,4 +264,3 @@ class YakCheckboxButton extends StatelessWidget {
     );
   }
 }
-

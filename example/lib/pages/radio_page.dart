@@ -9,9 +9,12 @@ class RadioPage extends StatefulWidget {
 }
 
 class _RadioPageState extends State<RadioPage> {
-  String _sizeS = 'M';
-  String _sizeM = 'M';
-  String _sizeL = 'M';
+  /// Spec grid: one radio per column (S / M / L control sizes).
+  int _sizeRefColumn = 1;
+
+  String _sizeS = 'b';
+  String _sizeM = 'b';
+  String _sizeL = 'b';
   String _customColor = 'selected';
 
   Widget _buildSection(
@@ -47,85 +50,181 @@ class _RadioPageState extends State<RadioPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildSection(
-              'Styles (S / M / L)',
-              'Preview sizes and focus glow. Try tab/keyboard focus on each row.',
+              'Circle sizes (spec)',
+              'S: 16px outline, 8px inner dot · M: 20px / 12px · L: 22px / 14px. '
+                  'Matches design tokens; use tab focus to see glow.',
+              [
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 4),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          'S',
+                          style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            color: Colors.grey[500],
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                      Expanded(
+                        child: Text(
+                          'M',
+                          style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            color: Colors.grey[500],
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                      Expanded(
+                        child: Text(
+                          'L',
+                          style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            color: Colors.grey[500],
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                YakRadioGroup<int>(
+                  groupValue: _sizeRefColumn,
+                  onChanged: (v) =>
+                      setState(() => _sizeRefColumn = v ?? 1),
+                  children: [
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          child: Align(
+                            alignment: Alignment.topCenter,
+                            child: SizedBox(
+                              width: 48,
+                              child: YakRadioButton<int>(
+                                value: 0,
+                                label: '',
+                                size: YakRadioSize.s,
+                              ),
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          child: Align(
+                            alignment: Alignment.topCenter,
+                            child: SizedBox(
+                              width: 48,
+                              child: YakRadioButton<int>(
+                                value: 1,
+                                label: '',
+                                size: YakRadioSize.m,
+                              ),
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          child: Align(
+                            alignment: Alignment.topCenter,
+                            child: SizedBox(
+                              width: 48,
+                              child: YakRadioButton<int>(
+                                value: 2,
+                                label: '',
+                                size: YakRadioSize.l,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            const SizedBox(height: 32),
+            _buildSection(
+              'Same options, different control sizes',
+              'Each group uses Option A / B / C only the YakRadioSize changes (S, M, or L).',
               [
                 const Text(
-                  'Small (S)',
+                  'YakRadioSize.s',
                   style: TextStyle(fontWeight: FontWeight.w600),
                 ),
                 const SizedBox(height: 8),
                 YakRadioGroup<String>(
                   groupValue: _sizeS,
-                  onChanged: (v) => setState(() => _sizeS = v ?? 'M'),
+                  onChanged: (v) => setState(() => _sizeS = v ?? 'b'),
                   children: const [
                     YakRadioButton<String>(
-                      value: 'S',
-                      label: 'S',
+                      value: 'a',
+                      label: 'Option A',
                       size: YakRadioSize.s,
                     ),
                     YakRadioButton<String>(
-                      value: 'M',
-                      label: 'M',
+                      value: 'b',
+                      label: 'Option B',
                       size: YakRadioSize.s,
                     ),
                     YakRadioButton<String>(
-                      value: 'L',
-                      label: 'L',
+                      value: 'c',
+                      label: 'Option C',
                       size: YakRadioSize.s,
                     ),
                   ],
                 ),
                 const SizedBox(height: 16),
                 const Text(
-                  'Medium (M)',
+                  'YakRadioSize.m',
                   style: TextStyle(fontWeight: FontWeight.w600),
                 ),
                 const SizedBox(height: 8),
                 YakRadioGroup<String>(
                   groupValue: _sizeM,
-                  onChanged: (v) => setState(() => _sizeM = v ?? 'M'),
+                  onChanged: (v) => setState(() => _sizeM = v ?? 'b'),
                   children: const [
                     YakRadioButton<String>(
-                      value: 'S',
-                      label: 'S',
+                      value: 'a',
+                      label: 'Option A',
                       size: YakRadioSize.m,
                     ),
                     YakRadioButton<String>(
-                      value: 'M',
-                      label: 'M',
+                      value: 'b',
+                      label: 'Option B',
                       size: YakRadioSize.m,
                     ),
                     YakRadioButton<String>(
-                      value: 'L',
-                      label: 'L',
+                      value: 'c',
+                      label: 'Option C',
                       size: YakRadioSize.m,
                     ),
                   ],
                 ),
                 const SizedBox(height: 16),
                 const Text(
-                  'Large (L)',
+                  'YakRadioSize.l',
                   style: TextStyle(fontWeight: FontWeight.w600),
                 ),
                 const SizedBox(height: 8),
                 YakRadioGroup<String>(
                   groupValue: _sizeL,
-                  onChanged: (v) => setState(() => _sizeL = v ?? 'M'),
+                  onChanged: (v) => setState(() => _sizeL = v ?? 'b'),
                   children: const [
                     YakRadioButton<String>(
-                      value: 'S',
-                      label: 'S',
+                      value: 'a',
+                      label: 'Option A',
                       size: YakRadioSize.l,
                     ),
                     YakRadioButton<String>(
-                      value: 'M',
-                      label: 'M',
+                      value: 'b',
+                      label: 'Option B',
                       size: YakRadioSize.l,
                     ),
                     YakRadioButton<String>(
-                      value: 'L',
-                      label: 'L',
+                      value: 'c',
+                      label: 'Option C',
                       size: YakRadioSize.l,
                     ),
                   ],

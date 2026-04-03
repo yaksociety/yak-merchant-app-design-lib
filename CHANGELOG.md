@@ -6,6 +6,38 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ---
 
+## [v1.7.2] - 2026-04-03
+
+**Title:** `v1.7.2 — Toggle label tap + color customization, modal close removal`
+
+**Description:** Improves **YakToggleButton** usability by making the label area tappable (larger hit target) and adds simple color customization for track/thumb. Also removes the built-in close (X) button from **YakModal** to keep it container-only.
+
+**Added**
+
+- **YakToggleButton**:
+  - Optional `label` (+ `labelStyle`, `labelSpacing`) to render a single tappable row (switch + text)
+  - `color` shorthand for “on” track color (with `activeColor` taking precedence)
+  - `activeThumbColor` and `inactiveThumbColor` for knob customization
+- **Tests**:
+  - Added coverage for toggling via label tap
+
+**Changed**
+
+- **Example app**:
+  - `ToggleButtonPage` updated to demonstrate label tap behavior and custom colors (tracks + thumbs)
+
+**Fixed**
+
+- **YakToggleButton**:
+  - Uses `activeThumbColor` (Flutter API) instead of deprecated `activeColor`
+
+**Removed**
+
+- **YakModal**:
+  - Removed the built-in top-right close (X) button (consumers should provide their own close action inside `child`)
+
+---
+
 ## [v1.7.1] - 2026-03-24
 
 **Title:** `v1.7.1 — Thai font fallback and input label alignment`
