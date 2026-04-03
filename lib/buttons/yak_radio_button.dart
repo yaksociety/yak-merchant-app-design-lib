@@ -5,14 +5,27 @@ import '../theme/yak_typography.dart';
 
 enum YakRadioSize { s, m, l }
 
-double _indicatorSize(YakRadioSize size) {
+/// Outer ring diameter (default / unselected circle).
+double _outlineDiameter(YakRadioSize size) {
   switch (size) {
     case YakRadioSize.s:
       return 16;
     case YakRadioSize.m:
       return 20;
     case YakRadioSize.l:
-      return 24;
+      return 22;
+  }
+}
+
+/// Selected inner dot diameter.
+double _innerDotDiameter(YakRadioSize size) {
+  switch (size) {
+    case YakRadioSize.s:
+      return 8;
+    case YakRadioSize.m:
+      return 12;
+    case YakRadioSize.l:
+      return 14;
   }
 }
 
@@ -243,7 +256,8 @@ class YakRadioButton<T> extends StatelessWidget {
         ? (color != null ? effectiveActive : (checkColor ?? effectiveActive))
         : YakColor.semantic.textAndIcons.disabled;
 
-    final double indicatorSize = _indicatorSize(size);
+    final double outlineSize = _outlineDiameter(size);
+    final double innerDotSize = _innerDotDiameter(size);
     final double borderWidth = _strokeWidth(size);
 
     Widget indicator({required bool focused}) {
@@ -255,7 +269,6 @@ class YakRadioButton<T> extends StatelessWidget {
           : (selected
                 ? YakColor.semantic.background.baseMain
                 : Colors.transparent);
-      final double dotSize = indicatorSize * 0.52;
 
       // Focused state in the reference shows a soft glow.
       final List<BoxShadow> glow = focused && enabled
@@ -271,8 +284,8 @@ class YakRadioButton<T> extends StatelessWidget {
       return AnimatedContainer(
         duration: const Duration(milliseconds: 140),
         curve: Curves.easeOutCubic,
-        width: indicatorSize,
-        height: indicatorSize,
+        width: outlineSize,
+        height: outlineSize,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           color: fillColor,
@@ -282,8 +295,8 @@ class YakRadioButton<T> extends StatelessWidget {
         child: selected
             ? Center(
                 child: Container(
-                  width: dotSize,
-                  height: dotSize,
+                  width: innerDotSize,
+                  height: innerDotSize,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     color: effectiveDotColor,
@@ -294,16 +307,14 @@ class YakRadioButton<T> extends StatelessWidget {
       );
     }
 
-    final TextStyle effectiveLabelStyle = (this.labelStyle ??
-            YakTypography.semantic.textS.medium)
-        .copyWith(
-      color: enabled
-          ? YakColor.semantic.textAndIcons.baseMain
-          : YakColor.semantic.textAndIcons.disabled,
-    );
-    final TextStyle effectiveSubtitleStyle = (this.subtitleStyle ??
-            YakTypography.semantic.textS.regular)
-        .copyWith(
+    final TextStyle effectiveLabelStyle =
+        (this.labelStyle ?? YakTypography.semantic.textS.medium).copyWith(
+          color: enabled
+              ? YakColor.semantic.textAndIcons.baseMain
+              : YakColor.semantic.textAndIcons.disabled,
+        );
+    final TextStyle effectiveSubtitleStyle =
+        (this.subtitleStyle ?? YakTypography.semantic.textS.regular).copyWith(
           color: enabled
               ? YakColor.semantic.textAndIcons.baseSecond
               : YakColor.semantic.textAndIcons.disabled,
