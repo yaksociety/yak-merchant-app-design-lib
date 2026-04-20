@@ -6,6 +6,32 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ---
 
+## [v1.7.3] - 2026-04-20
+
+**Title:** `v1.7.3 — Fix semantic color token mappings`
+
+**Description:** Aligns `YakColor.semantic` mappings with the latest Semantic Color token set (per design spec), ensuring components using semantic tokens render the correct colors.
+
+**Added**
+
+- None
+
+**Changed**
+
+- None
+
+**Fixed**
+
+- **YakColorSemantic**:
+  - `background.primaryThird` now maps to `Primary/100`
+  - Added missing `textAndIcons.primarySecond` mapping to `Primary/500`
+
+**Removed**
+
+- None
+
+---
+
 ## [v1.7.2] - 2026-04-03
 
 **Title:** `v1.7.2 — Toggle label tap + color customization, modal close removal`
