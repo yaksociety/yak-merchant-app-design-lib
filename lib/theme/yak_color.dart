@@ -164,7 +164,7 @@ class YakColorSemanticBackground {
   Color get baseSecond => YakColor.primitive.neutral.neutral100;
   Color get primaryMain => YakColor.primitive.primary.primary500;
   Color get primarySecond => YakColor.primitive.primary.primary50;
-  Color get primaryThird => YakColor.primitive.primary.primary25;
+  Color get primaryThird => YakColor.primitive.primary.primary100;
   Color get successMain => YakColor.primitive.success.success500;
   Color get successSecond => YakColor.primitive.success.success50;
   Color get dangerMain => YakColor.primitive.danger.danger500;
@@ -186,6 +186,7 @@ class YakColorSemanticTextAndIcons {
   Color get onColor => YakColor.primitive.base.white;
   Color get disabled => YakColor.primitive.neutral.neutral800;
   Color get primary => YakColor.primitive.primary.primary600;
+  Color get primarySecond => YakColor.primitive.primary.primary500;
   Color get success => YakColor.primitive.success.success600;
   Color get danger => YakColor.primitive.danger.danger600;
   Color get warning => YakColor.primitive.warning.warning600;
